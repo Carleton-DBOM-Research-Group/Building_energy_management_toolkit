@@ -20,7 +20,7 @@ Ensure the folder titled "toolkit" contains nine .py files and the subfolders ti
 Download and install Anaconda:
 > https://www.anaconda.com/products/individual
 
-Create a virtual environment and install the required packages using the included requirements.txt file
+Create a virtual environment and install the required packages using the included requirements.txt file.
 In command prompt, navigate to the directory containing the *requirements.txt* file with the following command line:
 > *cd C:\Users...\directory_with_file*
 
