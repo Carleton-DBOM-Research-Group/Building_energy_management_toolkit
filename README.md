@@ -35,3 +35,8 @@ Navigate to the directory titled "toolkit":
 > 
 Run the exe file:
 > *python exe.py*
+
+## Sample data, visuals, and reports
+Sample data is provided in the folder titled "sampleData" and sample visualizations from sample data are included in 
+the subfolder titled "outputs" within the "toolkit" folder. Sample reports are also included in the subfolder titled 
+"reports."
