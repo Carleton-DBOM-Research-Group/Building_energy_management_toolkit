@@ -1,5 +1,5 @@
-# Project Name
-Building Energy Management Toolkit (updated Feb 22, 2021)
+# Building Energy Management Toolkit
+Updated Feb 22, 2021
 
 ## Downloading the toolkit
 Download the contents of the repository.
