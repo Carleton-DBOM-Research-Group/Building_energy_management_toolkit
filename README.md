@@ -4,8 +4,8 @@ Building Energy Management Toolkit (updated Feb 22, 2021)
 ## Downloading the toolkit
 Download the contents of the repository.
 Enesure the folder titled "toolkit" contains nine .py files and the folders titled, "outputs" and "reports" with its subfolders. 
-> metadata.py
-> energyBaseline.py
+> metadata.py /n
+> energyBaseline.py \n
 > ahuAnomaly.py
 > zoneAnomaly.py
 > endUseDisaggregation.py
