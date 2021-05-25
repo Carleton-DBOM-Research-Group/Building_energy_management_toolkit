@@ -1,8 +1,39 @@
-## Building_energy_managment_toolkit
-Each folder contains the respective function as well as sample data and any supplementary files required for the function to run.
+# Project Name
+Building Energy Management Toolkit
 
-By default, each function will use the sample data and output its KPIs and visualizations to the output folder. Please leave the 'sample data' and 'output' folders in the same directory as the .ipnyb file if you wish to use the sample data.
+## Downloading the toolkit
+Download the seven functions and the folders titled, "outputs" and "reports" with the containing subfolders. 
+Ensure they are located all located in the same directory
+> metadata.py
+> energyBaseline.py
+> ahuAnomaly.py
+> zoneAnomaly.py
+> endUseDisaggregation.py
+> occupancy.py
+> complaintsAnalytics.py
+> outputs
+> reports
 
-If you wish to use your own data, ensure it is in the format presribed in the sample data, and place them in the 'sample data' folder.
+Download the *requirements.txt* file. This is required to run the functions.
+> requirement.txt
 
-The outputted KPIs and visualizations are rewritten after each successive run.
+## Downloading the sample data
+Download the sample data. These do not need to be in the same directory as the functions.
+> sampleData
+
+## Running the toolkit
+Download and install Anaconda:
+> https://www.anaconda.com/products/individual
+
+Create a virtual environment and install required packages
+In command prompt, navigate to the directory containing the *requirements.txt* file and run the following:
+> *cd C:\Users...\BEMToolkit*
+
+Run the following command to set up a virtual environment:
+>*conda env create -f requirements.txt newEnviro*
+
+Activate the virtual enviornment you just created by running the command:
+> *conda activate newEnviro*
+
+Run the exe file:
+> *python exe.py*
