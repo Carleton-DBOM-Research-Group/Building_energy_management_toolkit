@@ -3,7 +3,7 @@ Updated Feb 22, 2021
 
 ## Downloading the toolkit
 Download the contents of the repository.
-Enesure the folder titled "toolkit" contains nine .py files and the folders titled, "outputs" and "reports" with its subfolders. 
+Ensure the folder titled "toolkit" contains nine .py files and the subfolders titled "outputs" and "reports" with its subfolders are included. 
 > metadata.py
 > energyBaseline.py
 > ahuAnomaly.py
