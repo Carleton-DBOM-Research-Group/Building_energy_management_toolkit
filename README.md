@@ -31,13 +31,13 @@ In command prompt, navigate to the directory containing the *requirements.txt* f
 4. Run the following command line to set up a virtual environment named "newEnv" with the required packages:
 >*conda env create -f requirements.txt newEnv*
 
-Activate the virtual environment you just created by running the command:
+5. Activate the virtual environment you just created by running the command:
 > *conda activate newEnv*
 
-Navigate to the directory titled "toolkit":
+6. Navigate to the directory titled "toolkit":
 > *cd C:\Users...\toolkit*
 > 
-Run the exe file:
+7. Run the exe file:
 > *python exe.py*
 
 ## Sample data, visuals, and reports
