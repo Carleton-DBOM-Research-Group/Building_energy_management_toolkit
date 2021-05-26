@@ -21,6 +21,9 @@ Ensure the folder titled "toolkit" contains nine .py files and the subfolders ti
 Download and install Anaconda:
 > https://www.anaconda.com/products/individual
 
+Set the path to the location where Anaconda was installed.
+> Press the windows key --> type *environment* --> select *Environmental Variables* --> Select the *path* variable and select *Edit* --> *Add* the directories where Anaconda is installed. These should be C:\Users\*Username*\anaconda3 and C:\Users\*Username*\anaconda3\Library\bin
+
 Create a virtual environment and install the required packages using the included requirements.txt file.
 In command prompt, navigate to the directory containing the *requirements.txt* file with the following command line:
 > *cd C:\Users...\directory_with_requirements_txt_file*
