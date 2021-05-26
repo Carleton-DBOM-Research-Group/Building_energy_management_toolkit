@@ -24,15 +24,17 @@ Ensure the folder titled "toolkit" contains nine .py files and the subfolders ti
 2. Set the path to the location where Anaconda was installed.
 > Press the windows key --> type *environment* --> select *Environmental Variables* --> Select the *path* variable and select *Edit* --> *Add* the directories where Anaconda is installed. These should be C:\Users\*Username*\anaconda3 and C:\Users\*Username*\anaconda3\Library\bin
 
-3. Create a virtual environment and install the required packages using the included requirements.txt file.
-In command prompt, navigate to the directory containing the *requirements.txt* file with the following command line:
-> *cd C:\Users...\directory_with_requirements_txt_file*
+3. Create a virtual environment and install the required packages.
+In command prompt, create a new virtual environment and call it "newEnv" with the following command line:
+> *conda create -n newEnv python=3.8 anaconda*
 
-4. Run the following command line to set up a virtual environment named "newEnv" with the required packages:
->*conda env create -f requirements.txt newEnv*
+4. Activate the new virtual environment:
+>*conda activate newEnv*
 
-5. Activate the virtual environment you just created by running the command:
-> *conda activate newEnv*
+5. Install the required packages using *pip*:
+> pip install geneticalgorithm
+
+> pip install 
 
 6. Navigate to the directory titled "toolkit":
 > *cd C:\Users...\toolkit*
