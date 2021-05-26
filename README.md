@@ -29,10 +29,10 @@ In command prompt, navigate to the directory containing the *requirements.txt* f
 > *cd C:\Users...\directory_with_requirements_txt_file*
 
 Run the following command line to set up a virtual environment named "newEnviro" with the required packages:
->*conda env create -f requirements.txt newEnviro*
+>*conda env create -f requirements.txt newEnv*
 
 Activate the virtual environment you just created by running the command:
-> *conda activate newEnviro*
+> *conda activate newEnv*
 
 Navigate to the directory titled "toolkit":
 > *cd C:\Users...\toolkit*
