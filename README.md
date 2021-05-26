@@ -43,7 +43,7 @@ In command prompt, create a new virtual environment and call it "newEnv" with th
 6. Navigate to the directory titled "toolkit":
 > *cd C:\Users...\toolkit*
 > 
-7. Run the exe file:
+7. Run the exe.py file:
 > *python exe.py*
 
 ## Sample data, visuals, and reports
