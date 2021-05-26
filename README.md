@@ -23,7 +23,7 @@ Download and install Anaconda:
 
 Create a virtual environment and install the required packages using the included requirements.txt file.
 In command prompt, navigate to the directory containing the *requirements.txt* file with the following command line:
-> *cd C:\Users...\directory_with_file*
+> *cd C:\Users...\directory_with_requirements_txt_file*
 
 Run the following command line to set up a virtual environment named "newEnviro" with the required packages:
 >*conda env create -f requirements.txt newEnviro*
