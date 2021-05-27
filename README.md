@@ -66,7 +66,7 @@ The authors encourage community-driven efforts to improve and modify the toolkit
 > https://doi.org/10.1109/TASE.2020.2990566
 
 ### Baseline energy function (*energyBaseline.py*)
-> Gunay 8et al.*, "Detection and interpretation of anomalies in building energy use through inverse modeling," 2019.
+> Gunay *et al.*, "Detection and interpretation of anomalies in building energy use through inverse modeling," 2019.
 > https://doi.org/10.1080/23744731.2019.1565550
 
 > Afroz *et al.*, "An inquiry into the capabilities of baseline building energy modelling approaches to estimate energy savings," 2021.
