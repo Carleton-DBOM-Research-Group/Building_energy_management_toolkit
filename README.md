@@ -61,6 +61,23 @@ The authors encourage community-driven efforts to improve and modify the toolkit
 ### Framework of the toolkit
 This section will be updated when the reference documentation is available
 
-### Metadata function
+### Metadata inferencing function (*metadata.py*)
 Chen et al., "A Metadata Inference Method for Building Automation Systems With Limited Semantic Information," 2020.
 > https://doi.org/10.1109/TASE.2020.2990566
+
+### Baseline energy function (*energyBaseline.py*)
+Gunay et al., "Detection and interpretation of anomalies in building energy use through inverse modeling," 2019.
+> https://doi.org/10.1080/23744731.2019.1565550
+
+Afroz et al., "An inquiry into the capabilities of baseline building energy modelling approaches to estimate energy savings," 2021.
+> https://doi.org/10.1016/j.enbuild.2021.111054
+
+### AHU anomaly detection function (*ahuAnomaly.py*)
+Gunay and Shi, "Cluster analysis-based anomaly detection in building automation systems," 2020.
+> https://doi.org/10.1016/j.enbuild.2020.110445
+
+Darwazeh et al., "Development of Inverse Greybox Model-Based Virtual Meters for Air Handling Units," 2021.
+> https://doi.org/10.1109/TASE.2020.3005888
+
+### Zone anomaly detection function (*zoneAnomaly.py*)
+
