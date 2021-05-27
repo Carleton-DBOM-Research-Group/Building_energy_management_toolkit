@@ -41,7 +41,7 @@ In command prompt, create a new virtual environment and call it "newEnv" with th
 >*pip install python-docx*
 
 6. Navigate to the directory titled "toolkit":
-> *cd C:\Users...\toolkit*
+> *cd C:\Users\...\toolkit*
 > 
 7. Run the exe.py file:
 > *python exe.py*
