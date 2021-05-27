@@ -50,7 +50,7 @@ In command prompt, create a new virtual environment and call it "newEnv" with th
 To be updated...
 
 ## Sample data, visuals, and reports
-Sample data is provided in the folder titled "sampleData" and sample visualizations from sample data are included in 
+Sample data are provided in the folder titled "sampleData" and sample visualizations from sample data are included in 
 the subfolder titled "outputs" within the "toolkit" folder. Sample reports are also included in the subfolder titled 
 "reports."
 
