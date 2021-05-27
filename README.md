@@ -32,13 +32,13 @@ In command prompt, create a new virtual environment and call it "newEnv" with th
 >*conda activate newEnv*
 
 5. Install the following required packages using *pip*:
->pip install geneticalgorithm
+>*pip install geneticalgorithm*
 
->pip install editdistance
+>*pip install editdistance*
 
->pip install ruptures
+>*pip install ruptures*
 
->pip install python-docx
+>*pip install python-docx*
 
 6. Navigate to the directory titled "toolkit":
 > *cd C:\Users...\toolkit*
