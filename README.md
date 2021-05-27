@@ -58,4 +58,9 @@ the subfolder titled "outputs" within the "toolkit" folder. Sample reports are a
 The authors encourage community-driven efforts to improve and modify the toolkit. Refining the functions should not be limited to improving reliability but also to improve robustness. Derivations of multi-sourced toolkits incorporating additional, reduced, or altered functions to suit a particular set of buildings, or even establish explicit interdependencies between functions, are also encouraged. The toolkit is intended to act as a framework to initiate such efforts.
 
 ## Reference documentation
-This section will be updated as soon as the reference documentation is available. 
+### Framework of the toolkit
+This section will be updated when the reference documentation is available
+
+### Metadata function
+Chen et al., "A Metadata Inference Method for Building Automation Systems With Limited Semantic Information," 2020.
+> https://doi.org/10.1109/TASE.2020.2990566
