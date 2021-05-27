@@ -62,7 +62,7 @@ The authors encourage community-driven efforts to improve and modify the toolkit
 This section will be updated when the reference documentation is available
 
 ### Metadata inferencing function (*metadata.py*)
-Chen et al., "A Metadata Inference Method for Building Automation Systems With Limited Semantic Information," 2020.
+> Chen et al., "A Metadata Inference Method for Building Automation Systems With Limited Semantic Information," 2020.
 > https://doi.org/10.1109/TASE.2020.2990566
 
 ### Baseline energy function (*energyBaseline.py*)
