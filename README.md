@@ -1,5 +1,5 @@
 # Building Energy Management Toolkit
-Updated May 26, 2021 - This repository contains a preliminary version of a multi-sourced, data-driven toolkit for addressing building energy deficiencies and is open-source for others to learn from, adapt, and foster into more specialised versions of multi-sourced, data-driven toolkits. At this stage, the toolkit is undergoing active development. 
+Updated May 27, 2021 - This repository contains a preliminary version of a multi-sourced, data-driven toolkit for addressing building energy deficiencies and is open-source for others to learn from, adapt, and foster into more specialised versions of multi-sourced, data-driven toolkits. At this stage, the toolkit is undergoing active development. 
 Additions and revisions are expected and the repository will be updated periodically to reflect the most recent changes. Sample data are included (found in sampleData folder) and sample visuals and key performance indicators (KPIs) from the sample data are found in the "outputs" subfolder in the "toolkit" folder.  
 
 ## Downloading the toolkit
