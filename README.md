@@ -63,7 +63,7 @@ This section will be updated when the reference documentation is available
 
 ### Metadata inferencing function (*metadata.py*)
 Chen et al., "A Metadata Inference Method for Building Automation Systems With Limited Semantic Information," 2020.
-> https://doi.org/10.1109/TASE.2020.2990566
+https://doi.org/10.1109/TASE.2020.2990566
 
 ### Baseline energy function (*energyBaseline.py*)
 Gunay et al., "Detection and interpretation of anomalies in building energy use through inverse modeling," 2019.
@@ -80,4 +80,9 @@ Darwazeh et al., "Development of Inverse Greybox Model-Based Virtual Meters for 
 > https://doi.org/10.1109/TASE.2020.3005888
 
 ### Zone anomaly detection function (*zoneAnomaly.py*)
+Gunay and Shi, "Cluster analysis-based anomaly detection in building automation systems," 2020.
+> https://doi.org/10.1016/j.enbuild.2020.110445
 
+### End-use disaggregation function (*endUseDisaggregation.py*)
+Gunay et al., "Disaggregation of commercial building end-uses with automation system data," 2020.
+> 
