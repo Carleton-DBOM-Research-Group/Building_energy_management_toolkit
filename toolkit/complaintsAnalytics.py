@@ -63,14 +63,14 @@ def complaintsAnalytics(cmms,weather,tOa,time_tOa,zone,zone_time,area,bldg_id,ou
     monthly_cold_complaints = cmms_data.groupby([cmms_data['Report Time'].dt.month_name()], sort=False).sum().eval('coldComplain')
     monthly_hot_complaints = cmms_data.groupby([cmms_data['Report Time'].dt.month_name()], sort=False).sum().eval('hotComplain')
 
-    ax.bar(months,monthly_cold_complaints,width=0.65,color='tab:blue',hatch="//", bottom=monthly_hot_complaints)
-    ax.bar(months,monthly_hot_complaints,width=0.65,color='tab:red',hatch='o')
+    ax.bar(months,monthly_cold_complaints,width=0.65,color='tab:blue', bottom=monthly_hot_complaints)
+    ax.bar(months,monthly_hot_complaints,width=0.65,color='tab:red')
 
-    ax.set_ylabel('Number of complaints',fontsize=18,fontweight='bold')
-    ax.set_xlabel('Month',fontsize=18,fontweight='bold')
-    plt.yticks(fontsize=16)
-    ax.legend(['Cold', 'Hot'],loc='upper center', frameon=False, bbox_to_anchor=(0.5, 1.15), ncol=2, prop={"size":16})
-    ax.set_xticklabels(months, rotation=90, fontsize=16)
+    ax.set_ylabel('Number of complaints',fontsize=18)
+    ax.set_xlabel('Month',fontsize=18)
+    plt.yticks(fontsize=13)
+    ax.legend(['Cold', 'Hot'],loc='upper center', frameon=False, bbox_to_anchor=(0.5, 1.15), ncol=2, prop={"size":13})
+    ax.set_xticklabels(months, rotation=90, fontsize=13)
     ax.yaxis.set_major_locator(MaxNLocator(integer=True))
 
     #Sort complaints by time of day
@@ -96,16 +96,16 @@ def complaintsAnalytics(cmms,weather,tOa,time_tOa,zone,zone_time,area,bldg_id,ou
 
     ax = plt.subplot(1,2,2)
     periods = ['Late night','Early morning','Morning','Afternoon','Evening','Night']
-    ax.bar(periods,period_cold_complaints,width=0.65,color='tab:blue',hatch="//")
-    ax.bar(periods,period_hot_complaints,width=0.65,bottom=period_cold_complaints,color='tab:red',hatch='o')
+    ax.bar(periods,period_cold_complaints,width=0.65,color='tab:blue')
+    ax.bar(periods,period_hot_complaints,width=0.65,bottom=period_cold_complaints,color='tab:red')
 
-    ax.set_ylabel('Number of complaints',fontsize=18, fontweight='bold')
-    ax.set_xlabel('Period of day',fontsize=18,fontweight='bold')
-    ax.legend(['Cold', 'Hot'],loc='upper center', frameon=False, bbox_to_anchor=(0.5, 1.15), ncol=2, prop={"size":16})
-    ax.set_xticklabels(periods, fontsize=16)
+    ax.set_ylabel('Number of complaints',fontsize=18)
+    ax.set_xlabel('Period of day',fontsize=18)
+    ax.legend(['Cold', 'Hot'],loc='upper center', frameon=False, bbox_to_anchor=(0.5, 1.15), ncol=2, prop={"size":13})
+    ax.set_xticklabels(periods, fontsize=13)
     plt.setp(ax.xaxis.get_majorticklabels(), rotation=45,ha="right",rotation_mode="anchor")
     ax.yaxis.set_major_locator(MaxNLocator(integer=True))
-    plt.yticks(fontsize=16)
+    plt.yticks(fontsize=13)
     plt.tight_layout()
     plt.savefig(output_path + r'\complaints_breakdown.png',dpi=600)
 

@@ -243,7 +243,7 @@ def execute_function():
       yp = np.maximum(yp + mdl_heating_residual['residual2'].values,0)
 
     plt.plot(timeOfDay_handle, yp, linewidth=4, markersize=16)
-    plt.text(x=12,y=max(yp)+10,s=r'$t_{oa} =$' + str(i) + ' C', fontsize=15)
+    plt.text(x=12,y=max(yp)+10,s=r'$T_{oa} =$' + str(i) + ' C', fontsize=15)
 
   plt.tight_layout()
   plt.savefig(output_path + r'\energyBase_heating.png',dpi=600)

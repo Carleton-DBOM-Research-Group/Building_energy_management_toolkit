@@ -109,7 +109,7 @@ def zoneAnomaly (tIn,qFlo,qFloSp,sRad,output_path):
     #Compute Winter Health index - count number of zones where the cluster falls beyond threshold.
     centerClust['Health Index'] = ''
     centerClust['Health Index'][0] = 1 - centerClust.loc[(centerClust['Mean t_in']>25) | (centerClust['Mean t_in']<20) | (centerClust['Mean q_Flo Error']>20) | (centerClust['Mean q_Flo Error']<-20), 'Zones'].sum()/centerClust['Zones'].sum()
-    t = plt.text(24,-98,'Health Index=' + str(round(centerClust['Health Index'].iloc[0]*100,1))+'%', fontsize=25, alpha=0.5)
+    t = plt.text(15.2,-98,'Health Index=' + str(round(centerClust['Health Index'].iloc[0]*100,1))+'%', fontsize=25, alpha=0.5)
 
     fig.savefig(output_path + r'\zone_heat_season.png',dpi=600)
     zoneWinterSummary = centerClust
@@ -198,7 +198,7 @@ def zoneAnomaly (tIn,qFlo,qFloSp,sRad,output_path):
     #Compute Summer Health index - count number of zones where the cluster falls beyond threshold.
     centerClust['Health Index'] = ''
     centerClust['Health Index'][0] = 1 - centerClust.loc[(centerClust['Mean t_in']>25) | (centerClust['Mean t_in']<20) | (centerClust['Mean q_Flo Error']>20) | (centerClust['Mean q_Flo Error']<-20), 'Zones'].sum()/centerClust['Zones'].sum()
-    t = plt.text(24,-98,'Health Index=' + str(round(centerClust['Health Index'].iloc[0]*100,1))+'%', fontsize=25, alpha=0.5)
+    t = plt.text(15.2,-98,'Health Index=' + str(round(centerClust['Health Index'].iloc[0]*100,1))+'%', fontsize=25, alpha=0.5)
 
     plt.savefig(output_path + r'\zone_cool_season.png',dpi=600)
     zoneSummerSummary = centerClust

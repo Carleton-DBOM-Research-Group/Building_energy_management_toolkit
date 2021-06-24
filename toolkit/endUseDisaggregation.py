@@ -346,15 +346,16 @@ def execute_function():
 
         # Calculate EUIs of end uses as KPIs
         print('Calculating KPIs...')
-        kpi_electricity_chiller = electricity_chiller.sum()/BLDGE_AREA
-        kpi_electricity_distribution = electricity_distribution.sum()/BLDGE_AREA
-        kpi_electricity_occupant = electricity_occupant[electricity_occupant.columns[0]].sum()/BLDGE_AREA
+        kpi_electricity_chiller = int(round(electricity_chiller.sum()/BLDGE_AREA))
+        kpi_electricity_distribution = int(round(electricity_distribution.sum()/BLDGE_AREA))
+        kpi_electricity_occupant = int(round(electricity_occupant[electricity_occupant.columns[0]].sum()/BLDGE_AREA))
             
-        kpi_heating_other = heating_other.sum()/BLDGE_AREA
-        kpi_heating_ahu = heating_ahu.sum()/BLDGE_AREA
-        kpi_heating_perimeter = heating_perimeter[heating_perimeter.columns[0]].sum()/BLDGE_AREA
+        kpi_heating_other = int(round(heating_other.sum()/BLDGE_AREA))
+        kpi_heating_ahu = (heating_ahu.sum()/BLDGE_AREA).round().astype(int)
+        kpi_heating_perimeter = int(round(heating_perimeter[heating_perimeter.columns[0]].sum()/BLDGE_AREA))
             
-        kpi_cooling_ahu = cooling_ahu.sum()/BLDGE_AREA
+        kpi_cooling_ahu = (cooling_ahu.sum()/BLDGE_AREA).round().astype(int)
+
 
         #Export an excel sheet with KPIs
         print('Formatting KPIs...')
@@ -449,6 +450,7 @@ def execute_function():
         week=index.weekofyear+1
 
         plt.figure(figsize=(21,6))
+        #pal = ["#9b59b7", "#e74c4c", "#34496e", "#2ecc72"]
 
         plt.subplot(131)
         weeklyElecIntensity = pd.DataFrame(weeklyElecIntensity, index=week)
@@ -458,7 +460,7 @@ def execute_function():
         plt.yticks(fontsize=18)
         plt.xlabel('Week of year',fontsize = 22)
         plt.ylabel("Electricity (kWh/$m^{2}$)", fontsize= 22)
-        plt.legend(("Fans & pumps","Lighting & plug loads","Chillers"), loc='upper center', bbox_to_anchor=(0.5, 1.25), ncol=2, prop={"size":17})
+        plt.legend(("Fans & Pumps","Lighting & Plug loads","Chillers"), loc='upper center', bbox_to_anchor=(0.5, 1.25), ncol=2, prop={"size":17})
 
         plt.subplot(132)
         weeklyClgIntensity = pd.DataFrame(weeklyClgIntensity, index=week)
@@ -481,13 +483,13 @@ def execute_function():
         plt.yticks(fontsize=18)
         plt.xlabel('Week of year',fontsize = 22)
         plt.ylabel("Heating (kWh/$m^{2}$)", fontsize= 22)
-        ahu_legend_labels = ['Hot water','Perimeter heating']
+        ahu_legend_labels = ['Domestic hot water','Perimeter heaters']
         for i in range(1,num_of_ahus+1):
             ahu_legend_labels.append('AHU '+str(i))
         plt.legend(ahu_legend_labels,loc='upper center', bbox_to_anchor=(0.5, 1.16+0.09*(((2+num_of_ahus)//2)-1)), ncol=2, prop={"size":17})
 
         plt.tight_layout()
-        plt.savefig(output_path + r'\endUseDisaggregation.png',dpi=600)
+        plt.savefig(output_path + r'\endUseDisaggregation.png',dpi=900)
 
         timer = (time.time() - start_time) #Stop timer
         print('Analysis completed! Time elapsed: ' + str(round(timer,3)) + ' seconds')

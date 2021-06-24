@@ -3,7 +3,7 @@ import os
 import pandas as pd
 from docx import Document
 from docx.shared import Inches
-from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
+from docx2pdf import convert
 
 #-----------------------------------------------GENERATE BASELINE ENERGY REPORT----------------------------------------------------
 def energyBaseline():
@@ -18,22 +18,22 @@ def energyBaseline():
     document.add_heading('Baseline Energy - Analysis Report', 0) #Report title
 
     #Introductory paragraph
-    p = document.add_paragraph('The Baseline energy function inputs building-level heating, cooling, and electricity energy meter data and ')
-    p.add_run('compares energy use during operating hours and outside operating hours (afterhours) for heating, cooling, and electricity. ').bold=True
+    p = document.add_paragraph('The baseline energy function ')
+    p.add_run('compares energy use during operating hours (workhours) and outside operating hours (after-hours) for heating, cooling, and electricity. ').bold=True
     p.add_run("This function is intended to help the user assess the effectiveness of schedules and their ability to reduce \
-energy use outside of the building's operating hours. Visualizations compare the energy use rates during and outside operating \
-as a function of outdoor air temperature, and predict energy consumption at representative outdoor air temperatures - these are \
+energy use outside of the building's operating hours. Plots are generated which compare the rate of energy use during and outside operating \
+hours with respect to outdoor air temperature, and predict energy consumption at representative outdoor air temperatures - these are \
 done separately for heating, cooling, and electrcity. The generated key performance indicators (KPI) quantify schedule \
 effectiveness and afterhours energy use. More information is found in the respective sections.")
 
     #Visualization heading and description
-    document.add_heading('Visualizations', level=1)
-    p = document.add_paragraph('The first set of visualizations compare the rate of energy use during operating hours and \
-outside operating hours (afterhours) as a function of outdoor air temperatures - this is done separately for heating, \
-cooling, and electricity. If the afterhours energy use is similiar or identical (in magnitude or degree of inclined slope) \
-to the operating energy use, the current schedules are ineffective in reducing energy use during afterhours. If the slopes are vastly different, \
-the current schedules are effective in reducing energy use outside operating hours.')
-    p = document.add_paragraph('The second set of visualizations illustrates the predicted sensitivity of energy use on outdoor \
+    document.add_heading('Visuals', level=1)
+    p = document.add_paragraph('The first set of visuals (to the left) compare the rate of energy use during operating hours (workhours) and \
+outside operating hours (after-hours) as a function of outdoor air temperatures - this is done separately for heating, \
+cooling, and electricity. Current schedules may be ineffective at reducing after-hours energy use if the after-hours energy use \
+line is similiar or identical to the workhours energy use line. If the slope of the after-hours energy use line is shallower \
+than the workhour eneegry use line, the current schedules are effectively reducing energy use outside operating hours.')
+    p = document.add_paragraph('The second set of visuals (to the right) illustrates the sensitivity of energy use with respect to outdoor \
 air temperatures - this is done separately for heating, cooling, and electricity. If the lines are spaced considerably apart, \
 the energy use is particularily sensitive to outdoor air temperature.')
 
@@ -44,20 +44,21 @@ the energy use is particularily sensitive to outdoor air temperature.')
 
     #KPIs heading and description
     document.add_heading('Key performance Indicators', level=1)
-    p = document.add_paragraph('The generated KPIs are ')
+    p = document.add_paragraph('The key performance indicators (KPIs) are ')
     p.add_run('Schedule effectiveness').bold = True
     p.add_run(' and ')
     p.add_run('Afterhours energy use ratio').bold = True
-    p.add_run('. Schedule effectiveness quanitfies the difference between the inclined slope of the modeled operating and modeled \
-afterhours energy use rates. Values approaching zero (0) indicate similiar or identical inclined slopes, positive (+) values indcate \
-a steeper operating hours energy use inclined slope, and negative (-) values indicate a steeper afterhours energy use inclined slope. \
-The Afterhours energy use ratio is the ratio of energy use during afterhours over the total energy use.')
-
-    document.add_page_break()
+    p.add_run('. Schedule effectiveness quantifies the difference between the slope of the workhours energy use line and the \
+afterhours energy use line. Values approaching zero (0%) indicate similiar or identical inclined slopes, positive (+) values indicate \
+a steeper workhours energy use slope than afterhours, and negative (-) values indicate a steeper afterhours energy use slope. Therefore, \
+a greater positive value is desirable since it indicates an effective reduction in energy use rates during afterhours.\n\n\
+The Afterhours energy use ratio is the ratio of energy use during afterhours over the total energy use. Higher value indicate a larger \
+portion of total energy consumption used during after-hours. Therefore, a lower value is desirable.')
 
     #Extract data from excel sheet and add table to document
     kpis = pd.read_excel(input_path + r'\energyBase_summary.xlsx',sheet_name='KPIs')
     kpis.drop(kpis.columns[0],axis=1,inplace=True)
+    kpis.iloc[:,1:] = (kpis.iloc[:,1:] * 100).astype(int).astype(str) + '%'
 
     p = document.add_heading('Schedule Effectiveness and Afterhours energy use ratio',level=2)
     t = document.add_table(kpis.shape[0]+1, kpis.shape[1])
@@ -68,9 +69,12 @@ The Afterhours energy use ratio is the ratio of energy use during afterhours ove
     for i in range(kpis.shape[0]): # add the rest of the data frame
         for j in range(kpis.shape[-1]):
             t.cell(i+1,j).text = str(kpis.values[i,j])
+    
+    t.style = 'Colorful List'
 
     #Save document in reports folder
     document.save(output_path + r'\energyBaseline_report.docx')
+    convert(output_path + r'\energyBaseline_report.docx', output_path + r'\energyBaseline_report.pdf')
     print('Report successfully generated!')
 
     return
@@ -86,31 +90,50 @@ def ahuAnomaly():
     #Extract KPIs excel sheet
     faults_df = pd.read_excel(input_path + r'\ahu_anomaly_summary.xlsx',sheet_name='faults')
     faults_df.drop(faults_df.columns[0],axis=1,inplace=True)
+    faults_df.iloc[:,1] = (faults_df.iloc[:,1]).astype(int).astype(str) + '%'
 
     document = Document()
 
     document.add_heading('AHU Anomaly - Analysis Report', 0) #Report title
 
     #Introductory paragraph
-    p = document.add_paragraph('The AHU anomaly detection function inputs AHU- and zone-level HVAC network trendlog data and ')
-    p.add_run('detects hard and soft faults related to AHUs. ').bold=True
-    p.add_run("This function is intended to help the user identify potential causes for anomalous AHU operations which may cause \
-energy use inefficiencies. The accompanying visualizations are intended to aid understanding of the detected faults. These depict \
-supply air temperature, and the coolest/warmest/average return air temperatures as a function of outdoor air temperature, and  \
-damper and valve actuator positions as a function of outdoor air temperature. Additionaly, a number of diagrams are generated which \
-depict damper and valve actuator positions and temperature readings at characteristic AHU operational periods. More informations is \
+    p = document.add_paragraph('The AHU anomaly detection function ')
+    p.add_run('detects hard and soft faults related to air handling units (AHUs). ').bold=True
+    p.add_run("This function helps identify potential causes for anomalous AHU operations which may cause \
+energy use inefficiencies. The visuals are intended to aid understanding of the detected faults. These depict \
+supply air temperature, and the coolest/warmest/average return air temperatures as a function of outdoor air temperature, and \
+damper and valve actuator positions as a function of outdoor air temperature. Additionally, a number of diagrams are generated which \
+depict damper and valve actuator positions and temperature readings at characteristic AHU operational periods. More information is \
 available at the respective sections.")
 
     #Visualization heading and description - Part 1
-    document.add_heading('Visualizations - Split-range controller', level=1)
-    p = document.add_paragraph('A set of two charts are generated for each AHU inputted. The top chart depicts supply air \
+    document.add_heading('Visuals - Split-range controller', level=1)
+    p = document.add_paragraph('A set of two charts are generated for each AHU dataset inputted. The first (top) plots supply air \
 temperature, and the coolest/warmest/average return air temperatures as a function of outdoor air temperature. For \
-reference, the "ideal" supply air temperature is depicted.\n\nThe bottom chart is a Split-range controller diagram, which \
-plots damper and valve actuator positons and average fraction of active perimeter heaters per zone as a function of \
-outdoor air temperature. The four underlaying color zones represent the four distinct operating mode: Heating (red zone) \
-, economizer (yellow zone), economizer with cooling (grey zone), and cooling (blue zone). For reference, the below \
-Split-range controller diagram is a typical example of normal AHU operations.')
+reference, the "ideal" supply air temperature is depicted. The second (bottom) chart is a Split-range controller diagram, which \
+plots the outdoor air damper position (OA), heating coil valve position (HC), cooling coil valve position (CC) and average fraction \
+of active perimeter heaters (RAD) with respect to outdoor air temperature. The four underlaying color zones represent the four \
+distinct operating mode: Heating (red zone), economizer (yellow zone), economizer with cooling (grey zone), and cooling (blue zone). \
+As an example, the below Split-range controller diagram is representative of normal, healthy AHU operations. Some ')
+    p=document.add_paragraph('key characteristics of normal, healthy AHU operation').bold=True
+    p=document.add_paragraph(' include:')
+
+    document.add_paragraph('Heating coil active ONLY in heating mode', style='List Bullet')
+    document.add_paragraph('Cooling coil active ONLY in economizer with cooling and cooling mode', style='List Bullet')
+    document.add_paragraph('Heating and cooling coils should not operate simutaneously', style='List Bullet')
+    document.add_paragraph('Perimeter heating should be minimal in economizer mode. This can be achieved by increasing the supply air \
+temperature setpoint in the heating season, while monitoring any occurence of overheating.', style='List Bullet')
+
     document.add_picture(output_path + r'\SRC_example.png', width=Inches(5.75))
+
+    p = document.add_paragraph('Suboptimal supply air temperatures can result excessive energy consumption from excessive perimeter heating use, \
+economizing, or fan use. To guide supply air temperature setpoint adjustments, the typical "ideal" supply air temperature range is provided as a \
+reference. If the supply air temperature is LOWER than this range in the heating season, excessive use of perimeter heating and economizing may \
+result; only a few overheating rooms may trigger this behaviour. If this is the case, consider increasing the maximum terminal airflow setpoints \
+in these overheating rooms.\n\nIf the supply air temperature is HIGHER than this range in the cooling season, excessive fan power to deliver \
+required necessary cooling may result; a few overcooling rooms may trigger this behaviour. If this is the case, consider decreasing the minimum \
+terminal airflow setpoints in these overcooling rooms within reason. In both of these cases, ensure that the airflow and temperature sensors work \
+as intended in these rooms.')
 
     #For each AHU, output the first set of visuals
     for i in faults_df.index:
@@ -119,11 +142,22 @@ Split-range controller diagram is a typical example of normal AHU operations.')
         document.add_picture(input_path + r'\f2a_ahu_'+str(i+1)+'.png', width=Inches(5))
     
     #Visualization heading and description - Part 2
-    document.add_heading('Visualizations - Snapshots of AHU operating periods', level=1)
+    document.add_heading('Visuals - AHU operating periods', level=1)
     p = document.add_paragraph("A set of four to six visuals per AHU are generated which depict characteristic operating \
-periods of the AHU and the average damper/valve positions and temperatures at those periods. The fraction of time of \
-operation is the percentage of the total time of the AHU's operation which exhibit the following damper/valve positions \
-and temperatures.")
+periods of the AHU and the average damper and valve positions and temperatures at those periods. The fraction of time of \
+operation is the percentage of the total time of the AHU's operation which exhibit the displayed damper/valve positions \
+and temperatures. Some ")
+    p=document.add_paragraph('key characteristics of normal, healthy AHU operation').bold=True
+    p=document.add_paragraph(' include:')
+
+    document.add_paragraph('Heating coil active ONLY when the outdoor air temperature is below the upper setpoint for heating mode. (In the example \
+split-range controller diagram provided, this is -5C.)', style='List Bullet')
+    document.add_paragraph('Cooling coil active ONLY when the outdoor air temperature is above the upper setpoint for economizer mode. (In the \
+example split-range controller diagram provided, this is 10C.)', style='List Bullet')
+    document.add_paragraph('Heating and cooling coils should not operate simutaneously', style='List Bullet')
+    document.add_paragraph('Perimeter heating should be minimal in economizer mode (i.e. when both the heating and cooling \
+coils are inactive). This can be achieved by increasing the supply air temperature setpoint in the heating season, while \
+monitoring any occurence of overheating.', style='List Bullet')
     
     #For each AHU, output the second set of visuals
     for i in faults_df.index:
@@ -140,8 +174,26 @@ and temperatures.")
 
     #Extract data from excel sheet and add table to document
 
-    p = document.add_heading('AHU faults and anomalies',level=1)
-    p = document.add_paragraph("The following table lists the hard and soft faults identified by the function.")
+    p = document.add_heading('Key performance indicators - AHU faults',level=1)
+    p = document.add_paragraph('The following table lists the hard and soft faults identified by the function. The AHU health \
+index is also provided for each AHU which is '+ r'100%'+' if no faults are detected and '+ r'0%'+' if all six faults are detected. \
+The following faults may be detected:')
+
+    document.add_paragraph('Cooling coil stuck: This fault is generated if no or minimal use of the cooling coil was observed in the data. \
+This may be symptomatic of a faulty sensor, a stuck valve, or a conflict in the operational logic.', style='List Bullet')
+    document.add_paragraph('Heating coil stuck: This fault is generated if no or minimal use of the cooling coil was observed in the data. \
+This may be symptomatic of a faulty sensor, a stuck valve, or a conflict in the operational logic.', style='List Bullet')
+    document.add_paragraph("Check economizer logic: This fault is generated if excessive use of the perimeter heatings was observed in the \
+AHU's economizer mode.", style='List Bullet')
+    document.add_paragraph('Low/High outdoor air: This fault is generated if an inadequate or excessive amount of outdoor air was observed. \
+This may be symptomatic of a stuck outdoor air damper or faulty damper sensor/actuator.', style='List Bullet')
+    document.add_paragraph('Check mode of operation logic: This fault is generated if the weekly operational time (i.e. when the AHU fans are \
+operational) exceeds 100 hours a week. This considered excessive operations. It is suggested to check the operational logic for any conflicts \
+which may result in unintended operation of the AHUs', style='List Bullet')
+    document.add_paragraph("Check supply air temperature reset logic: This fault is generated if there is excessive use of perimeter heating \
+devices during the AHUs' economizer mode. This may be a result of select rooms overheating in the heatinmg season. If this is the case, consider \
+increasing the maximum terminal airflow setpoints in these overheating rooms.", style='List Bullet')
+
     t = document.add_table(faults_df.shape[0]+1, faults_df.shape[1])
     
     for j in range(faults_df.shape[-1]): # add the header rows.
@@ -151,8 +203,11 @@ and temperatures.")
         for j in range(faults_df.shape[-1]):
             t.cell(i+1,j).text = str(faults_df.values[i,j])
 
+    t.style = 'Colorful List'
+
     #Save document in reports folder
     document.save(output_path + r'\ahuAnomaly_report.docx')
+    convert(output_path + r'\ahuAnomaly_report.docx', output_path + r'\ahuAnomaly_report.pdf')
     print('Report successfully generated!')
 
     return
@@ -168,6 +223,7 @@ def zoneAnomaly():
     #Extract KPIs excel sheet
     kpis_heating = pd.read_excel(input_path + r'\zone_anomaly_summary.xlsx',sheet_name='Heating season')
     kpis_heating.drop(kpis_heating.columns[0],axis=1,inplace=True)
+
     kpis_cooling = pd.read_excel(input_path + r'\zone_anomaly_summary.xlsx',sheet_name='Cooling season')
     kpis_cooling.drop(kpis_cooling.columns[0],axis=1,inplace=True)
 
@@ -178,23 +234,33 @@ def zoneAnomaly():
     document.add_heading('Zone Anomaly - Analysis Report', 0)
 
     #Introductory paragraph
-    p = document.add_paragraph('The zone anomaly function inputs zone-level HVAC controls network data and ')
+    p = document.add_paragraph('The zone anomaly function ')
     p.add_run('detects anomalous zones based on indoor air temperature and airflow control errors. ').bold = True
-    p.add_run('This report outputs the results of the clustering algorithm, including the number of clusters \
-generated, the number of zones included in each cluster, the average indoor air temperature of each cluster of zones, and the average airflow rate setpoint error \
-of each cluster of zones. Visualization are also generated which depict the zone clusters relative to their \
-average indoor air temperature and average airflow rate setpoint error; this is done separately for the heating \
-and cooling season. This function is intended to help the user identify abnormal or undesirable operating conditions in \
-groups of zones.')
+    p.add_run('This function can help identify potential faults in variable air volume (VAV) units which \
+may result in anomalous airflow and temperature conditions in thermal zones. Visuals are also generated which \
+plot the average indoor air temperature and airflow control error or groups of zones; this is done separately \
+for the heating and cooling season.')
 
     #Visualization heading and description
-    document.add_heading('Visualizations', level=1)
-    p = document.add_paragraph('The generated visualizations depict the resultant zone clusters relative \
-to their average indoor air temperature and average airflow rate setpoint error. This is done separately for \
-the heating season (December through February) and cooling season (May thorugh August). Zone clusters \
-are represented by the black semi-transparent boxes and cluster identifier. The cluster identifier \
-(C1, C2, C3, etc.) is also presented on the top-left of the visualization along with the number of zones \
-that are included in each cluster. This information is also provided in the Key Performance Indicators section.')
+    document.add_heading('Visuals', level=1)
+    p = document.add_paragraph('The generated visuals plot the average indoor air temperature and average \
+airflow control error or groups of zones. Each group of zones (C1, C2, C3, etc.) represents a number of zones \
+which is presented at the top-left of the visual. The airflow control error is the difference between the \
+actual and setpoint airflow rate with respect to the airflow rate setpoint. A positive (+) percentage indicates a \
+higher actual flowrate than the setpoint and a negative (-) percentage indicates a lower actual flowrate than the \
+setpoint. This visual is generated twice, once for the heating season (December through February) and again \
+for the cooling season (May through August). The following are possible symptoms of anomalous operations:')
+
+    document.add_paragraph('High flow: Zones exhibit abnormally high airflow. Ensure the VAV termianl damper and \
+airflow sensors are operating as intended. High airflow to zones may result in excessive use of perimeter heaters.', style='List Bullet')
+    document.add_paragraph('Low flow: Zones exhibit abnormally low airflow. Ensure the VAV termianl damper and \
+airflow sensors are operating as intended. Low airflow to zones may result in inadequate indoor air quality for occuapnts.', style='List Bullet')
+    document.add_paragraph("Cold: Zones exhibit abnormally low indoor air temperatures. If zones exhibit acceptable \
+airflow control errors, ensure perimeter heating devices and/or reheat coils are operating as intended. Consider \
+decreasing the minimum airflow setpoint.", style='List Bullet')
+    document.add_paragraph("Hot: Zones exhibit abnormally high indoor air temperatures. If zones exhibit acceptable \
+airflow control errors, ensure perimeter heating devices and/or reheat coils are operating as intended. Consider \
+increasing the maximum airflow setpoint.", style='List Bullet')
 
     #Add visualizations
     document.add_picture(input_path + r'\zone_heat_season.png', width=Inches(4.75))
@@ -205,33 +271,37 @@ that are included in each cluster. This information is also provided in the Key 
     p = document.add_paragraph('This section presents the generated KPIs - ')
     p.add_run('the zone health index').bold = True
     p.add_run('. The zone health index is the ') 
-    p.add_run('ratio of zones with acceptable indoor air temperature and airflow setpoint error over the \
+    p.add_run('ratio of zones with acceptable indoor air temperature and airflow control error over the \
 total number of zones ').bold = True
     p.add_run('- this is calculated separately for the heating season (December through February) and the \
-cooling season (May thorugh August). An acceptable indoor air temperature is considered to be between 20 and \
-25 degrees, and an acceptable airflow setpoint control error is +/- 20%. The airflow setpoint control error \
-is the ratio of the difference between the actual airflow rate and setpoint airflow rate over the setpoint airflow rate.')
+cooling season (May through August). An acceptable indoor air temperature is considered to be between 20 and \
+25 degrees, and an acceptable airflow control error is +/- 20%. A greater percentage is desirable since this \
+indicates little to no detected anomalous zones.')
 
     heating_health_index = (round(kpis_heating.iloc[0]['Health Index'],3))*100
     cooling_health_index = (round(kpis_cooling.iloc[0]['Health Index'],3))*100
 
-    p = document.add_paragraph('Zone health index for heating: ', style='List Bullet')
+    p = document.add_paragraph('Zone health index for heating season: ', style='List Bullet')
     p.add_run(str(heating_health_index) + '%').bold = True
-    p = document.add_paragraph('Zone health index for cooling: ', style='List Bullet')
+    p = document.add_paragraph('Zone health index for cooling season: ', style='List Bullet')
     p.add_run(str(cooling_health_index) + '%').bold = True
 
     #Add tables with summary tables
-    p = document.add_paragraph('The clustering algorithm resulted in ' + str(len(kpis_heating.index))\
-        + ' zone clusters for the heating season and ' + str(len(kpis_cooling.index)) + ' zone clusters \
-for the cooling season. The below tables lists the resultant zone clusters, the number of zones included in each cluster, \
-the average indoor air temperature, and average airflow rate setpoint error for each cluster. For the heating season, the average fraction \
-of active (On-state) perimter heaters within a zone is also provided for each cluster.')
+    p = document.add_paragraph('The following tables lists the number of zones in each group and the average \
+indoor air temperature and average airflow control error for each group. For the heating season, the average fraction \
+of active (ON-state) perimeter heaters within a zone is also provided for each cluster.')
     
     document.add_page_break()
 
     kpis_heating.drop(kpis_heating.columns[-1],axis=1,inplace=True) #Drop the health index from the heating season table
+    kpis_heating.iloc[:,0] = (kpis_heating.iloc[:,0]).astype(int)
+    kpis_heating.iloc[:,2:] = (kpis_heating.iloc[:,2:]).round(1).astype(str) + '%'
+
     kpis_cooling.drop(kpis_cooling.columns[-1],axis=1,inplace=True) #Drop the health index from the cooling season table
-    table_labels = ['Number of zones','Average indoor air temperature (C)','Average airflow rate setpoint error (%)','Average fraction of active perimeter heaters (%)']
+    kpis_cooling.iloc[:,0] = (kpis_cooling.iloc[:,0]).astype(int)
+    kpis_cooling.iloc[:,2] = (kpis_cooling.iloc[:,2]).round(1).astype(str) + '%'
+
+    table_labels = ['Number of zones','Average indoor air temperature (C)','Average airflow control error','Average fraction of active perimeter heaters']
     table_headings = ['Heating season KPIs','Cooling season KPIs']
     k = 0
 
@@ -247,10 +317,12 @@ of active (On-state) perimter heaters within a zone is also provided for each cl
             for j in range(df.shape[-1]):
                 t.cell(i+1,j).text = str(df.values[i,j])
         k+=1
+        t.style = 'Colorful List'
         
 
     #Save document in reports folder
     document.save(output_path + r'\zoneAnomaly_report.docx')
+    convert(output_path + r'\zoneAnomaly_report.docx', output_path + r'\zoneAnomaly_report.pdf')
     print('Report successfully generated!')
 
     return
@@ -278,19 +350,16 @@ def endUseDisaggregation():
     document.add_heading('End-use Disaggregation - Analysis Report', 0)
 
     #Introductory paragraph
-    p = document.add_paragraph('The end-use disaggregation function inputs energy meter, Wi-Fi device count, and AHU- and zone-level \
-HVAC controls trendlog data, and calculates annual energy use intensities of major end-uses. The major end-uses for electricity are ')
-    p.add_run('lighting and plug-loads, distribution (i.e., pumps and fans), and chillers').bold = True
-    p.add_run('. The major end-uses for heating energy use are ')
-    p.add_run('perimeter heating, the AHUs’ heating coils, and other appliances (i.e., domestic hot water)').bold = True
-    p.add_run('. The major end-use for cooling energy are the ')
-    p.add_run('AHUs’ cooling coils.').bold = True
-    p.add_run(' This function is intended to help the user assess the distribution of energy consumption within a building and can \
-be used to identify abnormal activity or lack thereof of end-uses in a yearly context.')
+    p = document.add_paragraph('The end-use disaggregation function calculates ') 
+    p.add_run('annual energy use intensities of major end-uses. ').bold = True
+    p.add_run('The major end-uses for electricity are lighting and plug-loads, distribution (i.e., pumps and fans), and chillers. \
+The major end-uses for heating energy use are perimeter heating, the AHUs’ heating coils, and other appliances (i.e., domestic \
+hot water). The major end-use for cooling energy are the AHUs’ cooling coils. This function can help assess \
+the distribution of energy consumption within a building and can be used to identify abnormal energy use patterns.')
 
     #Visualization heading and description
     document.add_heading('Visualizations', level=1)
-    p = document.add_paragraph('The generated visualization are energy use intensity profiles which depict the weekly distribution \
+    p = document.add_paragraph('The visuals plot energy use intensity profiles which depict the weekly distribution \
 of the major end-uses for electricity, cooling, and heating separately.')
 
     #Add visualizations
@@ -307,7 +376,7 @@ example, if three (3) AHUs were analyzed, the energy use intensites for the AHU 
     document.add_page_break()
 
     #Add KPIs
-    table_labels = ['End-use','Total annual energy use intensity (kWh/m2)']
+    table_labels = ['End-use',['Annual space heating load intensity (kWh/m2)','Annual space cooling load intensity (kWh/m2)','Annual electricity use intensity (kWh/m2)']]
     table_headings = ['Heating energy','Cooling energy','Electricity']
     k = 0
 
@@ -317,92 +386,168 @@ example, if three (3) AHUs were analyzed, the energy use intensites for the AHU 
         t = document.add_table(df.shape[0]+1, df.shape[1])
         
         for j in range(df.shape[-1]): # add the header rows.
-            t.cell(0,j).text = table_labels[j]
+            if j == 0:
+                t.cell(0,j).text = table_labels[j]
+            else:
+                t.cell(0,j).text = table_labels[j][k]
         
         for i in range(df.shape[0]): # add the rest of the data frame
             for j in range(df.shape[-1]):
                 t.cell(i+1,j).text = str(df.values[i,j])
         k+=1
+        t.style = 'Colorful List'
 
     #Save document in reports folder
     document.save(output_path + r'\endUseDisaggregation_report.docx')
+    convert(output_path + r'\endUseDisaggregation_report.docx', output_path + r'\endUseDisaggregation_report.pdf')
     print('Report successfully generated!')
 
     return
 
 #------------------------------------------------------GENERATE OCCUPANCY REPORT-------------------------------------------------
-def occupancy():
-    print('Generating report for occupancy function...')
+def occupancy(which_data):
 
-    path = os.getcwd() #Get current directory
-    output_path = path + r'\reports\6-occupancy' #Specify the output path for report
-    input_path = path + r'\outputs\6-occupancy' #Specify the input path for report
+    if which_data == 1:
 
-    #Extract KPIs excel sheet
-    kpis = pd.read_excel(input_path + r'\arrive_depart_maxOcc.xlsx',sheet_name='KPIs')
-    kpis = kpis.round() #Remove decimal places
+        print('Generating report for occupancy function with Wi-Fi device count data...')
 
-    #Generate Word document
-    document = Document()
+        path = os.getcwd() #Get current directory
+        output_path = path + r'\reports\6-occupancy' #Specify the output path for report
+        input_path = path + r'\outputs\6-occupancy' #Specify the input path for report
 
-    #Report title
-    document.add_heading('Occupancy - Analysis Report', 0)
+        #Extract KPIs excel sheet
+        kpis = pd.read_excel(input_path + r'\arrive_depart_maxOcc.xlsx',sheet_name='KPIs',keep_default_na=False)
 
-    #Introductory paragraph
-    p = document.add_paragraph('The occupancy function inputs Wi-Fi device count data and determines typical ')
-    p.add_run('earliest arrival times, latest departure times,').bold = True
-    p.add_run(' and ')
-    p.add_run('highest recorded occupancy').bold = True
-    p.add_run(' for weekdays and weekends separately. This report outputs the results of the function and a set of visualizations \
-illustrating building-level and floor-level occupant count profiles.')
+        #Generate Word document
+        document = Document()
 
-    #Visualization heading and description
-    document.add_heading('Visualizations', level=1)
-    p = document.add_paragraph('The first set of visualizations are building-level hourly occupant count profiles for weekdays and \
-weekends separately. The profiles are shown as the 25th, 50th (median), and 75th percentile whereby the 25th percentile represents \
-the lower range of typical occupancy and the 75th represents the higher range. The second set of visualizations are \
-occupant count profiles taken at the 75th percentile and broken down by floor.')
+        #Report title
+        document.add_heading('Occupancy (Wi-Fi device count) - Analysis Report', 0)
 
-    #Add visualizations
-    document.add_picture(input_path + r'\percentile_occ.png', width=Inches(5.75))
-    document.add_picture(input_path + r'\floor_level_occ.png', width=Inches(5.75))
+        #Introductory paragraph
+        p = document.add_paragraph('The occupancy function determines typical ')
+        p.add_run('earliest arrival times, latest departure times,').bold = True
+        p.add_run(' and ')
+        p.add_run('highest recorded occupancy').bold = True
+        p.add_run(' for weekdays and weekends separately. This function can be used to inform ventilation schedules which can minimize \
+    excessive ventilation during unoccupied hours, or even serve as a bssis for an occupant-driven demand controlled ventilation scheme. \
+    Visuals plot building-level and floor-level occupant count profiles.')
 
-    #KPIs heading and description
-    document.add_heading('Key performance Indicators', level=1)
-    p = document.add_paragraph('This section presents the generated KPIs - ')
-    p.add_run('typical earliest arrival times, latest departure times, and highest occupant count').bold = True
-    p.add_run(' which are broken down by floor and determined sparately for weekdays and weekends. Typical earliest arrival times \
-are determined at the hour whereby the 75th percentile occupant count exceeds '+r'10%'+' of the maximum recorded count per floor. Similiarily, typical latest \
-departure times are determined whereby the 75th percentile occupant count dips below '+r'10%'+' of the maximum recorded count per floor. The highest occupant \
-is taken as the highest recorded occupant count at the 75th percentile.')
+        #Visualization heading and description - Building-level occupant count
+        document.add_heading('Visuals - Building-level occupant count', level=1)
+        p = document.add_paragraph('This set of visuals plots hourly building-level occupant count profiles for weekdays (to the left) and \
+    weekends (to the right) separately. The profiles are shown as the 25th, 50th (median), and 75th percentile. The 25th percentile represents \
+    the lower range of typical occupancy and the 75th represents the higher range. The second set of visualizations are \
+    occupant count profiles taken at the 75th percentile and broken down by floor.')
 
-    document.add_page_break()
+        #Add visualizations
+        document.add_picture(input_path + r'\percentile_occ.png', width=Inches(5.75))
 
-    #Add tables with summary tables
-    table_labels = ['Floor',
-                    'Weekday earliest arrival time (hours after midnight)',
-                    'Weekday latest departure time (hours after midnight)',
-                    'Weekday highest occupant count',
-                    'Weekend earliest arrival time (hours after midnight)',
-                    'Weekend latest departure time (hours after midnight)',
-                    'Weekend highest occupant count']
+        #Visualization heading and description - Floor-level occupant count
+        document.add_heading('Visuals - Floor-level occupant count', level=1)
+        p = document.add_paragraph('This set of visuals plots hourly floor-level occupant count profiles for weekdays (to the left) and \
+    weekends (to the right) separately. The profiles are broken down by floor and are shown as the 75th, which is the higher range of typical occupancy.')
 
-    p = document.add_heading('Earliest arrival times, latest departure times, and highest occupant count',level=2)
-    t = document.add_table(kpis.shape[0]+1, kpis.shape[1])
-    
-    for j in range(kpis.shape[-1]): # add the header rows.
-        t.cell(0,j).text = table_labels[j]
-    
-    for i in range(kpis.shape[0]): # add the rest of the data frame
-        for j in range(kpis.shape[-1]):
-            t.cell(i+1,j).text = str(kpis.values[i,j])
+        #Add visualizations
+        document.add_picture(input_path + r'\floor_level_occ.png', width=Inches(5.75))
+
+        #KPIs heading and description
+        document.add_heading('Key performance Indicators', level=1)
+        p = document.add_paragraph('This section presents the generated KPIs - ')
+        p.add_run('typical earliest arrival times, latest departure times, and highest occupant count').bold = True
+        p.add_run(' which are broken down by floor and determined sparately for weekdays and weekends. The typical earliest arrival time \
+    is the hour when the occupant count exceeds '+r'10%'+' of the maximum recorded count per floor. Similiarily, the typical latest \
+    departure time is the hours when occupant count dips below '+r'10%'+' of the maximum recorded count per floor. The highest occupant count \
+    is taken as the highest recorded occupant count. Note all these calculations are determined at the 75th percentile, meaning the higher range \
+    of typical occupancy.')
+
+        document.add_page_break()
+
+        #Add tables with summary tables
+        table_labels = ['Floor',
+                        'Weekday earliest arrival time (hours after midnight)',
+                        'Weekday latest departure time (hours after midnight)',
+                        'Weekday highest occupant count',
+                        'Weekend earliest arrival time (hours after midnight)',
+                        'Weekend latest departure time (hours after midnight)',
+                        'Weekend highest occupant count']
+
+        p = document.add_heading('Earliest arrival times, latest departure times, and highest occupant count',level=2)
+        t = document.add_table(kpis.shape[0]+1, kpis.shape[1])
         
+        for j in range(kpis.shape[-1]): # add the header rows.
+            t.cell(0,j).text = table_labels[j]
+        
+        for i in range(kpis.shape[0]): # add the rest of the data frame
+            for j in range(kpis.shape[-1]):
+                t.cell(i+1,j).text = str(kpis.values[i,j])
+        
+        t.style = 'Colorful List'
 
-    #Save document in reports folder
-    document.save(output_path + r'\occupancy_report.docx')
-    print('Report successfully generated!')
+        #Save document in reports folder
+        document.save(output_path + r'\occupancy_wifi_report.docx')
+        convert(output_path + r'\occupancy_wifi_report.docx', output_path + r'\occupancy_wifi_report.pdf')
+        print('Report successfully generated!')
 
-    return
+        return
+    
+    else:
+
+        print('Generating report for occupancy function with motion-detection data...')
+
+        path = os.getcwd() #Get current directory
+        output_path = path + r'\reports\6-occupancy' #Specify the output path for report
+        input_path = path + r'\outputs\6-occupancy' #Specify the input path for report
+
+        #Extract KPIs excel sheet
+        kpis = pd.read_excel(input_path + r'\motion_detection_kpis.xlsx',sheet_name='KPIs',keep_default_na=False)
+        kpis.drop(kpis.columns[0],axis=1,inplace=True)
+
+        #Generate Word document
+        document = Document()
+
+        #Report title
+        document.add_heading('Occupancy (Motion-detection) - Analysis Report', 0)
+
+        #Introductory paragraph
+        p = document.add_paragraph('The occupancy function determines the typical ')
+        p.add_run('earliest arrival time, latest arrival time, latest departure time,').bold = True
+        p.add_run(' and ')
+        p.add_run('longest break duration').bold = True
+        p.add_run(' for weekdays ONLY. This function can be used to inform ventilation schedules which can minimize \
+    excessive ventilation during unoccupied hours, or even serve as a bssis for an occupant-driven demand controlled ventilation scheme. \
+    Visuals plot building-level and floor-level occupant count profiles.')
+
+        #KPIs heading and description
+        document.add_heading('Key performance Indicators', level=1)
+        p = document.add_paragraph('This section presents the generated KPIs - ')
+        p.add_run('typical earliest arrival time, latest arrival time, latest departure time, and longest break duration').bold = True
+        p.add_run(' for weekdays ONLY.')
+
+        #Add tables with summary tables
+        table_labels = ['Earlist arrival time',
+                        'Latest arrival time',
+                        'Latest departure time',
+                        'Longest break duration (hours)'
+                        ]
+
+        t = document.add_table(kpis.shape[0]+1, kpis.shape[1])
+        
+        for j in range(kpis.shape[-1]): # add the header rows.
+            t.cell(0,j).text = table_labels[j]
+        
+        for i in range(kpis.shape[0]): # add the rest of the data frame
+            for j in range(kpis.shape[-1]):
+                t.cell(i+1,j).text = str(kpis.values[i,j])
+        
+        t.style = 'Colorful List'
+
+        #Save document in reports folder
+        document.save(output_path + r'\occupancy_motion_report.docx')
+        convert(output_path + r'\occupancy_motion_report.docx', output_path + r'\occupancy_motion_report.pdf')
+        print('Report successfully generated!')
+
+        return
 
 #------------------------------------------------------GENERATE COMPLAINTS REPORT-------------------------------------------------
 def complaints():
@@ -415,47 +560,48 @@ def complaints():
     #Extract KPIs excel sheet
     kpis = pd.read_excel(input_path + r'\complaints_freq.xlsx',sheet_name='Daily frequency of complaints')
     kpis.drop(kpis.columns[0],axis=1,inplace=True)
+    kpis.iloc[:,1:] = kpis.iloc[:,1:].astype(float).round(3)
 
     #Generate Word document
     document = Document()
 
     #Report title
-    document.add_heading('Occupancy - Analysis Report', 0)
+    document.add_heading('Complaint Analytics - Analysis Report', 0)
 
     #Introductory paragraph
-    p = document.add_paragraph('The occupant complaints function inputs occupant complaints logs and weather data and determines the ')
-    p.add_run('daily frequency of hot/cold-related occupant complaints.').bold = True
-    p.add_run(' Visualizations are generated which depict the distribution of complaints by month and by the period \
-of the day by which the complaint was registered, the relationship of hot/cold complaints to indoor and outdoor \
-air temperature, and the predicted proportion of the cold/hot complaints based on time of day, day of the week, \
-and outdoor air temperature')
+    p = document.add_paragraph('The occupant complaints function determines the ')
+    p.add_run('daily frequency of hot/cold-related occupant complaints. ').bold = True
+    p.add_run('This function can be used to assess the effects of temperature setpoint or \
+schedule adjustments on building occupants. The visuals depict the distribution of complaints by month and by the period \
+of the day, the relationship between the complaints and indoor and outdoor air temperature, and the predicted proportion \
+of the complaints based on time of day, day of the week, and outdoor air temperature. More information is available at the \
+respective sections.')
 
     #First visualization heading and description
-    document.add_heading('Occupant complaints breakdown', level=1)
-    p = document.add_paragraph('The first set of visualizations categorize the complaints by the type of complaint \
-(hot or cold related), and quanitify the number of complaints by the month and period of the day the complaint was \
+    document.add_heading('Visuals - Occupant complaints breakdown', level=1)
+    p = document.add_paragraph('This set of visuals categorizes the complaints by the type of complaint \
+(hot or cold related), and counts the number of complaints by the month and period of the day the complaint was \
 registered.')
 
     #Add first visualizations
     document.add_picture(input_path + r'\complaints_breakdown.png', width=Inches(5.75))
 
     #Second visualization heading and description
-    document.add_heading('Occupant complaints with indoor/outdoor air temperature', level=1)
-    p = document.add_paragraph('The second visualization depicts the relationship between a hot/cold complaint \
+    document.add_heading('Visuals - Indoor and outdoor air temperature', level=1)
+    p = document.add_paragraph('This visual plots the relationship between a hot/cold complaint \
 and the indoor and outdoor air temperature at the time the complaint was registered.')
 
     #Add second visualizations
     document.add_picture(input_path + r'\complaint_scatter.png', width=Inches(5.75))
 
     #Third visualization heading and description
-    document.add_heading('Predicted proportion of complaints', level=1)
-    p = document.add_paragraph("The third visualization predicts the proportion of complaints that would be made \
-with respect to certain conditions in time of day, day of the week, and outdoor air temperatures. The decision tree \
-diagram can be interpreted whereby boxes branching to the left represent the predicted proportion of complaints when \
+    document.add_heading('Visuals - Predicted proportion of complaints', level=1)
+    p = document.add_paragraph("This visual predicts the proportion of complaints that would be made \
+with respect to certain conditions. The boxes which branch to the left represent the predicted proportion of complaints when \
 the condition in the preceding box is satisfied. For example, if a box with the condition, 'Hour of the day <= 10' \
-has a left node with "+r"40%"+" and a right node with "+r"60%"+", it is predicted that "+r"40%"+" of all complaints \
-made will occur before 10 am. The condition is displayed at the top of the box and the predicted \
-proportion of displayed at the center of each box between the 0.0s.")
+has a left branch with "+r"40%"+" and a right branch with "+r"60%"+", it is predicted that "+r"40%"+" of all complaints \
+made will occur before 10 am. The condition is displayed at the top of the box, and the predicted \
+proportion is displayed at the center of each box between the 0.0s.")
 
     #Add third visualizations
     document.add_picture(input_path + r'\decision_tree.png', width=Inches(5.75))
@@ -464,7 +610,8 @@ proportion of displayed at the center of each box between the 0.0s.")
     document.add_heading('Key performance Indicators', level=1)
     p = document.add_paragraph('This section presents the generated KPIs - ')
     p.add_run('daily frequency of hot and cold complaints in the heating and cooling season.').bold = True
-    p.add_run(' Higher frequencies indicate a higher rate of occurence of a type of complaint for the particular season.')
+    p.add_run(' The values represent the number of complaints made per day. Higher frequencies indicate a higher \
+rate of occurence of a type of complaint for the particular season.')
 
     table_labels = ['Type of complaint',
                     'Daily frequency for heating season (complaints per day)',
@@ -479,10 +626,12 @@ proportion of displayed at the center of each box between the 0.0s.")
     for i in range(kpis.shape[0]): # add the rest of the data frame
         for j in range(kpis.shape[-1]):
             t.cell(i+1,j).text = str(kpis.values[i,j])
-        
+    
+    t.style = 'Colorful List'
 
     #Save document in reports folder
     document.save(output_path + r'\complaint_report.docx')
+    convert(output_path + r'\complaint_report.docx', output_path + r'\complaint_report.pdf')
     print('Report successfully generated!')
 
     return

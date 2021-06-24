@@ -209,7 +209,7 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path,gen_num,pop_size):
         #Plot first subplot of f2a_ahu_
         fig, ax = plt.subplots(2,figsize=(15,12))
         ax[0].set_xlabel(r'Outdoor air temperature '+r'$(^{0}C)$', fontsize=24)
-        ax[0].set_ylabel(r'Indoor air temperature '+r'$(^{0}C)$', fontsize=24)
+        ax[0].set_ylabel(r'Air temperature '+r'$(^{0}C)$', fontsize=24)
         ax[0].set_xlim(-25,35)
         ax[0].set_ylim(10,30)
         ax[0].set_xticks(np.arange(-25,36,5))
@@ -253,7 +253,7 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path,gen_num,pop_size):
 
         #Plot second subplot f2a_ahu_
         ax[1].set_xlabel(r'Outdoor air temperature '+r'$(^{0}C)$', fontsize=24)
-        ax[1].set_ylabel('Damper position/state (%)', fontsize=24)
+        ax[1].set_ylabel('Damper/Valve position (%)', fontsize=24)
         ax[1].set_xlim(-25,35)
         ax[1].set_ylim(0,100)
         ax[1].set_xticks(np.arange(-25,36,5))
@@ -300,7 +300,7 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path,gen_num,pop_size):
         ax[1].legend(ncol=4,loc='lower center',prop={"size":25},bbox_to_anchor=(0.5,-0.4))
 
         plt.tight_layout()
-        fig.savefig(output_path + r'\f2a_ahu_' + str(ahu_num+1) + '.png',dpi=600)
+        fig.savefig(output_path + r'\f2a_ahu_' + str(ahu_num+1) + '.png',dpi=900)
 
         #MULTIPLE LINEAR REGRESSION to extract ahuMdl
 
@@ -399,7 +399,7 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path,gen_num,pop_size):
             clusterCenter = clusterCenter.append((round(clusterFrame[eva==j].median(axis=0))), ignore_index=True)
             clusterSize.append(round(sum(eva==j)/len(eva),2)*100)
         
-        clusterCenter['size'] = clusterSize # Merge clusterSize with clusterCenter
+        clusterCenter['size'] = clusterSize # Merge clusterSize with clusterCenter change
         clusterCenter = clusterCenter.sort_values(by=clusterCenter.columns[5]).astype('int64') #sort by ascending tOa
 
         print('Creating simplified AHU diagram of clusters...')
