@@ -70,16 +70,20 @@ def occupancy(floor,output_path):
                 kpi.iloc[j-1,0] = np.nan # no arrivals for Wkdy
                 kpi.iloc[j-1,1] = np.nan # no departures for Wkdy
         else:
-                kpi.iloc[j-1,0] = max((np.where(occ_wkdy.iloc[:,2]/occ_wkdy.iloc[:,2].max() > 0.1)[0][0]-1),0) # tArr_Wkdy
-                kpi.iloc[j-1,1] = (np.where(occ_wkdy.iloc[:,2]/occ_wkdy.iloc[:,2].max() > 0.1)[0][-1]-1) # tDpt_wkdy
+                tArr_Wkdy = max((np.where(occ_wkdy.iloc[:,2]/occ_wkdy.iloc[:,2].max() > 0.1)[0][0]-1),0) # tArr_Wkdy
+                kpi.iloc[j-1,0] = '{0:02.0f}:{1:02.0f}'.format(*divmod(float(tArr_Wkdy) * 60, 60))
+                tDpt_wkdy = (np.where(occ_wkdy.iloc[:,2]/occ_wkdy.iloc[:,2].max() > 0.1)[0][-1]-1) # tDpt_wkdy
+                kpi.iloc[j-1,1] = '{0:02.0f}:{1:02.0f}'.format(*divmod(float(tDpt_wkdy) * 60, 60))
         kpi.iloc[j-1,2] = (occ_wkdy.iloc[:,2].max()) #sOcc_wkdy
 
         if occ_wknd.iloc[:,2].max() == 0:
                 kpi.iloc[j-1,3] = np.nan # No arrivals for Wknd
                 kpi.iloc[j-1,4] = np.nan # No departure for Wknd
         else:
-                kpi.iloc[j-1,3] = max((np.where(occ_wknd.iloc[:,2]/occ_wknd.iloc[:,2].max() > 0.1)[0][0]-1),0) # tArr_wknd
-                kpi.iloc[j-1,4] = (np.where(occ_wknd.iloc[:,2]/occ_wknd.iloc[:,2].max() > 0.1)[0][-1]-1) # tDpt_wknd
+                tArr_wknd = max((np.where(occ_wknd.iloc[:,2]/occ_wknd.iloc[:,2].max() > 0.1)[0][0]-1),0) # tArr_wknd
+                kpi.iloc[j-1,3] = '{0:02.0f}:{1:02.0f}'.format(*divmod(float(tArr_wknd) * 60, 60))
+                tDpt_wknd = (np.where(occ_wknd.iloc[:,2]/occ_wknd.iloc[:,2].max() > 0.1)[0][-1]-1) # tDpt_wknd
+                kpi.iloc[j-1,4] = '{0:02.0f}:{1:02.0f}'.format(*divmod(float(tDpt_wknd) * 60, 60))
         kpi.iloc[j-1,5] = (occ_wknd.iloc[:,2].max()) # sOcc_wknd
 
     #----Building-level quantile plots----#

@@ -465,12 +465,12 @@ def occupancy(which_data):
 
         #Add tables with summary tables
         table_labels = ['Floor',
-                        'Weekday earliest arrival time (hours after midnight)',
-                        'Weekday latest departure time (hours after midnight)',
-                        'Weekday highest occupant count',
-                        'Weekend earliest arrival time (hours after midnight)',
-                        'Weekend latest departure time (hours after midnight)',
-                        'Weekend highest occupant count']
+                        'WEEKDAY earliest arrival time',
+                        'WEEKDAY latest departure time',
+                        'WEEKDAY highest occupant count',
+                        'WEEKEND earliest arrival time',
+                        'WEEKEND latest departure time',
+                        'WEEKEND highest occupant count']
 
         p = document.add_heading('Earliest arrival times, latest departure times, and highest occupant count',level=2)
         t = document.add_table(kpis.shape[0]+1, kpis.shape[1])
