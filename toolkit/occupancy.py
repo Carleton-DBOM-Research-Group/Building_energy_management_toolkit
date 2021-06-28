@@ -300,7 +300,7 @@ def occupancyMotion(motion_df):
 def execute_function(which_data):
         #Specify output path
         path = os.getcwd()
-        output_path = output_path = path + r'\outputs\6-occupancy'
+        output_path = output_path = path + r'\toolkit\outputs\6-occupancy'
 
         if which_data == 1:
 

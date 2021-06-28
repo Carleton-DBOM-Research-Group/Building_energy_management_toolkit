@@ -197,7 +197,7 @@ def complaintsAnalytics(cmms,weather,tOa,time_tOa,zone,zone_time,area,bldg_id,ou
 def execute_function():
     #Specify current directory and ask user for file directories
     path = os.getcwd()
-    output_path = path + r'\outputs\7-complaintsAnalytics' #Specify output directory for KPIs and visualizations
+    output_path = path + r'\toolkit\outputs\7-complaintsAnalytics' #Specify output directory for KPIs and visualizations
 
     #Ask user for CMMS data file
     tk.messagebox.showinfo(title='Complaints Analytics',message='Please select the FILE (must be in CSV format) containing the CMMS data.')

@@ -465,7 +465,7 @@ def searchZoneTags (zoneIdentifier,tInTagInc,tInTagExc,qFloTagInc,qFloTagExc,qFl
 def execute_function():
     #Specify current and input/output directories
     path = os.getcwd() #Get current directory
-    output_path = path + r'\outputs\1-metadata' #Specify KPI/visualization output directory
+    output_path = path + r'\toolkit\outputs\1-metadata' #Specify KPI/visualization output directory
     tk.messagebox.showinfo(title='Metadata',message='Please select the file (must be in CSV format) containing the metadata labels.')
     metadata_file_path = askopenfilename(title='Select metadata FILE (CSV)') #Ask user for metadata data file
     metadata_file_path = metadata_file_path.replace('/','\\') #Replace backward slashes with forward slashes in metadata data input directory

@@ -18,7 +18,7 @@ def execute_function():
 
   #Specify current directory and input/output paths
   path = os.getcwd() #Get current directory
-  output_path = path + r'\outputs\2-energyBaseline' #Specify output directory for KPIs and visualizations
+  output_path = path + r'\toolkit\outputs\2-energyBaseline' #Specify output directory for KPIs and visualizations
 
   tk.messagebox.showinfo(title='Energy Baseline',message='Please select the file (must be in CSV format) containing the energy meter data.')
   energy_file_path = askopenfilename(title='Select energy meter data file (CSV)') #Ask user for energy data file

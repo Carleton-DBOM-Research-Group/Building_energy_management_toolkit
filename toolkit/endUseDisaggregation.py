@@ -26,7 +26,7 @@ import time
 def execute_function():
 
     path = os.getcwd() #Get current directory
-    output_path = path + r'\outputs\5-endUseDisaggregation' #Specify output directory for KPIs and visualizations
+    output_path = path + r'\toolkit\outputs\5-endUseDisaggregation' #Specify output directory for KPIs and visualizations
 
     #Ask user for energy data file
     tk.messagebox.showinfo(title='End-use Load Disaggregation',message='Please select the FILE (must be in CSV format) containing the energy meter data.')

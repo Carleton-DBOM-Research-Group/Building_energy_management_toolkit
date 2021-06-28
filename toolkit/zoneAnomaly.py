@@ -208,7 +208,7 @@ def zoneAnomaly (tIn,qFlo,qFloSp,sRad,output_path):
 def execute_function ():
     #Specify current directory and ask user for zone file directory
     path = os.getcwd() #Get current directory
-    output_path = path + r'\outputs\4-zoneAnomaly'
+    output_path = path + r'\toolkit\outputs\4-zoneAnomaly'
 
     #Ask user for zone-level HVAC network data input directory
     tk.messagebox.showinfo(title='Zone Anomaly',message='Please select the file directory (FOLDER) containing the zone-level HVAC controls network data.\n\nThe directory must contain at least six (6) files, representing 6 zones, in CSV format.')

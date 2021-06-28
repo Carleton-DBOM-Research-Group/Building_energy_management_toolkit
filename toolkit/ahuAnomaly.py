@@ -464,7 +464,7 @@ def execute_function():
 
     #Specify current directory and input/output paths
     path = os.getcwd() #Get current directory
-    output_path = path + r'\outputs\3-ahuAnomaly' #Specify output directory for KPIs and visualizations
+    output_path = path + r'\toolkit\outputs\3-ahuAnomaly' #Specify output directory for KPIs and visualizations
 
     #Ask user for AHU-level HVAC network data input directory
     tk.messagebox.showinfo(title='AHU Anomaly',message='Please select the file directory (FOLDER) containing the AHU-level HVAC controls network data.\n\nThe directory must contain at least one (1) file in CSV format.')

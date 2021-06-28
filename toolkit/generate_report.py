@@ -10,8 +10,8 @@ def energyBaseline():
     print('Generating report for Baseline Energy function...')
 
     path = os.getcwd() #Get current directory
-    output_path = path + r'\reports\2-energyBaseline' #Specify the output path for report
-    input_path = path + r'\outputs\2-energyBaseline'
+    output_path = path + r'\toolkit\reports\2-energyBaseline' #Specify the output path for report
+    input_path = path + r'\toolkit\outputs\2-energyBaseline'
 
     document = Document()
 
@@ -84,8 +84,8 @@ def ahuAnomaly():
     print('Generating report for AHU anomaly detection function...')
 
     path = os.getcwd() #Get current directory
-    output_path = path + r'\reports\3-ahuAnomaly' #Specify the output path for report
-    input_path = path + r'\outputs\3-ahuAnomaly'
+    output_path = path + r'\toolkit\reports\3-ahuAnomaly' #Specify the output path for report
+    input_path = path + r'\toolkit\outputs\3-ahuAnomaly'
 
     #Extract KPIs excel sheet
     faults_df = pd.read_excel(input_path + r'\ahu_anomaly_summary.xlsx',sheet_name='faults')
@@ -217,8 +217,8 @@ def zoneAnomaly():
     print('Generating report for zone anomaly detection function...')
 
     path = os.getcwd() #Get current directory
-    output_path = path + r'\reports\4-zoneAnomaly' #Specify the output path for report
-    input_path = path + r'\outputs\4-zoneAnomaly' #Specify the input path for report
+    output_path = path + r'\toolkit\reports\4-zoneAnomaly' #Specify the output path for report
+    input_path = path + r'\toolkit\outputs\4-zoneAnomaly' #Specify the input path for report
 
     #Extract KPIs excel sheet
     kpis_heating = pd.read_excel(input_path + r'\zone_anomaly_summary.xlsx',sheet_name='Heating season')
@@ -332,8 +332,8 @@ def endUseDisaggregation():
     print('Generating report for end-uses disaggregation function...')
 
     path = os.getcwd() #Get current directory
-    output_path = path + r'\reports\5-endUseDisaggregation' #Specify the output path for report
-    input_path = path + r'\outputs\5-endUseDisaggregation' #Specify the input path for report
+    output_path = path + r'\toolkit\reports\5-endUseDisaggregation' #Specify the output path for report
+    input_path = path + r'\toolkit\outputs\5-endUseDisaggregation' #Specify the input path for report
 
     #Extract KPIs excel sheet
     kpis_htg = pd.read_excel(input_path + r'\endUseDisagg_summary.xlsx',sheet_name='Heating')
@@ -412,8 +412,8 @@ def occupancy(which_data):
         print('Generating report for occupancy function with Wi-Fi device count data...')
 
         path = os.getcwd() #Get current directory
-        output_path = path + r'\reports\6-occupancy' #Specify the output path for report
-        input_path = path + r'\outputs\6-occupancy' #Specify the input path for report
+        output_path = path + r'\toolkit\reports\6-occupancy' #Specify the output path for report
+        input_path = path + r'\toolkit\outputs\6-occupancy' #Specify the input path for report
 
         #Extract KPIs excel sheet
         kpis = pd.read_excel(input_path + r'\arrive_depart_maxOcc.xlsx',sheet_name='KPIs',keep_default_na=False)
@@ -496,8 +496,8 @@ def occupancy(which_data):
         print('Generating report for occupancy function with motion-detection data...')
 
         path = os.getcwd() #Get current directory
-        output_path = path + r'\reports\6-occupancy' #Specify the output path for report
-        input_path = path + r'\outputs\6-occupancy' #Specify the input path for report
+        output_path = path + r'\toolkit\reports\6-occupancy' #Specify the output path for report
+        input_path = path + r'\toolkit\outputs\6-occupancy' #Specify the input path for report
 
         #Extract KPIs excel sheet
         kpis = pd.read_excel(input_path + r'\motion_detection_kpis.xlsx',sheet_name='KPIs',keep_default_na=False)
@@ -554,8 +554,8 @@ def complaints():
     print('Generating report for occupant complaints analytics function...')
 
     path = os.getcwd() #Get current directory
-    output_path = path + r'\reports\7-complaintsAnalytics' #Specify the output path for report
-    input_path = path + r'\outputs\7-complaintsAnalytics' #Specify the input path for report
+    output_path = path + r'\toolkit\reports\7-complaintsAnalytics' #Specify the output path for report
+    input_path = path + r'\toolkit\outputs\7-complaintsAnalytics' #Specify the input path for report
 
     #Extract KPIs excel sheet
     kpis = pd.read_excel(input_path + r'\complaints_freq.xlsx',sheet_name='Daily frequency of complaints')
