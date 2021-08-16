@@ -25,16 +25,20 @@ def zoneAnomaly (tIn,qFlo,qFloSp,sRad,output_path):
     tInWntr = tIn[mask].mean(axis=0)
     qFloWntr = qFlo[mask]
     qFloSpWntr = qFloSp[mask]
-    qFloWntrErr = ((qFloWntr-qFloSpWntr)/qFloSpWntr).mean(axis=0)
-    sRadWntr = sRad[mask].mean(axis=0)
+    sRadWntr_mean = sRad[mask].mean(axis=0) #Take the mean reheat/radiant heat valve per zone
+    
+    qFloWntrErr = ((qFloWntr-qFloSpWntr)/qFloSpWntr) #Calculate airflow control error
+    qFloWntrErr = qFloWntrErr.replace(np.nan, 0) #If NaN value, replace with zero (NaNs are a result of (qFloWntr-qFloSpWntr)/qFloSpWntr == 0/0, and thus is no airflow error)
+    qFloWntrErr = qFloWntrErr.replace([np.inf, -np.inf], np.nan).dropna(axis=0) #Remove inf/-inf values (This is a result of qFloSpWntr == 0, and thus is inconclusive)
+    qFloWntrErr_mean = qFloWntrErr.mean(axis=0) #Take the mean airflow control error per zone
 
     tInErrNrm = tInWntr / np.linalg.norm(tInWntr)
-    qFloErrNrm = qFloWntrErr / np.linalg.norm(qFloWntrErr)
+    qFloErrNrm = qFloWntrErr_mean / np.linalg.norm(qFloWntrErr_mean)
     
-    if sRadWntr.max() > 1:
-        sRadNrm = sRadWntr/100
+    if sRadWntr_mean.max() > 1:
+        sRadNrm = sRadWntr_mean/100
     else:
-        sRadNrm = sRadWntr
+        sRadNrm = sRadWntr_mean
 
     frameWntr = pd.concat([tInErrNrm,qFloErrNrm,sRadNrm],axis=1, join='inner')
     
@@ -98,8 +102,8 @@ def zoneAnomaly (tIn,qFlo,qFloSp,sRad,output_path):
     for i in range(0,optimalK): #Extract zones identified in clustering solution per cluster and plot 
         
         x = tInWntr.to_frame().T.loc[:, eva==i].stack().mean() #Temp Bias
-        y = (qFloWntrErr.to_frame().T.loc[:, eva==i]*100).stack().mean() #Flow Bias
-        z = sRadWntr.to_frame().T.loc[:, eva==i].stack().mean() #Mean rad state
+        y = (qFloWntrErr_mean.to_frame().T.loc[:, eva==i]*100).stack().mean() #Flow Bias
+        z = sRadWntr_mean.to_frame().T.loc[:, eva==i].stack().mean() #Mean rad state
         centerClust = centerClust.append({'Zones':sum(eva==i),'Mean t_in':x,'Mean q_Flo Error':y,'Mean s_Rad':z},ignore_index=True) #cluster center
         if ((x>15) & (x<30) & (y>-100) &(y<100)):
             t = plt.text(x, y, 'C'+str(i+1), fontsize=25, color = 'w', ha = 'center', va= 'center')
@@ -120,10 +124,14 @@ def zoneAnomaly (tIn,qFlo,qFloSp,sRad,output_path):
     tInSmr = tIn[mask].mean(axis=0)
     qFloSmr = qFlo[mask]
     qFloSpSmr = qFloSp[mask]
-    qFloSmrErr = ((qFloSmr-qFloSpSmr)/qFloSpSmr).mean(axis=0)
+
+    qFloSmrErr = ((qFloSmr-qFloSpSmr)/qFloSpSmr) #Calculate airflow control error
+    qFloSmrErr = qFloSmrErr.replace(np.nan, 0) #If NaN value, replace with zero (NaNs are a result of (qFloSmr-qFloSpSmr)/qFloSpSmr == 0/0, and thus is no airflow error)
+    qFloSmrErr = qFloSmrErr.replace([np.inf, -np.inf], np.nan).dropna(axis=0) #Remove inf/-inf values (This is a result of qFloSpSmr == 0, and thus is inconclusive)
+    qFloSmrErr_mean = qFloSmrErr.mean(axis=0) #Take the mean airflow control error per zone
 
     tInErrNrm = tInSmr / np.linalg.norm(tInSmr)
-    qFloErrNrm = qFloSmrErr / np.linalg.norm(qFloSmrErr)
+    qFloErrNrm = qFloSmrErr_mean / np.linalg.norm(qFloSmrErr_mean)
 
     frameSmr = pd.concat([tInErrNrm,qFloErrNrm],axis=1)
     
@@ -188,7 +196,7 @@ def zoneAnomaly (tIn,qFlo,qFloSp,sRad,output_path):
     for i in range(0,optimalK): #Extract zones identified in clustering solution per cluster and plot 
         
         x = tInSmr.to_frame().T.loc[:, eva==i].stack().mean() #Temp Bias
-        y = (qFloSmrErr.to_frame().T.loc[:, eva==i]*100).stack().mean() #Flow Bias
+        y = (qFloSmrErr_mean.to_frame().T.loc[:, eva==i]*100).stack().mean() #Flow Bias
         centerClust = centerClust.append({'Zones':sum(eva==i),'Mean t_in':x,'Mean q_Flo Error':y},ignore_index=True) #cluster center
         if ((x>15) & (x<30) & (y>-100) &(y<100)):
             t = plt.text(x, y, 'C'+str(i+1), fontsize=25, color = 'w', ha = 'center', va= 'center')
