@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+
+    <!-- Favicons -->
+<link rel="apple-touch-icon" href="/docs/5.0/assets/img/favicons/apple-touch-icon.png" sizes="180x180">
+<link rel="icon" href="/docs/5.0/assets/img/favicons/favicon-32x32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="/docs/5.0/assets/img/favicons/favicon-16x16.png" sizes="16x16" type="image/png">
+<link rel="manifest" href="/docs/5.0/assets/img/favicons/manifest.json">
+<link rel="mask-icon" href="/docs/5.0/assets/img/favicons/safari-pinned-tab.svg" color="#7952b3">
+<link rel="icon" href="/docs/5.0/assets/img/favicons/favicon.ico">
+<meta name="theme-color" content="#7952b3">
+
+    <style>
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+    </style>
+
+    
+    <!-- Custom styles for this template -->
+    <link href="{{ url_for('static',filename='styles/functions.css') }}" rel="stylesheet" type="text/css">
+  </head>
+  <body>
+    
+<!--Main Nav bar-->
+   <header class="p-3 bg-dark text-white">
+    <div class="container">
+      <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-end">
+        <a href="index.html" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+          <svg xmlns="http://www.w3.org/2000/svg" width="40" height="32" fill="currentColor" class="bi bi-building" viewBox="0 0 18 18">
+            <path fill-rule="evenodd" d="M14.763.075A.5.5 0 0 1 15 .5v15a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5V14h-1v1.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V10a.5.5 0 0 1 .342-.474L6 7.64V4.5a.5.5 0 0 1 .276-.447l8-4a.5.5 0 0 1 .487.022zM6 8.694 1 10.36V15h5V8.694zM7 15h2v-1.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5V15h2V1.309l-7 3.5V15z"/>
+            <path d="M2 11h1v1H2v-1zm2 0h1v1H4v-1zm-2 2h1v1H2v-1zm2 0h1v1H4v-1zm4-4h1v1H8V9zm2 0h1v1h-1V9zm-2 2h1v1H8v-1zm2 0h1v1h-1v-1zm2-2h1v1h-1V9zm0 2h1v1h-1v-1zM8 7h1v1H8V7zm2 0h1v1h-1V7zm2 0h1v1h-1V7zM8 5h1v1H8V5zm2 0h1v1h-1V5zm2 0h1v1h-1V5zm0-2h1v1h-1V3z"/>
+          </svg>
+          <span class="fs-4"> Building Energy Management Toolkit</span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="40" height="32" fill="currentColor" class="bi bi-tools" viewBox="0 0 18 18">
+            <path d="M1 0 0 1l2.2 3.081a1 1 0 0 0 .815.419h.07a1 1 0 0 1 .708.293l2.675 2.675-2.617 2.654A3.003 3.003 0 0 0 0 13a3 3 0 1 0 5.878-.851l2.654-2.617.968.968-.305.914a1 1 0 0 0 .242 1.023l3.356 3.356a1 1 0 0 0 1.414 0l1.586-1.586a1 1 0 0 0 0-1.414l-3.356-3.356a1 1 0 0 0-1.023-.242L10.5 9.5l-.96-.96 2.68-2.643A3.005 3.005 0 0 0 16 3c0-.269-.035-.53-.102-.777l-2.14 2.141L12 4l-.364-1.757L13.777.102a3 3 0 0 0-3.675 3.68L7.462 6.46 4.793 3.793a1 1 0 0 1-.293-.707v-.071a1 1 0 0 0-.419-.814L1 0zm9.646 10.646a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708zM3 11l.471.242.529.026.287.445.445.287.026.529L5 13l-.242.471-.026.529-.445.287-.287.445-.529.026L3 15l-.471-.242L2 14.732l-.287-.445L1.268 14l-.026-.529L1 13l.242-.471.026-.529.445-.287.287-.445.529-.026L3 11z"/>
+          </svg>
+        </a>
+
+        <ul class="nav nav-pills">
+          <li><a href="/home" class="nav-link px-2 text-white">Home</a></li>
+          <li><a href="/functions" class="nav-link active px-2 text-white">Functions Library</a></li>
+          <li><a href="/contributors" class="nav-link px-2 text-white">Contributors</a></li>
+          <li><a href="https://github.com/Carleton-DBOM-Research-Group/Building_energy_management_toolkit.git" title="GitHub" class="nav-link px-2 text-white" target="_blank">Source</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+
+ <!-- Sidebar-->
+ <div class="container-xxl my-md-4">
+  <aside class="flex-shrink-0 p-0 bg-white" style="width: 240px;">
+    <a href="/functions" class="d-flex align-items-center pb-3 mb-3 link-dark text-decoration-none border-bottom">
+      <span class="fs-5 fw-semibold">Functions Library</span>
+    </a>
+    <ul class="list-unstyled ps-0">
+      <li class="mb-1">
+        <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#metadata-collapse" aria-expanded="false">
+          Metadata
+        </button>
+        <div class="collapse" id="metadata-collapse">
+          <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+            <li><a href="/functions/metadata" class="link-dark rounded">Overview</a></li>
+            <li><a href="/functions/metadata/inputs" class="link-dark rounded">Inputs</a></li>
+            <li><a href="/functions/metadata/outputs" class="link-dark rounded">Outputs</a></li>
+            <li><a href="/functions/metadata/upload" class="link-dark rounded">Upload Data</a></li>
+          </ul>
+        </div>
+      </li>
+      <li class="mb-1">
+        <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#energyBaseline-collapse" aria-expanded="false">
+          Energy Baseline
+        </button>
+        <div class="collapse" id="energyBaseline-collapse">
+          <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+            <li><a href="/functions/energyBaseline" class="link-dark rounded">Overview</a></li>
+            <li><a href="/functions/energyBaseline/inputs" class="link-dark rounded">Inputs</a></li>
+            <li><a href="/functions/energyBaseline/outputs" class="link-dark rounded">Outputs</a></li>
+            <li><a href="/functions/energyBaseline/upload" class="link-dark rounded">Upload Data</a></li>
+          </ul>
+        </div>
+      </li>
+      <li class="mb-1">
+        <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#ahuAnomaly-collapse" aria-expanded="false">
+          AHU Anomaly
+        </button>
+        <div class="collapse" id="ahuAnomaly-collapse">
+          <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+            <li><a href="/functions/ahuAnomaly" class="link-dark rounded">Overview</a></li>
+            <li><a href="/functions/ahuAnomaly/inputs" class="link-dark rounded">Inputs</a></li>
+            <li><a href="/functions/ahuAnomaly/outputs" class="link-dark rounded">Outputs</a></li>
+            <li><a href="/functions/ahuAnomaly/upload" class="link-dark rounded">Upload Data</a></li>
+          </ul>
+        </div>
+      </li>
+      <li class="mb-1">
+        <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#zoneAnomaly-collapse" aria-expanded="false">
+          Zone Anomaly
+        </button>
+        <div class="collapse" id="zoneAnomaly-collapse">
+          <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+            <li><a href="/functions/zoneAnomaly" class="link-dark rounded">Overview</a></li>
+            <li><a href="/functions/zoneAnomaly/inputs" class="link-dark rounded">Inputs</a></li>
+            <li><a href="/functions/zoneAnomaly/outputs" class="link-dark rounded">Outputs</a></li>
+            <li><a href="/functions/zoneAnomaly/upload" class="link-dark rounded">Upload Data</a></li>
+          </ul>
+        </div>
+      </li>
+      <li class="mb-1">
+        <button class="btn btn-toggle align-items-center rounded collapsed fw-bold" data-bs-toggle="collapse" data-bs-target="#endUseDisaggregation-collapse" aria-expanded="true">
+          End-use Disaggregation
+        </button>
+        <div class="collapse show" id="endUseDisaggregation-collapse">
+          <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+            <li><a href="/functions/endUseDisaggregation" class="link-dark rounded">Overview</a></li>
+            <li><a href="/functions/endUseDisaggregation/inputs" class="link-dark rounded">Inputs</a></li>
+            <li><a href="/functions/endUseDisaggregation/outputs" class="link-dark rounded">Outputs</a></li>
+            <li><a href="/functions/endUseDisaggregation/upload" class="link-dark rounded fw-bold">Upload Data</a></li>
+          </ul>
+        </div>
+      </li>
+      <li class="mb-1">
+        <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#complaintAnalytics-collapse" aria-expanded="false">
+          Complaint Analytics
+        </button>
+        <div class="collapse" id="complaintAnalytics-collapse">
+          <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+            <li><a href="/functions/complaintAnalytics" class="link-dark rounded">Overview</a></li>
+            <li><a href="/functions/complaintAnalytics/inputs" class="link-dark rounded">Inputs</a></li>
+            <li><a href="/functions/complaintAnalytics/outputs" class="link-dark rounded">Outputs</a></li>
+            <li><a href="/functions/complaintAnalytics/upload" class="link-dark rounded">Upload Data</a></li>
+          </ul>
+        </div>
+      </li>
+      <li class="mb-1">
+        <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#occupancy-collapse" aria-expanded="false">
+          Occupancy
+        </button>
+        <div class="collapse" id="occupancy-collapse">
+          <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+            <li><a href="/functions/occupancy" class="link-dark rounded">Overview</a></li>
+            <li><a href="/functions/occupancy/inputs" class="link-dark rounded">Inputs</a></li>
+            <li><a href="/functions/occupancy/outputs" class="link-dark rounded">Outputs</a></li>
+            <li><a href="/functions/occupancy/upload" class="link-dark rounded">Upload Data</a></li>
+          </ul>
+        </div>
+      </li>
+      <li class="border-top my-3"></li>
+      <li class="mb-1">
+        <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#resources-collapse" aria-expanded="false">
+          Resources
+        </button>
+        <div class="collapse" id="resources-collapse">
+          <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+            <li><a href="/functions/sample-data" class="link-dark rounded">Sample Data</a></li>
+            <li><a href="/functions/data-templates" class="link-dark rounded">Data Templates</a></li>
+            <li><a href="/functions/help" class="link-dark rounded">Help</a></li>
+          </ul>
+        </div>
+      </li>
+    </ul>
+  </aside>
+
+  
+<!-- Main content -->
+  <div class="intro ps-lg-4" style="margin-left: 250px;">
+    <div class="d-md-flex flex-md-row-reverse align-items-center justify-content-between">     
+      <div class="btn-group" role="group" aria-label="button group">
+        <a class="btn btn-sm btn-outline-dark" href=https://doi.org/10.1016/j.enbuild.2020.110222 title="Disaggregation of commercial building end-uses with automation system data" target="_blank">Gunay et al. (2020)</a>
+        <a class="btn btn-sm btn-outline-dark" href=https://doi.org/10.1145/3427771.3429389 title="Virtual metering of heat supplied by hydronic perimeter heaters in variable air volume zones" target="_blank">Darwazeh et al. (2020)</a>
+      </div>        
+      <p class="h1">End-use Diaggregation</p>
+    </div>
+    <p class="lead fs-4 pb-1">The end-use disaggregation function separates bulk energy consumption into its major consituent end-uses and calculates its energy use intensities.</p>
+    <div class="d-md-flex flex-md-row align-items-center justify-content-start">     
+      <p class="h2 pb-3">Upload data</p>
+    </div>
+    <p class="fs-6">This function requires only one(1) CSV file containing energy meter data, <strong>and</strong> a minimum of one(1) CSV file containing AHU-level HVAC network trend log 
+      data, <strong>and</strong> a minimum of one(1) CSV file containing zone-level HVAC network trend log data, <strong>and</strong> a minimum of one(1) CSV file containing Wi-Fi device count data. To run the function, upload your data 
+      in the form below. For information about input data and the required format for this function, click <a href="/functions/endUseDisaggregation/inputs" class="link-blue">here</a>.
+    </p>
+    <p class="fs-6 pb-2"><strong>NOTE: This function uses multiple instances of the <u>genetic algorithm</u>, and will take a considerable amount of time to run.</strong> Reducing the specified number of generations 
+      will reduce runtime, but may produce inaccurate results.</p>
+
+    <!-- Upload data form --> 
+    <div class="card">
+      <div class="card-body">
+        <form action="/functions/endUseDisaggregation/upload/run-endUseDisaggregation" method="POST" enctype="multipart/form-data">
+          <div class="mb-3">
+            <label for="formFile" class="form-label">Upload energy meter data file (Required)</label>
+            <input class="form-control" type="file" name="energy_file[]" id="formFile" required>
+          </div>
+          <div class="mb-3">
+            <label for="formFile" class="form-label">Upload AHU-level HVAC network trend log data file(s) (Required)</label>
+            <input class="form-control" type="file" name="ahu_HVAC_files[]" id="formFileMultiple" accept=".csv" multiple required>
+          </div>
+          <div class="mb-3">
+            <label for="formFile" class="form-label">Upload zone-level HVAC network trend log data file(s) (Required)</label>
+            <input class="form-control" type="file" name="zone_HVAC_files[]" id="formFileMultiple" accept=".csv" multiple required>
+          </div>
+          <div class="mb-3">
+            <label for="formFileMultiple" class="form-label">Upload Wi-Fi device count data file(s) (Required)</label>
+            <input class="form-control" type="file" name="wifi_files[]" id="formFileMultiple" accept=".csv" multiple required>
+          </div>
+          <div class="mb-3">
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label for="inputArea" class="form-label">Gross floor area [m<sup>2</sup>] (Required)</label>
+                <input type="text" class="form-control" name="floorArea" id="inputArea" required>
+              </div>
+              <div class="col-md-6">
+                <label for="inputCoolingType" class="form-label">Cooling type (Required)</label>
+                <select id="inputCoolingType" class="form-select" name="coolingType" required>
+                  <option selected>Choose...</option>
+                  <option>Chillers (On-site)</option>
+                  <option>District (Off-site)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="col-12">
+            <button class="btn btn-primary" type="submit">Upload and Run</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <!-- Upload data form --> 
+
+
+    <!-- Footer -->
+    <footer class="pt-4 my-md-5 pt-md-5 border-top">
+      <div class="row">
+        <div class="col-12 col-md">
+          <small class="d-block mb-3 text-muted">Actively in development, an open-source project by the Data-driven Building Operation and Maintenance team within Carleton University's Building Performance Research Center.</small>
+        </div>
+        <div class="col-6 col-md">
+          <h5>Functions Library</h5>
+          <ul class="list-unstyled text-small">
+            <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Metadata</a></li>
+            <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Energy Baseline</a></li>
+            <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">AHU Anomaly</a></li>
+            <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Zone Anomaly</a></li>
+            <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">End-use Disaggregation</a></li>
+            <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Complaints Analytics</a></li>
+            <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Occupancy</a></li>
+          </ul>
+        </div>
+        <div class="col-6 col-md">
+          <h5>Resources</h5>
+          <ul class="list-unstyled text-small">
+            <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Sample Data</a></li>
+            <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Templates</a></li>
+            <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Literature</a></li>
+            <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">GitHub</a></li>
+          </ul>
+        </div>
+      </div>
+    </footer>
+    <!-- Footer -->
+
+  </div>
+  
+  
+ </div>
+
+    <!-- Optional JavaScript; choose one of the two! -->
+
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+
+    <!-- Option 2: Separate Popper and Bootstrap JS -->
+    <!--
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.min.js" integrity="sha384-Atwg2Pkwv9vp0ygtn1JAojH0nYbwNJLPhwyoVbhoPwBhjQPR5VtM2+xf0Uwh9KtT" crossorigin="anonymous"></script>
+    -->
+  </body>
+</html>

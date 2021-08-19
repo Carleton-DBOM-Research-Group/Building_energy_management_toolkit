@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+
+    <!-- Favicons -->
+<link rel="apple-touch-icon" href="/docs/5.0/assets/img/favicons/apple-touch-icon.png" sizes="180x180">
+<link rel="icon" href="/docs/5.0/assets/img/favicons/favicon-32x32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="/docs/5.0/assets/img/favicons/favicon-16x16.png" sizes="16x16" type="image/png">
+<link rel="manifest" href="/docs/5.0/assets/img/favicons/manifest.json">
+<link rel="mask-icon" href="/docs/5.0/assets/img/favicons/safari-pinned-tab.svg" color="#7952b3">
+<link rel="icon" href="/docs/5.0/assets/img/favicons/favicon.ico">
+<meta name="theme-color" content="#7952b3">
+
+    <style>
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+    </style>
+
+    
+    <!-- Custom styles for this template -->
+    <link href="{{ url_for('static',filename='styles/functions.css') }}" rel="stylesheet" type="text/css">
+  </head>
+  <body>
+    
+<!--Main Nav bar-->
+   <header class="p-3 bg-dark text-white">
+    <div class="container">
+      <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-end">
+        <a href="index.html" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+          <svg xmlns="http://www.w3.org/2000/svg" width="40" height="32" fill="currentColor" class="bi bi-building" viewBox="0 0 18 18">
+            <path fill-rule="evenodd" d="M14.763.075A.5.5 0 0 1 15 .5v15a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5V14h-1v1.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V10a.5.5 0 0 1 .342-.474L6 7.64V4.5a.5.5 0 0 1 .276-.447l8-4a.5.5 0 0 1 .487.022zM6 8.694 1 10.36V15h5V8.694zM7 15h2v-1.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5V15h2V1.309l-7 3.5V15z"/>
+            <path d="M2 11h1v1H2v-1zm2 0h1v1H4v-1zm-2 2h1v1H2v-1zm2 0h1v1H4v-1zm4-4h1v1H8V9zm2 0h1v1h-1V9zm-2 2h1v1H8v-1zm2 0h1v1h-1v-1zm2-2h1v1h-1V9zm0 2h1v1h-1v-1zM8 7h1v1H8V7zm2 0h1v1h-1V7zm2 0h1v1h-1V7zM8 5h1v1H8V5zm2 0h1v1h-1V5zm2 0h1v1h-1V5zm0-2h1v1h-1V3z"/>
+          </svg>
+          <span class="fs-4">Building Energy Management Toolkit</span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="40" height="32" fill="currentColor" class="bi bi-tools" viewBox="0 0 18 18">
+            <path d="M1 0 0 1l2.2 3.081a1 1 0 0 0 .815.419h.07a1 1 0 0 1 .708.293l2.675 2.675-2.617 2.654A3.003 3.003 0 0 0 0 13a3 3 0 1 0 5.878-.851l2.654-2.617.968.968-.305.914a1 1 0 0 0 .242 1.023l3.356 3.356a1 1 0 0 0 1.414 0l1.586-1.586a1 1 0 0 0 0-1.414l-3.356-3.356a1 1 0 0 0-1.023-.242L10.5 9.5l-.96-.96 2.68-2.643A3.005 3.005 0 0 0 16 3c0-.269-.035-.53-.102-.777l-2.14 2.141L12 4l-.364-1.757L13.777.102a3 3 0 0 0-3.675 3.68L7.462 6.46 4.793 3.793a1 1 0 0 1-.293-.707v-.071a1 1 0 0 0-.419-.814L1 0zm9.646 10.646a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708zM3 11l.471.242.529.026.287.445.445.287.026.529L5 13l-.242.471-.026.529-.445.287-.287.445-.529.026L3 15l-.471-.242L2 14.732l-.287-.445L1.268 14l-.026-.529L1 13l.242-.471.026-.529.445-.287.287-.445.529-.026L3 11z"/>
+          </svg>
+        </a>
+
+        <ul class="nav nav-pills">
+          <li><a href="/home" class="nav-link px-2 text-white">Home</a></li>
+          <li><a href="/functions" class="nav-link active px-2 text-white">Functions Library</a></li>
+          <li><a href="/contributors" class="nav-link px-2 text-white">Contributors</a></li>
+          <li><a href="https://github.com/Carleton-DBOM-Research-Group/Building_energy_management_toolkit.git" title="GitHub" class="nav-link px-2 text-white" target="_blank">Source</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+
+ <!-- Sidebar-->
+ <div class="container-xxl my-md-4">
+  <aside class="flex-shrink-0 p-0 bg-white" style="width: 240px;">
+    <a href="/functions" class="d-flex align-items-center pb-3 mb-3 link-dark text-decoration-none border-bottom">
+      <span class="fs-5 fw-semibold">Functions Library</span>
+    </a>
+    <ul class="list-unstyled ps-0">
+      <li class="mb-1">
+        <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#metadata-collapse" aria-expanded="false">
+          Metadata
+        </button>
+        <div class="collapse" id="metadata-collapse">
+          <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+            <li><a href="/functions/metadata" class="link-dark rounded">Overview</a></li>
+            <li><a href="/functions/metadata/inputs" class="link-dark rounded">Inputs</a></li>
+            <li><a href="/functions/metadata/outputs" class="link-dark rounded">Outputs</a></li>
+            <li><a href="/functions/metadata/upload" class="link-dark rounded">Upload Data</a></li>
+          </ul>
+        </div>
+      </li>
+      <li class="mb-1">
+        <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#energyBaseline-collapse" aria-expanded="false">
+          Energy Baseline
+        </button>
+        <div class="collapse" id="energyBaseline-collapse">
+          <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+            <li><a href="/functions/energyBaseline" class="link-dark rounded">Overview</a></li>
+            <li><a href="/functions/energyBaseline/inputs" class="link-dark rounded">Inputs</a></li>
+            <li><a href="/functions/energyBaseline/outputs" class="link-dark rounded">Outputs</a></li>
+            <li><a href="/functions/energyBaseline/upload" class="link-dark rounded">Upload Data</a></li>
+          </ul>
+        </div>
+      </li>
+      <li class="mb-1">
+        <button class="btn btn-toggle align-items-center rounded collapsed fw-bold" data-bs-toggle="collapse" data-bs-target="#ahuAnomaly-collapse" aria-expanded="true">
+          AHU Anomaly
+        </button>
+        <div class="collapse show" id="ahuAnomaly-collapse">
+          <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+            <li><a href="/functions/ahuAnomaly" class="link-dark rounded">Overview</a></li>
+            <li><a href="/functions/ahuAnomaly/inputs" class="link-dark rounded">Inputs</a></li>
+            <li><a href="/functions/ahuAnomaly/outputs" class="link-dark rounded fw-bold">Outputs</a></li>
+            <li><a href="/functions/ahuAnomaly/upload" class="link-dark rounded">Upload Data</a></li>
+          </ul>
+        </div>
+      </li>
+      <li class="mb-1">
+        <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#zoneAnomaly-collapse" aria-expanded="false">
+          Zone Anomaly
+        </button>
+        <div class="collapse" id="zoneAnomaly-collapse">
+          <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+            <li><a href="/functions/zoneAnomaly" class="link-dark rounded">Overview</a></li>
+            <li><a href="/functions/zoneAnomaly/inputs" class="link-dark rounded">Inputs</a></li>
+            <li><a href="/functions/zoneAnomaly/outputs" class="link-dark rounded">Outputs</a></li>
+            <li><a href="/functions/zoneAnomaly/upload" class="link-dark rounded">Upload Data</a></li>
+          </ul>
+        </div>
+      </li>
+      <li class="mb-1">
+        <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#endUseDisaggregation-collapse" aria-expanded="false">
+          End-use Disaggregation
+        </button>
+        <div class="collapse" id="endUseDisaggregation-collapse">
+          <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+            <li><a href="/functions/endUseDisaggregation" class="link-dark rounded">Overview</a></li>
+            <li><a href="/functions/endUseDisaggregation/inputs" class="link-dark rounded">Inputs</a></li>
+            <li><a href="/functions/endUseDisaggregation/outputs" class="link-dark rounded">Outputs</a></li>
+            <li><a href="/functions/endUseDisaggregation/upload" class="link-dark rounded">Upload Data</a></li>
+          </ul>
+        </div>
+      </li>
+      <li class="mb-1">
+        <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#complaintAnalytics-collapse" aria-expanded="false">
+          Complaint Analytics
+        </button>
+        <div class="collapse" id="complaintAnalytics-collapse">
+          <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+            <li><a href="/functions/complaintAnalytics" class="link-dark rounded">Overview</a></li>
+            <li><a href="/functions/complaintAnalytics/inputs" class="link-dark rounded">Inputs</a></li>
+            <li><a href="/functions/complaintAnalytics/outputs" class="link-dark rounded">Outputs</a></li>
+            <li><a href="/functions/complaintAnalytics/upload" class="link-dark rounded">Upload Data</a></li>
+          </ul>
+        </div>
+      </li>
+      <li class="mb-1">
+        <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#occupancy-collapse" aria-expanded="false">
+          Occupancy
+        </button>
+        <div class="collapse" id="occupancy-collapse">
+          <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+            <li><a href="/functions/occupancy" class="link-dark rounded">Overview</a></li>
+            <li><a href="/functions/occupancy/inputs" class="link-dark rounded">Inputs</a></li>
+            <li><a href="/functions/occupancy/outputs" class="link-dark rounded">Outputs</a></li>
+            <li><a href="/functions/occupancy/upload" class="link-dark rounded">Upload Data</a></li>
+          </ul>
+        </div>
+      </li>
+      <li class="border-top my-3"></li>
+      <li class="mb-1">
+        <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#resources-collapse" aria-expanded="false">
+          Resources
+        </button>
+        <div class="collapse" id="resources-collapse">
+          <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+            <li><a href="/functions/sample-data" class="link-dark rounded">Sample Data</a></li>
+            <li><a href="/functions/data-templates" class="link-dark rounded">Data Templates</a></li>
+            <li><a href="/functions/help" class="link-dark rounded">Help</a></li>
+          </ul>
+        </div>
+      </li>
+    </ul>
+  </aside>
+
+  
+<!-- Main content -->
+  <div class="intro ps-lg-4" style="margin-left: 250px;">
+    <div class="d-md-flex flex-md-row-reverse align-items-center justify-content-between">     
+      <div class="btn-group" role="group" aria-label="button group">
+        <a class="btn btn-sm btn-outline-dark" href=https://doi.org/10.1016/j.enbuild.2020.110445 title="Cluster analysis-based anomaly detection in building automation systems" target="_blank">Gunay and Shi (2019)</a>
+        <a class="btn btn-sm btn-outline-dark" href=https://ieeexplore.ieee.org/document/9140313 title="Development of Inverse Greybox Model-Based Virtual Meters for Air Handling Units" target="_blank">Darwazeh et al. (2021)</a>
+      </div>     
+      <p class="h1">AHU Anomaly</p>
+    </div>
+    <p class="lead fs-4 pb-1">The AHU anomaly function detects common hard and soft faults related to a building's air handling unit(s).</p>
+    <div class="d-md-flex flex-md-row align-items-center justify-content-start">     
+      <p class="h2 pb-3">Outputs</p>
+    </div>
+    <p class="h3 fw-normal">Figures</p>
+    <p class="fs-6 pb-2">The AHU anomaly function generates three sets of visuals to help put some context to the identified faults. The first generated visual plots supply air temperature as a function of outdoor air temperature; 
+      this is generated for each identified AHU. Figure 1 below is an example of this visual.</p>
+    <div class="card">
+      <div class="card-body">
+        <figure class="figure">
+          <img src="/static/img/tSa_tOa_example.png" class="figure-img img-fluid rounded" alt="A generic square placeholder image with rounded corners in a figure.">
+          <figcaption class="figure-caption">Figure 1: Example plot of supply air temperature and return air temperatures as a function of outdoor air temperature, with highlighted supply air setpoint reset scheme. The return air temperatures of the 
+            coldest, warmest, and average thermal zones are also displayed.
+          </figcaption>
+        </figure>
+      </div>
+    </div>  
+    <p class="fs-6 pt-4">The coolest, warmest, and average return air temperatures (zone air temperature) are also depicted. This visual is intended to inform a supply air temperature setpoint reset scheme. A setpoint reset 
+      scheme allows for a higher supply air temperatures as outdoor air temperatures decreases. Suboptimal supply air temperatures can result in excessive energy consumption from
+      excessive perimeter heating use, economizing, or fan use. To guide supply air temperature setpoint adjustments, the typical "ideal" supply air temperature range is highlighted in green. If the supply air temperature is <strong>lower</strong> 
+      than this range in the heating season, excessive use of perimeter heating and economizing may result; only a few overheating rooms may trigger this behaviour. If this is the case, consider increasing the maximum terminal 
+      airflow setpoints in these overheating rooms. If the supply air temperature is <strong>higher</strong> than this range in the cooling season, excessive fan power to deliver required necessary cooling may result; a few 
+      overcooling rooms may trigger this behaviour. If this is the case, consider decreasing the minimum terminal airflow setpoints in these overcooling rooms within reason. In either case, ensure that the
+      airflow and temperature sensors work as intended in these rooms.</p>  
+    <p class="fs-6">The second generated visual is a split-range controller diagram; this is generated for each identified AHU. This diagram depicts outdoor air damper (OA), heating coil valve (HC), and cooling coil valve (CC) position with respect to outdoor air temperature. 
+      The average fraction of active perimter heating devices (RAD) is also shown. The four underlying color zones represent the four disinct AHU operating modes: Heating (red zone), economizer (yellow zone), economizer with cooling (grey zone), and cooling (blue zone). Figure 2 below 
+      is an example of the split-range controller diagram. 
+    <div class="card">
+      <div class="card-body">
+        <figure class="figure">
+          <img src="/static/img/SRC_example.png" class="figure-img img-fluid rounded" alt="A generic square placeholder image with rounded corners in a figure.">
+          <figcaption class="figure-caption">Figure 2: Example of split-range controller diagram of healthy AHU operation. Note that HC represents the heating coil valve position, RAD represents the state of perimter heaters, OA represents outdoor air damper position, and CC represents cooling coil valve position.</figcaption>
+        </figure>
+      </div>
+    </div>
+    <p class="fs-6 pt-4">For healthy AHU operation, the following items should be especially considered:</p>
+    <ul>
+      <li>Heating coil valve is open <u>only</u> in the heating mode (red zone)</li>
+      <li>Cooling coil valve is open <u>only</u> in the economizer with cooling (grey zone) and cooling (blue zone) mode</li>
+      <li>Heating and cooling should not operate simutaneously</li>
+      <li>Perimeter heating should be minimal in economizer mode. This can be achieved by
+        increasing the supply air temperature setpoint in the heating season, while monitoring
+        any occurence of overheating.</li>
+    </ul>
+    <p class="fs-6">The last set of generated visuals is a collection of simplified AHU diagrams. A set of four to six visuals per identified AHU are generated which depict average damper and valve positions and temperatures at characteristic operating periods. The fraction of time 
+      of operation is the percentage of the total time of the AHU's operation which exhibit the displayed damper and valve positions and temperatures. Figure 3 below is an example of the simplified AHU diagrams.
+    </p>
+    <div class="card">
+      <div class="card-body">
+        <figure class="figure">
+          <img src="/static/img/AHU_snapshot_example.png" class="figure-img img-fluid rounded" alt="A generic square placeholder image with rounded corners in a figure.">
+          <table class="table table-striped table-hover">
+            <thead>
+              <tr>
+                <th scope="col">Key</th>
+                <th scope="col">Averaged measurement</th>
+                <th scope="col">Units</th>
+                <th scope="col">Range</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">A</th>
+                <td>Outdoor air temperature</td>
+                <td><sup>o</sup>C</td>
+                <td>-</td>
+              </tr>
+              <tr>
+                <th scope="row">B</th>
+                <td>Return air temperature</td>
+                <td><sup>o</sup>C</td>
+                <td>-</td>
+              </tr>
+              <tr>
+                <th scope="row">C</th>
+                <td>Mixed air temperature</td>
+                <td><sup>o</sup>C</td>
+                <td>-</td>
+              </tr>
+              <tr>
+                <th scope="row">D</th>
+                <td>Supply air temperature</td>
+                <td><sup>o</sup>C</td>
+                <td>-</td>
+              </tr>
+              <tr>
+                <th scope="row">E</th>
+                <td>Outdoor air damper position</td>
+                <td>%</td>
+                <td>0(closed) - 100(open)</td>
+              </tr>
+              <tr>
+                <th scope="row">F</th>
+                <td>Heating coil valve position</td>
+                <td>%</td>
+                <td>0(closed) - 100(open)</td>
+              </tr>
+              <tr>
+                <th scope="row">G</th>
+                <td>Cooling coil valve position</td>
+                <td>%</td>
+                <td>0(closed) - 100(open)</td>
+              </tr>
+              <tr>
+                <th scope="row">H</th>
+                <td>Supply fan state</td>
+                <td>%</td>
+                <td>0(inactive) - 100(fully active)</td>
+              </tr>
+              <tr>
+                <th scope="row">I</th>
+                <td>Fraction of time of operation</td>
+                <td>%</td>
+                <td>0(never occurs) - 100(always occurs)</td>
+              </tr>
+              <tr>
+                <th scope="row">J</th>
+                <td>Fraction of active perimeter heating devices</td>
+                <td>%</td>
+                <td>0(inactive) - 100(fully active)</td>
+              </tr>
+            </tbody>
+          </table>
+          <figcaption class="figure-caption">Figure 3: Example of simplified AHU diagram.</figcaption>
+        </figure>
+      </div>
+    </div>
+
+    <p class="h3 fw-normal pt-4">Key Performance Indicators (KPIs)</p>
+    <p class="fs-6 pb-2">The AHU anomaly function identifies three common hard faults and three common soft faults and calculates an <strong>AHU health index</strong>; this is done for each AHU. The AHU health index is the ratio of non-faults over the 
+      number of total faults that can be detected (six in total). If no faults were detected, the AHU health index would be 100%, and if all six faults were detected, the AHU health index would be 0%. Table 2 below is an example output of the detected faults.</p>
+    <div class="card">
+      <div class="card-body">
+        <table class="table table-striped table-hover">
+          <thead>
+            <tr>
+              <th scope="col">AHU</th>
+              <th scope="col">Health index</th>
+              <th scope="col">Cooling coil</th>
+              <th scope="col">Economizer</th>
+              <th scope="col">Heating coil</th>
+              <th scope="col">Outdoor air damper</th>
+              <th scope="col">Schedule</th>
+              <th scope="col">Supply air temperature</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">AHU 1</th>
+              <td>100%</td>
+              <td>Normal</td>
+              <td>Normal</td>
+              <td>Normal</td>
+              <td>Normal</td>
+              <td>Normal</td>
+              <td>Normal</td>
+            </tr>
+            <tr>
+              <th scope="row">AHU 2</th>
+              <td>0%</td>
+              <td>Stuck</td>
+              <td>Check economizer logic</td>
+              <td>Stuck</td>
+              <td>Stuck</td>
+              <td>Check mode of operation logic</td>
+              <td>Check supply air temperature reset logic</td>
+            </tr>
+            
+          </tbody>
+        </table>
+        <figcaption class="figure-caption">Table 1: Example output of KPIs of energy baseline function.</figcaption>
+      </div>
+    </div>
+    <p class="fs-6 pb-2 pt-4">The three hard faults that can be detected are a stuck heating coil valve, stuck cooling coil valve, and stuck outdoor air damper. A stuck cooling or heating coil is detected if there is minimal to no operation of the 
+      respective coil in the observed data; you may refer to the generated split-range controller diagram, as in Figure 2 above, to verify if this is the case. This may be symptomatic of a faulty sensor, inoperable or broken valve, or even a conflict in the controller logic resulting in unintended idling of the respective conditioning elements. </p>
+    <p class="fs-6 pb-2">The three soft faults that can be detected by the function are excessive use of perimeter heating devices (basebaord heaters, VAV reheat coils, etc.) during the AHUs' economizer mode, inappropriate economizer 
+      mode settings, and absence of weekly schedule. Of these soft faults, the first soft fault is typically associated with an inappropriate supply air temperature setpoint reset logic. The second soft fault is 
+      typically a result of an incorrect configuration of the AHUs' supply air temperature controller. The third fault can simply indicate an absence of inoperable weekly schedule, or can be the result of frequent cycling 
+      caused by a few zones overheating beyond unoccupied indoor temperature setpoints; this can be fixed by adjusting airflow and/or temperature setpoints of the variable air volume (VAV) terminals of the overheating zones 
+      during unoccupied periods.</p>
+    
+    
+    <!-- Footer -->
+    <footer class="pt-4 my-md-5 pt-md-5 border-top">
+      <div class="row">
+        <div class="col-12 col-md">
+          <small class="d-block mb-3 text-muted">Actively in development, an open-source project by the Data-driven Building Operation and Maintenance team within Carleton University's Building Performance Research Center.</small>
+        </div>
+        <div class="col-6 col-md">
+          <h5>Functions Library</h5>
+          <ul class="list-unstyled text-small">
+            <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Metadata</a></li>
+            <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Energy Baseline</a></li>
+            <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">AHU Anomaly</a></li>
+            <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Zone Anomaly</a></li>
+            <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">End-use Disaggregation</a></li>
+            <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Complaints Analytics</a></li>
+            <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Occupancy</a></li>
+          </ul>
+        </div>
+        <div class="col-6 col-md">
+          <h5>Resources</h5>
+          <ul class="list-unstyled text-small">
+            <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Sample Data</a></li>
+            <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Templates</a></li>
+            <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Literature</a></li>
+            <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">GitHub</a></li>
+          </ul>
+        </div>
+      </div>
+    </footer>
+    <!-- Footer -->
+
+  </div>
+  
+  
+ </div>
+
+    <!-- Optional JavaScript; choose one of the two! -->
+
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+
+    <!-- Option 2: Separate Popper and Bootstrap JS -->
+    <!--
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.min.js" integrity="sha384-Atwg2Pkwv9vp0ygtn1JAojH0nYbwNJLPhwyoVbhoPwBhjQPR5VtM2+xf0Uwh9KtT" crossorigin="anonymous"></script>
+    -->
+  </body>
+</html>
