@@ -186,8 +186,8 @@
     </div>
 
     <p class="h3 fw-normal">Computerized Maintenance and Management System (CMMS)</p>
-    <p class="fs-6">The complaint analytics function requires CMMS operator work order log data. These data log the building operator's work order and typically contain comments about complaints made by building occupants.
-      The data must contain the work order description and the time at which the work order was entered. The data should be formatted as seen in Figure 1.</p>
+    <p class="fs-6">The complaint analytics function requires CMMS operator work order log data. These data log the building operator's work orders and typically contain comments about complaints made by building occupants.
+      The data must contain the work order's description and the time at which the work order was entered. The data must be formatted as seen in Figure 1.</p>
     <div class="card">
       <div class="card-body">
         <figure class="figure">
@@ -196,20 +196,20 @@
         </figure>
       </div>
     </div>
-    <p class="fs-6 pt-4">The first column should contain the timestamp at which the work order was entered, which must include the numerical date and time and in the following format: [yyyy-mm-dd hh-mm].
-      The second column should contain the work order description.</p>
-    <p class="fs-6">Only one(1) CSV file containing CMMS operator work order log data must be supplied to this function.</p>
+    <p class="fs-6 pt-4">The first column must contain the timestamp at which the work order was entered, which must include the numerical date and time and in the following format: [yyyy-mm-dd hh-mm].
+      The second column must contain the work order description.</p>
+    <p class="fs-6">Only one (1) CSV file containing CMMS operator work order log data must be supplied to this function.</p>
 
-    <p class="h3 fw-normal">Zone-level HVAC Network Trend Logs</p>
-    <p class="fs-6">The complaint analytics function also requires zone-level network trend log data. These data are a record of various actuator 
+    <p class="h3 fw-normal">Zone-level HVAC Control Network Trends</p>
+    <p class="fs-6">The complaint analytics function also requires zone-level HVAC control network trend data. These data are a record of various actuator 
       and sensor measurements pertaining to variable air volume terminals (VAV) which regulate airflow and sometimes re-condition supply air 
-      from the AHUs to specific thermal zone(s). For this analysis, four unique trend logs are required for each zone/VAV; they are as listed with units and range in Table 1 and shoudl be formatted as seen in Figure 2.</p>
+      from the AHUs to specific thermal zone(s). For this analysis, four unique trend data are required for each zone/VAV; they are as listed with units and range in Table 1 and must be formatted as seen in Figure 2.</p>
     <div class="card">
       <div class="card-body">
         <table class="table table-striped table-hover">
           <thead>
             <tr>
-              <th scope="col">Required trend log data</th>
+              <th scope="col">Required trend data</th>
               <th scope="col">Abbreviation</th>
               <th scope="col">Unit</th>
               <th scope="col">Range</th>
@@ -242,7 +242,7 @@
             </tr>
           </tbody>
         </table>
-        <figcaption class="figure-caption">Table 1: Required zone-level HVAC trend log data for each VAV/thermal zone.</figcaption>
+        <figcaption class="figure-caption">Table 1: Required zone-level HVAC control network trend data for each VAV/thermal zone.</figcaption>
       </div>
     </div>
     <p class="pt-3"></p>
@@ -250,29 +250,29 @@
       <div class="card-body">
         <figure class="figure">
           <img src="/static/img/example_ZonelevelHVAC_data_input.png" class="figure-img img-fluid rounded" alt="A generic square placeholder image with rounded corners in a figure.">
-          <figcaption class="figure-caption">Figure 2: Example of zone-level HVAC network trend log input data format.</figcaption>
+          <figcaption class="figure-caption">Figure 2: Example of zone-level HVAC control network trend data input format.</figcaption>
         </figure>
       </div>
     </div>
-    <p class="fs-6 pt-4">The first column should contain the timestamp, which must include the numerical date and time and in the following format: [yyyy-mm-dd hh-mm].
-      Each subsequent column should contain the trend log data as listed in Table 1 in descending order (i.e. second column contains indoor air temperature, third column 
+    <p class="fs-6 pt-4">The first column must contain the timestamp, which must include the numerical date and time and in the following format: [yyyy-mm-dd hh-mm].
+      Each subsequent column must contain the trend data as listed in Table 1 in descending order (i.e., second column contains indoor air temperature, third column 
       contains supply airflow, etc.)</p>
-    <p class="fs-6">A minimum of one(1) CSV file containing zone-level HVAC trend log data must be supplied to this function, where each CSV file represents a separate thermal zone.</p>
+    <p class="fs-6">A minimum of one (1) CSV file containing zone-level HVAC control network trend data must be supplied to this function, where each CSV file represents a unique VAV or thermal zone.</p>
 
     <p class="h3 fw-normal">Weather</p>
-    <p class="fs-6">The complaint analytics function also requires outdoor weather data. These data record the outdoor air temperature within the building's geographic vicinity. The temperatures must be represented in Celcius (<sup>o</sup>C). The data should 
+    <p class="fs-6">The complaint analytics function also requires outdoor weather data. These data record the outdoor air temperature within the building's geographic vicinity. The temperatures must be represented in Celsius (<sup>o</sup>C). The data must 
       be formatted as in Figure 3.
     </p>
     <div class="card">
       <div class="card-body">
         <figure class="figure">
           <img src="" class="figure-img img-fluid rounded" alt="A generic square placeholder image with rounded corners in a figure.">
-          <figcaption class="figure-caption">Figure 3: Example of weather input input data format. Note that the measured temperature must be represented in Celcius (<sup>o</sup>C).</figcaption>
+          <figcaption class="figure-caption">Figure 3: Example of weather data input format. Note that the measured temperature must be represented in Celsius (<sup>o</sup>C).</figcaption>
         </figure>
       </div>
     </div>
-    <p class="fs-6 pt-4">The first column should contain the timestamp, which must include the numerical date and time and in the following format: [yyyy-mm-dd hh-mm]. The second column should contain the measured outdoor air temperature.</p>
-    <p class="fs-6">Only one(1) CSV file containing weather data must be supplied to this function.</p>
+    <p class="fs-6 pt-4">The first column must contain the timestamp, which must include the numerical date and time and in the following format: [yyyy-mm-dd hh-mm]. The second column must contain the measured outdoor air temperature.</p>
+    <p class="fs-6">Only one (1) CSV file containing weather data must be supplied to this function.</p>
   
     <!-- Footer -->
     <footer class="pt-4 my-md-5 pt-md-5 border-top">

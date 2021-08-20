@@ -179,9 +179,9 @@
         <a class="btn btn-sm btn-outline-dark" href=https://doi.org/10.1016/j.enbuild.2020.110222 title="Disaggregation of commercial building end-uses with automation system data" target="_blank">Gunay et al. (2020)</a>
         <a class="btn btn-sm btn-outline-dark" href=https://doi.org/10.1145/3427771.3429389 title="Virtual metering of heat supplied by hydronic perimeter heaters in variable air volume zones" target="_blank">Darwazeh et al. (2020)</a>
       </div>        
-      <p class="h1">End-use Diaggregation</p>
+      <p class="h1">End-use Disaggregation</p>
     </div>
-    <p class="lead fs-4 pb-1">The end-use disaggregation function separates bulk energy consumption into its major consituent end-uses and calculates its energy use intensities.</p>
+    <p class="lead fs-4 pb-1">The end-use disaggregation function separates bulk energy consumption into its major constituent end-uses and calculates its energy use intensities.</p>
     <div class="d-md-flex flex-md-row align-items-center justify-content-start">     
       <p class="h2 pb-3">Inputs</p>
     </div>
@@ -190,7 +190,7 @@
     <p class="fs-6">The end-use disaggregation function requires energy meter data. These data record a building's measured energy consumption at regular intervals. For this function, energy consumption must already be segregated 
       into heating, cooling, and electricity consumption and must be represented in kilowatts only (kW). Electricity use should include energy use for only lighting, plug-in loads, distribution equipment (fans and pumps), and chillers. 
       Cooling energy use should include energy use for only the AHUs' cooling coils. Heating energy use should include energy use for only the AHUs' heating coils, perimeter heating devices, and domestic hot water. The data 
-      should be formatted as seen in Figure 1. 
+      must be formatted as seen in Figure 1. 
     </p>
     <div class="card">
       <div class="card-body">
@@ -200,21 +200,21 @@
         </figure>
       </div>
     </div>
-    <p class="fs-6 pt-4">The first column should contain the timestamp at which the device count is measured. The timestamp must include the numerical date and time and in the following format: [yyyy-mm-dd hh-mm]. The second column should 
-      contain the measured power consumption for electricity only. The third column should contain the measured power consumption for cooling only. The fourth column should contain the measured power consumption for heating only.</p>
-    <p class="fs-6">Only one(1) CSV file containing energy meter data for the whole building must be supplied to this function.</p>
+    <p class="fs-6 pt-4">This function requires <ul>hourly</ul> energy meter data. The first column must contain the timestamp at which power consumption is measured. The timestamp must include the numerical date and time and in the following format: [yyyy-mm-dd hh-mm]. The second column must 
+      contain the measured power consumption for electricity only. The third column must contain the measured power consumption for cooling only. The fourth column must contain the measured power consumption for heating only.</p>
+    <p class="fs-6">Only one (1) CSV file containing energy meter data for the whole building must be supplied to this function.</p>
     <p class="fs-6"><strong>NOTE:</strong> This function may not be suitable for buildings with other significant electricity end-uses such as elevators and data centers, unless such end-uses are separated from the energy meter data
       prior to using the function.</p>
 
-    <p class="h3 fw-normal">AHU-level HVAC Network Trend Logs</p>
-    <p class="fs-6">The end-use disaggregation function also requires AHU-level HVAC network trend log data. These data are a record the various actuator and sensor measurements pertaining to the air handling units (AHUs) and can typically be extracted 
-      from a building automation system (BAS). For this analysis, ten unique trend logs are required for each AHU; they are as listed with units and range in Table 1 and formatted as in Figure 2.</p>
+    <p class="h3 fw-normal">AHU-level HVAC Control Network Trends</p>
+    <p class="fs-6">The end-use disaggregation function also requires AHU-level HVAC control network trend data. These data are a record the various actuator and sensor measurements pertaining to the air handling units (AHUs) and can typically be extracted 
+      from a building automation system (BAS). For this analysis, ten unique trend data are required for each AHU; they are as listed with units and range in Table 1 and formatted as in Figure 2.</p>
     <div class="card">
       <div class="card-body">
         <table class="table table-striped table-hover">
           <thead>
             <tr>
-              <th scope="col">Required trend log data</th>
+              <th scope="col">Required trend data</th>
               <th scope="col">Abbreviation</th>
               <th scope="col">Unit</th>
               <th scope="col">Range</th>
@@ -283,7 +283,7 @@
             </tr>
           </tbody>
         </table>
-        <figcaption class="figure-caption">Table 1: Required trend log data for each AHU.</figcaption>
+        <figcaption class="figure-caption">Table 1: Required AHU-level HVAC control network trend data for each AHU.</figcaption>
       </div>
     </div>
     <p class="pt-3"></p>
@@ -291,27 +291,28 @@
       <div class="card-body">
         <figure class="figure">
           <img src="/static/img/example_AHUlevelHVAC_data_input.png" class="figure-img img-fluid rounded" alt="A generic square placeholder image with rounded corners in a figure.">
-          <figcaption class="figure-caption">Figure 2: Example of AHU-level HVAC network trend log input data format.</figcaption>
+          <figcaption class="figure-caption">Figure 2: Example of AHU-level HVAC control network trend data input format.</figcaption>
         </figure>
       </div>
     </div>
-    <p class="fs-6 pt-4">The first column should contain the timestamp at which the measurement was recorded. The timestamp must include the numerical date and time and 
-      in the following format: [yyyy-mm-dd hh-mm]. Each subsequent column should contain the trend log data as listed in Table 1 in descending order (i.e. second column 
+    <p class="fs-6 pt-4">This function requires <ul>hourly</ul> trend data. The first column must contain the timestamp at which the measurement was recorded. The timestamp must include the numerical date and time and 
+      in the following format: [yyyy-mm-dd hh-mm]. The timestamp must be consistent with the timestamp in the energy meter data. Each subsequent column must contain the trend log data as listed in Table 1 in descending order (i.e., second column 
       contains supply air supply temperature, third column contains return air temperature, etc.)</p>
-    <p class="fs-6">A minimum of one(1) CSV file containing AHU-level HVAC network trend log data must be supplied to this function, where each CSV file represents a separate AHU. 
+    <p class="fs-6">A minimum of one (1) CSV file containing AHU-level HVAC control network trend data must be supplied to this function, where each CSV file represents a unique AHU. 
       If multiple files are inputted, a separate energy load intensity value will be calculated for the heating and cooling coil for every AHU. Visuals plotting weekly energy use intensity
-      will also differentiate between different AHUs. See <a href="/functions/endUseDisaggregation/outputs" class="link-blue">outputs</a> for more information about the generated KPIs and visuals.</p>
+      will also differentiate between different AHUs. See <a href="/functions/endUseDisaggregation/outputs" class="link-blue">outputs</a> for more information about the generated KPIs and visuals.
+      Note that timestamps must be consistent between multiple files.</p>
     
-    <p class="h3 fw-normal">Zone-level HVAC Network Trend Logs</p>
-    <p class="fs-6">The end-use disaggregation function also requires zone-level network trend log data. Like AHU-level HVAC trend log data, these data are a record of various 
-      actuator and sensor measurements, but pertain to variable air volume terminals (VAV) which regulate airflow and sometimes re-condition supply air from the AHUs to specific thermal zone(s). 
-      For this analysis, four unique trend logs are required for each zone/VAV; they are as listed in Table 2 and formatted as seen in Figure 3.</p>
+    <p class="h3 fw-normal">Zone-level HVAC Control Network Trends</p>
+    <p class="fs-6">The end-use disaggregation function also requires zone-level HVAC control network trend data. Like AHU-level HVAC control network trend data, these data are a record of various 
+      actuator and sensor measurements, but pertain to variable air volume (VAV) terminals units which regulate airflow and sometimes re-condition supply air from the AHUs to specific thermal zone(s). 
+      For this analysis, four unique trend data are required for each thermal zone/VAV terminal unit; they are as listed in Table 2 and formatted as seen in Figure 3.</p>
     <div class="card">
       <div class="card-body">
         <table class="table table-striped table-hover">
           <thead>
             <tr>
-              <th scope="col">Required trend log data</th>
+              <th scope="col">Required trend data</th>
               <th scope="col">Abbreviation</th>
               <th scope="col">Unit</th>
               <th scope="col">Range</th>
@@ -344,7 +345,7 @@
             </tr>
           </tbody>
         </table>
-        <figcaption class="figure-caption">Table 2: Required zone-level HVAC trend log data for each VAV/thermal zone.</figcaption>
+        <figcaption class="figure-caption">Table 2: Required zone-level HVAC control network trend data for each VAV/thermal zone.</figcaption>
       </div>
     </div>
     <p class="pt-3"></p>
@@ -352,17 +353,18 @@
       <div class="card-body">
         <figure class="figure">
           <img src="/static/img/example_ZonelevelHVAC_data_input.png" class="figure-img img-fluid rounded" alt="A generic square placeholder image with rounded corners in a figure.">
-          <figcaption class="figure-caption">Figure 3: Example of zone-level HVAC network trend log input data format.</figcaption>
+          <figcaption class="figure-caption">Figure 3: Example of zone-level HVAC control network trend data input format.</figcaption>
         </figure>
       </div>
     </div>
-    <p class="fs-6 pt-4">Like AHU-level HVAC trend log data, the first column should contain the timestamp, which must include the numerical date and time and in the following format: [yyyy-mm-dd hh-mm].
-      Each subsequent column should contain the trend log data as listed in Table 2 in descending order (i.e. second column contains indoor air temperature, third column contains supply airflow, etc.)</p>
-    <p class="fs-6">A minimum of one(1) CSV file containing zone-level HVAC network trend log data must be supplied to this function, where each CSV file represents a separate thermal zone.</p>
+    <p class="fs-6 pt-4">This function requires <ul>hourly</ul> trend data. Like AHU-level HVAC control network trend data, the first column must contain the timestamp, which must include the numerical date and time and in the following format: [yyyy-mm-dd hh-mm]. 
+      The timestamp must be consistent with the timestamp in the energy meter data. Each subsequent column should contain the trend log data as listed in Table 2 in descending order (i.e., second column contains 
+      indoor air temperature, third column contains supply airflow, etc.)</p>
+    <p class="fs-6">A minimum of one (1) CSV file containing zone-level HVAC network trend log data must be supplied to this function, where each CSV file represents a unique VAV terminal or thermal zone. Note that timestamps must be consistent between multiple files.</p>
 
     <p class="h3 fw-normal">Wi-Fi Device Count</p>
-    <p class="fs-6">The end-use disaggregation function also requires Wi-Fi device count data. These data count the number of actively recognized, but not necessarily connected, devices by a building's Wi-Fi connection. 
-      The function uses device count data as a proxy for occupant count by equating 1.2 devices per occupant. These data should be formatted in a spreadsheet seen in Figure 4 below.</p>
+    <p class="fs-6">The end-use disaggregation function also requires Wi-Fi device count data. These data count the number of actively recognized, but not necessarily connected, devices by a building's Wi-Fi access points. 
+      The function uses device count data as a proxy for occupant count by equating 1.2 devices per occupant. These data must be formatted in a spreadsheet seen in Figure 4 below.</p>
     <div class="card">
       <div class="card-body">
         <figure class="figure">
@@ -371,11 +373,11 @@
         </figure>
       </div>
     </div>
-    <p class="fs-6 pt-4">The first column should contain the timestamp at which the device count is measured. The timestamp must include the numerical date and time and in the following format: [yyyy-mm-dd hh-mm]. 
-      The second column should contain the number of devices recognized by the Wi-Fi connection. This column should only contain whole numbers (i.e. 2.4 is not an acceptable entry).</p>
-    <p class="fs-6">A minimum of one(1) CSV file containing Wi-Fi device count data must be supplied to this function. However, if there is greater certainty amounting in floor-level 
-      device count data (i.e. You have device count data for each floor of the building), you may input several CSV files whereby each file contains the data pertaining to a different floor. If the function 
-      recognizes that more than one CSV file is provided, occupant-count will be taken as the sum of all supplied files.</p>
+    <p class="fs-6 pt-4">This function does not requires <ul>hourly</ul> trend data (i.e., measurements taken at 15-minute interval are OK). The first column must contain the timestamp at which the device count is measured. The timestamp must include the numerical date and time and in the following format: [yyyy-mm-dd hh-mm]. 
+      The second column must contain the number of devices recognized by a Wi-Fi access point. This column must contain only whole numbers (i.e., 2.4 is not an acceptable entry).</p>
+    <p class="fs-6">A minimum of one (1) CSV file containing Wi-Fi device count data must be supplied to this function. However, if there is greater certainty amounting in floor-level 
+      device count data (i.e., you have device count data for each floor of the building), you may input several CSV files whereby each file contains the data pertaining to a different floor. If the function 
+      recognizes that more than one CSV file is provided, occupant-count will be taken as the sum of all supplied files. Note that timestamps must be consistent between multiple files.</p>
   
     <!-- Footer -->
     <footer class="pt-4 my-md-5 pt-md-5 border-top">

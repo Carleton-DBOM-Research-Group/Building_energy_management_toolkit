@@ -185,7 +185,7 @@
     <div class="d-md-flex flex-md-row align-items-center justify-content-start">     
       <p class="h2 pb-3">Upload data</p>
     </div>
-    <p class="fs-6 pb-2">The metadata inference function requires only one(1) CSV file containing metadata labels with controller address IDs. To run the function, upload your data in the form below. 
+    <p class="fs-6 pb-2">The metadata inference function requires only one (1) CSV file containing metadata labels with controller address IDs. To run the function, upload your data in the form below. 
       For information about input data and the required format for this function, see <a href="/functions/metadata/inputs" class="link-blue">inputs</a>.
     </p>
 
@@ -195,8 +195,8 @@
       <div class="card-body">
         <form action="/functions/metadata/upload/run-metadata" method="POST" enctype="multipart/form-data">
           <div class="mb-3">
-            <label for="formFileMultiple" class="form-label">Upload metadata data file (Required)</label>
-            <input class="form-control" type="file" name="metadata_file[]" id="formFileMultiple" accept=".csv" required>
+            <label for="formFile" class="form-label">Upload metadata data file (Required)</label>
+            <input class="form-control" type="file" name="metadata_file[]" id="formFile" accept=".csv" required>
           </div>
           <div class="col-12">
             <button class="btn btn-primary" type="submit">Upload and Run</button>

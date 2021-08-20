@@ -199,31 +199,31 @@
       </div>
     </div>  
     <p class="fs-6 pt-4">The coolest, warmest, and average return air temperatures (zone air temperature) are also depicted. This visual is intended to inform a supply air temperature setpoint reset scheme. A setpoint reset 
-      scheme allows for a higher supply air temperatures as outdoor air temperatures decreases. Suboptimal supply air temperatures can result in excessive energy consumption from
-      excessive perimeter heating use, economizing, or fan use. To guide supply air temperature setpoint adjustments, the typical "ideal" supply air temperature range is highlighted in green. If the supply air temperature is <strong>lower</strong> 
+      scheme allows for higher supply air temperatures as outdoor air temperature decreases. Suboptimal supply air temperatures can result in excessive energy consumption from
+      excessive perimeter heating use, economizing, or fan use. To guide supply air temperature setpoint adjustments, the typical 'ideal' supply air temperature range is highlighted in green. If the supply air temperature is <strong>lower</strong> 
       than this range in the heating season, excessive use of perimeter heating and economizing may result; only a few overheating rooms may trigger this behaviour. If this is the case, consider increasing the maximum terminal 
       airflow setpoints in these overheating rooms. If the supply air temperature is <strong>higher</strong> than this range in the cooling season, excessive fan power to deliver required necessary cooling may result; a few 
       overcooling rooms may trigger this behaviour. If this is the case, consider decreasing the minimum terminal airflow setpoints in these overcooling rooms within reason. In either case, ensure that the
       airflow and temperature sensors work as intended in these rooms.</p>  
     <p class="fs-6">The second generated visual is a split-range controller diagram; this is generated for each identified AHU. This diagram depicts outdoor air damper (OA), heating coil valve (HC), and cooling coil valve (CC) position with respect to outdoor air temperature. 
-      The average fraction of active perimter heating devices (RAD) is also shown. The four underlying color zones represent the four disinct AHU operating modes: Heating (red zone), economizer (yellow zone), economizer with cooling (grey zone), and cooling (blue zone). Figure 2 below 
+      The average fraction of active perimeter heating devices (RAD) is also shown. The four underlying color zones represent the four distinct AHU operating modes: heating (red zone), economizer (yellow zone), economizer with cooling (grey zone), and cooling (blue zone). Figure 2 below 
       is an example of the split-range controller diagram. 
     <div class="card">
       <div class="card-body">
         <figure class="figure">
           <img src="/static/img/SRC_example.png" class="figure-img img-fluid rounded" alt="A generic square placeholder image with rounded corners in a figure.">
-          <figcaption class="figure-caption">Figure 2: Example of split-range controller diagram of healthy AHU operation. Note that HC represents the heating coil valve position, RAD represents the state of perimter heaters, OA represents outdoor air damper position, and CC represents cooling coil valve position.</figcaption>
+          <figcaption class="figure-caption">Figure 2: Example of split-range controller diagram of healthy AHU operation. Note that HC represents the heating coil valve position, RAD represents the state of perimeter heaters, OA represents outdoor air damper position, and CC represents cooling coil valve position.</figcaption>
         </figure>
       </div>
     </div>
     <p class="fs-6 pt-4">For healthy AHU operation, the following items should be especially considered:</p>
     <ul>
-      <li>Heating coil valve is open <u>only</u> in the heating mode (red zone)</li>
-      <li>Cooling coil valve is open <u>only</u> in the economizer with cooling (grey zone) and cooling (blue zone) mode</li>
-      <li>Heating and cooling should not operate simutaneously</li>
+      <li>Heating coil valve is open <u>only</u> in the heating mode (red zone).</li>
+      <li>Cooling coil valve is open <u>only</u> in the economizer with cooling (grey zone) and cooling (blue zone) mode.</li>
+      <li>Heating and cooling should not operate simultaneously.</li>
       <li>Perimeter heating should be minimal in economizer mode. This can be achieved by
         increasing the supply air temperature setpoint in the heating season, while monitoring
-        any occurence of overheating.</li>
+        any occurrence of overheating.</li>
     </ul>
     <p class="fs-6">The last set of generated visuals is a collection of simplified AHU diagrams. A set of four to six visuals per identified AHU are generated which depict average damper and valve positions and temperatures at characteristic operating periods. The fraction of time 
       of operation is the percentage of the total time of the AHU's operation which exhibit the displayed damper and valve positions and temperatures. Figure 3 below is an example of the simplified AHU diagrams.
@@ -310,7 +310,7 @@
     </div>
 
     <p class="h3 fw-normal pt-4">Key Performance Indicators (KPIs)</p>
-    <p class="fs-6 pb-2">The AHU anomaly function identifies three common hard faults and three common soft faults and calculates an <strong>AHU health index</strong>; this is done for each AHU. The AHU health index is the ratio of non-faults over the 
+    <p class="fs-6 pb-2">The AHU anomaly function identifies three common hard faults and three common soft faults and calculates an <strong>AHU health index</strong>; this is done separately for each AHU. The AHU health index is the ratio of non-faults over the 
       number of total faults that can be detected (six in total). If no faults were detected, the AHU health index would be 100%, and if all six faults were detected, the AHU health index would be 0%. Table 2 below is an example output of the detected faults.</p>
     <div class="card">
       <div class="card-body">
@@ -356,9 +356,9 @@
     </div>
     <p class="fs-6 pb-2 pt-4">The three hard faults that can be detected are a stuck heating coil valve, stuck cooling coil valve, and stuck outdoor air damper. A stuck cooling or heating coil is detected if there is minimal to no operation of the 
       respective coil in the observed data; you may refer to the generated split-range controller diagram, as in Figure 2 above, to verify if this is the case. This may be symptomatic of a faulty sensor, inoperable or broken valve, or even a conflict in the controller logic resulting in unintended idling of the respective conditioning elements. </p>
-    <p class="fs-6 pb-2">The three soft faults that can be detected by the function are excessive use of perimeter heating devices (basebaord heaters, VAV reheat coils, etc.) during the AHUs' economizer mode, inappropriate economizer 
-      mode settings, and absence of weekly schedule. Of these soft faults, the first soft fault is typically associated with an inappropriate supply air temperature setpoint reset logic. The second soft fault is 
-      typically a result of an incorrect configuration of the AHUs' supply air temperature controller. The third fault can simply indicate an absence of inoperable weekly schedule, or can be the result of frequent cycling 
+    <p class="fs-6 pb-2">The three soft faults that can be detected by the function are excessive use of perimeter heating devices (baseboard heaters, VAV reheat coils, etc.) during the AHUs' economizer mode, inappropriate economizer 
+      mode settings, and the absence of a weekly schedule. Of these soft faults, the first soft fault is typically associated with an inappropriate supply air temperature setpoint reset logic. The second soft fault is 
+      typically a result of an incorrect configuration of the AHUs' supply air temperature controller. The third fault can simply indicate an inoperable weekly schedule, or can be the result of frequent cycling 
       caused by a few zones overheating beyond unoccupied indoor temperature setpoints; this can be fixed by adjusting airflow and/or temperature setpoints of the variable air volume (VAV) terminals of the overheating zones 
       during unoccupied periods.</p>
     

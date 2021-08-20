@@ -184,7 +184,7 @@
     <div class="d-md-flex flex-md-row align-items-center justify-content-start">     
       <p class="h2 pb-3">Upload data</p>
     </div>
-    <p class="fs-6">The zone anomaly function requires at least six(6) CSV files containing zone-level HVAC network trend log data. To run the function, upload your data in the form below. 
+    <p class="fs-6">The zone anomaly function requires at least six (6) CSV files containing zone-level HVAC control network trend data. To run the function, upload your data in the form below. 
       For information about input data and the required format for this function, click <a href="/functions/zoneAnomaly/inputs" class="link-blue">here</a>.
     </p>
 
@@ -193,7 +193,7 @@
       <div class="card-body">
         <form action="/functions/zoneAnomaly/upload/run-zoneAnomaly" method="POST" enctype="multipart/form-data">
           <div class="mb-3">
-            <label for="formFileMultiple" class="form-label">Upload zone-level HVAC network trend log data files (Required minimum 6)</label>
+            <label for="formFileMultiple" class="form-label">Upload zone-level HVAC control network trend data files (Required minimum 6)</label>
             <input class="form-control" type="file" name="zone_HVAC_files[]" id="formFileMultiple" accept=".csv" multiple required>
           </div>
           <div class="col-12">
