@@ -301,7 +301,7 @@
     <p class="fs-6">A minimum of one (1) CSV file containing AHU-level HVAC control network trend data must be supplied to this function, where each CSV file represents a unique AHU. 
       If multiple files are inputted, a separate energy load intensity value will be calculated for the heating and cooling coil for every AHU. Visuals plotting weekly energy use intensity
       will also differentiate between different AHUs. See <a href="/functions/endUseDisaggregation/outputs" class="link-blue">outputs</a> for more information about the generated KPIs and visuals.
-      Note that the timestamps must be consistent between multiple files <u>and</u> the timestamps in the energy meter data.</p>
+      Note that the timestamps must be consistent between multiple files <u>and</u> with the timestamps in the energy meter data.</p>
     
     <p class="h3 fw-normal">Zone-level HVAC Control Network Trends</p>
     <p class="fs-6">The end-use disaggregation function also requires zone-level HVAC control network trend data. Like AHU-level HVAC control network trend data, these data are a record of various 
@@ -361,7 +361,7 @@
       The timestamp must be consistent with the timestamp in the energy meter data. Each subsequent column should contain the trend log data as listed in Table 2 in descending order (i.e., second column contains 
       indoor air temperature, third column contains supply airflow, etc.)</p>
     <p class="fs-6">A minimum of one (1) CSV file containing zone-level HVAC network trend log data must be supplied to this function, where each CSV file represents a unique VAV terminal or thermal zone. 
-      Note that the timestamps must be consistent between multiple files <u>and</u> the timestamps in the energy meter and AHU-level HVAC network trend data.</p>
+      Note that the timestamps must be consistent between multiple files <u>and</u> with the timestamps in the energy meter and AHU-level HVAC network trend data.</p>
 
     <p class="h3 fw-normal">Wi-Fi Device Count</p>
     <p class="fs-6">The end-use disaggregation function also requires Wi-Fi device count data. These data count the number of actively recognized, but not necessarily connected, devices by a building's Wi-Fi access points. 
