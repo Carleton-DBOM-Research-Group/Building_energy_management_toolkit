@@ -200,7 +200,7 @@
         </figure>
       </div>
     </div>
-    <p class="fs-6 pt-4">This function requires <ul>hourly</ul> energy meter data. The first column must contain the timestamp at which power consumption is measured. The timestamp must include the numerical date and time and in the following format: [yyyy-mm-dd hh-mm]. The second column must 
+    <p class="fs-6 pt-4">This function requires <u>hourly</u> energy meter data. The first column must contain the timestamp at which power consumption is measured. The timestamp must include the numerical date and time and in the following format: [yyyy-mm-dd hh-mm]. The second column must 
       contain the measured power consumption for electricity only. The third column must contain the measured power consumption for cooling only. The fourth column must contain the measured power consumption for heating only.</p>
     <p class="fs-6">Only one (1) CSV file containing energy meter data for the whole building must be supplied to this function.</p>
     <p class="fs-6"><strong>NOTE:</strong> This function may not be suitable for buildings with other significant electricity end-uses such as elevators and data centers, unless such end-uses are separated from the energy meter data
@@ -295,13 +295,13 @@
         </figure>
       </div>
     </div>
-    <p class="fs-6 pt-4">This function requires <ul>hourly</ul> trend data. The first column must contain the timestamp at which the measurement was recorded. The timestamp must include the numerical date and time and 
+    <p class="fs-6 pt-4">This function requires <u>hourly</u> trend data. The first column must contain the timestamp at which the measurement was recorded. The timestamp must include the numerical date and time and 
       in the following format: [yyyy-mm-dd hh-mm]. The timestamp must be consistent with the timestamp in the energy meter data. Each subsequent column must contain the trend log data as listed in Table 1 in descending order (i.e., second column 
       contains supply air supply temperature, third column contains return air temperature, etc.)</p>
     <p class="fs-6">A minimum of one (1) CSV file containing AHU-level HVAC control network trend data must be supplied to this function, where each CSV file represents a unique AHU. 
       If multiple files are inputted, a separate energy load intensity value will be calculated for the heating and cooling coil for every AHU. Visuals plotting weekly energy use intensity
       will also differentiate between different AHUs. See <a href="/functions/endUseDisaggregation/outputs" class="link-blue">outputs</a> for more information about the generated KPIs and visuals.
-      Note that timestamps must be consistent between multiple files.</p>
+      Note that the timestamps must be consistent between multiple files <u>and</u> the timestamps in the energy meter data.</p>
     
     <p class="h3 fw-normal">Zone-level HVAC Control Network Trends</p>
     <p class="fs-6">The end-use disaggregation function also requires zone-level HVAC control network trend data. Like AHU-level HVAC control network trend data, these data are a record of various 
@@ -357,10 +357,11 @@
         </figure>
       </div>
     </div>
-    <p class="fs-6 pt-4">This function requires <ul>hourly</ul> trend data. Like AHU-level HVAC control network trend data, the first column must contain the timestamp, which must include the numerical date and time and in the following format: [yyyy-mm-dd hh-mm]. 
+    <p class="fs-6 pt-4">This function requires <u>hourly</u> trend data. Like AHU-level HVAC control network trend data, the first column must contain the timestamp, which must include the numerical date and time and in the following format: [yyyy-mm-dd hh-mm]. 
       The timestamp must be consistent with the timestamp in the energy meter data. Each subsequent column should contain the trend log data as listed in Table 2 in descending order (i.e., second column contains 
       indoor air temperature, third column contains supply airflow, etc.)</p>
-    <p class="fs-6">A minimum of one (1) CSV file containing zone-level HVAC network trend log data must be supplied to this function, where each CSV file represents a unique VAV terminal or thermal zone. Note that timestamps must be consistent between multiple files.</p>
+    <p class="fs-6">A minimum of one (1) CSV file containing zone-level HVAC network trend log data must be supplied to this function, where each CSV file represents a unique VAV terminal or thermal zone. 
+      Note that the timestamps must be consistent between multiple files <u>and</u> the timestamps in the energy meter and AHU-level HVAC network trend data.</p>
 
     <p class="h3 fw-normal">Wi-Fi Device Count</p>
     <p class="fs-6">The end-use disaggregation function also requires Wi-Fi device count data. These data count the number of actively recognized, but not necessarily connected, devices by a building's Wi-Fi access points. 
@@ -373,7 +374,7 @@
         </figure>
       </div>
     </div>
-    <p class="fs-6 pt-4">This function does not requires <ul>hourly</ul> trend data (i.e., measurements taken at 15-minute interval are OK). The first column must contain the timestamp at which the device count is measured. The timestamp must include the numerical date and time and in the following format: [yyyy-mm-dd hh-mm]. 
+    <p class="fs-6 pt-4">This function does not requires <u>hourly</u> trend data (i.e., measurements taken at 15-minute interval are OK). The first column must contain the timestamp at which the device count is measured. The timestamp must include the numerical date and time and in the following format: [yyyy-mm-dd hh-mm]. 
       The second column must contain the number of devices recognized by a Wi-Fi access point. This column must contain only whole numbers (i.e., 2.4 is not an acceptable entry).</p>
     <p class="fs-6">A minimum of one (1) CSV file containing Wi-Fi device count data must be supplied to this function. However, if there is greater certainty amounting in floor-level 
       device count data (i.e., you have device count data for each floor of the building), you may input several CSV files whereby each file contains the data pertaining to a different floor. If the function 

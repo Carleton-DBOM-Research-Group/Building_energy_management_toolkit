@@ -275,7 +275,7 @@
         </figure>
       </div>
     </div>
-    <p class="fs-6 pt-4">This function requires <ul>hourly</ul> trend data. The first column must contain the timestamp at which the measurement was recorded. The timestamp must include the numerical date and time and 
+    <p class="fs-6 pt-4">This function requires <u>hourly</u> trend data. The first column must contain the timestamp at which the measurement was recorded. The timestamp must include the numerical date and time and 
       in the following format: [yyyy-mm-dd hh-mm]. Each subsequent column must contain the trend data as listed in Table 1 in descending order (i.e. second column 
       contains supply air supply temperature, third column contains return air temperature, etc.)</p>
     <p class="fs-6">A minimum of one (1) CSV file containing AHU-level HVAC control network trend data must be supplied to this function, where each CSV file represents a separate AHU. 
@@ -336,9 +336,10 @@
         </figure>
       </div>
     </div>
-    <p class="fs-6 pt-4">This function requires <ul>hourly</ul> trend data. Like AHU-level HVAC control network trend data, the first column must contain the timestamp, which must include the numerical date and time and in the following format: [yyyy-mm-dd hh-mm].
+    <p class="fs-6 pt-4">This function requires <u>hourly</u> trend data. Like AHU-level HVAC control network trend data, the first column must contain the timestamp, which must include the numerical date and time and in the following format: [yyyy-mm-dd hh-mm].
       The timestamps must be consistent with the timestamps in the AHU-level HVAC control network trend data. Each subsequent column must contain the trend data as listed in Table 2 in descending order (i.e. second column contains indoor air temperature, third column contains supply airflow, etc.)</p>
-      <p class="fs-6">A minimum of one (1) CSV file containing zone-level HVAC control network trend data must be supplied to this function, where each CSV file represents a unique VAV terminal unit or thermal zone. Note that timestamps must be consistent between multiple files.</p>
+      <p class="fs-6">A minimum of one (1) CSV file containing zone-level HVAC control network trend data must be supplied to this function, where each CSV file represents a unique VAV terminal unit or thermal zone. 
+        Note that timestamps must be consistent between multiple files <u>and</u> with the timestamps in the AHU-level HVAC network trend data.</p>
   
     <!-- Footer -->
     <footer class="pt-4 my-md-5 pt-md-5 border-top">
