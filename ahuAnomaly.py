@@ -138,7 +138,12 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path):
         data = data.set_index(data.columns[0])
 
         #Drop rows with nan values
-        data = data.dropna()
+        mask = data[data.columns[0]].isna()
+        data = data.drop(data[mask].index)
+        sRad = sRad.drop(sRad[mask].index)
+        tInCld = tInCld.drop(tInCld[mask].index)
+        tInWrm = tInWrm.drop(tInWrm[mask].index)
+        tInAvg = tInAvg.drop(tInAvg[mask].index)
         
         #Drop stagnant data
         mask = data.iloc[:,3].rolling(24).std() < 0.001
