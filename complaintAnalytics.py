@@ -9,12 +9,10 @@ from sklearn.tree import DecisionTreeRegressor
 from sklearn import tree
 from sklearn import preprocessing
 
-def complaintsAnalytics(cmms,weather,tOa,time_tOa,zone,zone_time,area,bldg_id,output_path):
+def complaintsAnalytics(cmms_data,weather,tOa,time_tOa,zone,zone_time,area,output_path):
 
-    cols_to_use = ['Operator comments', 'Building ID', 'Report Time']
-    mask = (cmms['Building ID'] == bldg_id) #Collects entries pertaining to the building ID
-    cmms_data = cmms.loc[mask, cols_to_use]
-    cmms_time =cmms_data['Report Time']
+    cmms_data = cmms_data.rename(columns={cmms_data.columns[0]: "Report Time", cmms_data.columns[1]: "Operator comments"})
+    cmms_time = cmms_data['Report Time']
     cmms_time = pd.to_datetime(cmms_time)
 
     #hotComplain = cmms_data[cmms_data['Operator comments'].str.contains("hot", "water")]
@@ -186,9 +184,6 @@ def complaintsAnalytics(cmms,weather,tOa,time_tOa,zone,zone_time,area,bldg_id,ou
 
 def execute_function(uploaded_cmms_file, uploaded_zone_files, uploaded_weather_file, bldg_area, output_path):
 
-    #Specify the building ID -- Note: This is only required due to the nature of the sample dataset
-    bldg_id = '42-000'
-
     #Try reading CMMS data file
     print('Reading CMMS data file...')
     cmms = pd.read_csv(uploaded_cmms_file,encoding='unicode escape')
@@ -221,4 +216,4 @@ def execute_function(uploaded_cmms_file, uploaded_zone_files, uploaded_weather_f
         zone = pd.concat([zone,data],axis=1)
 
     #Try analyzing the data
-    complaintsAnalytics(cmms,weather,tOa,time_tOa,zone,zone_time,bldg_area,bldg_id,output_path)
+    complaintsAnalytics(cmms,weather,tOa,time_tOa,zone,zone_time,bldg_area,output_path)
