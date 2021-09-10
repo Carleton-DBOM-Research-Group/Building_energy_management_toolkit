@@ -387,7 +387,7 @@ def execute_function(uploaded_energy_data, uploaded_weather_data, numberOfFloors
   #Output an excel table with KPIs
   print('Formatting KPIs...')
   d = {'Utility': ['Heating', 'Cooling','Electricity'],
-      'Schedule Effectivness': [kpi_scheduleEffectiveness_heating, kpi_scheduleEffectiveness_cooling,kpi_scheduleEffectiveness_electricity],
+      'Schedule Effectiveness': [kpi_scheduleEffectiveness_heating, kpi_scheduleEffectiveness_cooling,kpi_scheduleEffectiveness_electricity],
       'After-hours energy use ratio':[kpi_afterHoursEnergyFraction_heating,kpi_afterHoursEnergyFraction_cooling,kpi_afterHoursEnergyFraction_electricity]}
   kpi_df = pd.DataFrame(data=d)
 
