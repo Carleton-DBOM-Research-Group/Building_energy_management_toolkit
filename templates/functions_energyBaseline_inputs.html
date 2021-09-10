@@ -200,9 +200,10 @@
       </div>
     </div>
     <p class="fs-6 pt-4">This function requires <u>hourly</u> energy meter data. The first column should contain the timestamp at which energy consumption is measured. The timestamp must include the numerical date and 
-      time and in the following format: [yyyy-mm-dd hh-mm]. The second column should contain the measured power consumption for electricity only. The third column should contain the measured power consumption for cooling only. The fourth column should contain the measured power 
-      consumption for heating only.</p>
+      time and in the following format: [yyyy-mm-dd hh-mm]. The second column should contain the measured power consumption for heating use only. The third column should contain the measured power consumption for cooling use only. The fourth column should contain the measured power 
+      consumption for electricity use only. The column containing electricity consumption may be omitted if the building does not meet the criteria* for performing an electricity use analysis.</p>
     <p class="fs-6">Only one (1) CSV file containing energy meter data for the whole building must be supplied to this function.</p>
+    <p class="fs-6">*<sup>Energy use comparison for electricity is valid only for buildings with on-site electricity-based cooling and without electricity-based heating.</sup></p>
     
     <p class="h3 fw-normal">Weather</p>
     <p class="fs-6">The energy baseline function also requires outdoor weather data. These data record the outdoor air temperature within the building's geographic vicinity. The data must be formatted as seen in Figure 2.
