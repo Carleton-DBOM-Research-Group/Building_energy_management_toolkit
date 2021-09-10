@@ -110,14 +110,18 @@ def execute_function(uploaded_energy_data, uploaded_weather_data, numberOfFloors
 
   if is_elec_clg:
     print('Electricity use comparison enabled!')
-    elec_df = pd.DataFrame()
-    elec_df['electricity'] = energy[energy.columns[3]]
-    elec_df['tOa'] = weather[weather.columns[0]]
-    elec_df.index = energy[energy.columns[0]]
-    elec_df.index = pd.to_datetime(elec_df.index)
-    elec_df['timeOfDay'] = elec_df.index.hour
-    elec_df['dayOfWeek'] = elec_df.index.dayofweek
-    elec_df = elec_df.dropna()
+    try:
+      elec_df = pd.DataFrame()
+      elec_df['electricity'] = energy[energy.columns[3]]
+      elec_df['tOa'] = weather[weather.columns[0]]
+      elec_df.index = energy[energy.columns[0]]
+      elec_df.index = pd.to_datetime(elec_df.index)
+      elec_df['timeOfDay'] = elec_df.index.hour
+      elec_df['dayOfWeek'] = elec_df.index.dayofweek
+      elec_df = elec_df.dropna()
+    except:
+      print('Cannot read electricity data. Electricity use comparison will be disabled.')
+      is_elec_clg = False
   else:
     print('Electricity use comparison disabled!')
 
