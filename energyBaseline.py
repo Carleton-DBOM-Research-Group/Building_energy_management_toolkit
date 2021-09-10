@@ -7,7 +7,7 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import math
 
-def execute_function(uploaded_energy_data, uploaded_weather_data, numberOfFloors, wwr, floorArea, exteriorFacadeArea, output_path):
+def execute_function(uploaded_energy_data, uploaded_weather_data, numberOfFloors, wwr, floorArea, exteriorFacadeArea, is_elec_clg, output_path):
 
   if (bool(exteriorFacadeArea) == False) or (exteriorFacadeArea == 0):
     exteriorFacadeArea = floorArea * 0.4
@@ -91,7 +91,7 @@ def execute_function(uploaded_energy_data, uploaded_weather_data, numberOfFloors
 
   #Create one dataframe to store all relevant data
   htg_df = pd.DataFrame()
-  htg_df['heating'] = energy[energy.columns[3]]
+  htg_df['heating'] = energy[energy.columns[1]]
   htg_df['tOa'] = weather[weather.columns[0]]
   htg_df.index = energy[energy.columns[0]]
   htg_df.index = pd.to_datetime(htg_df.index)
@@ -108,14 +108,18 @@ def execute_function(uploaded_energy_data, uploaded_weather_data, numberOfFloors
   clg_df['dayOfWeek'] = clg_df.index.dayofweek
   clg_df = clg_df.dropna()
 
-  elec_df = pd.DataFrame()
-  elec_df['electricity'] = energy[energy.columns[1]]
-  elec_df['tOa'] = weather[weather.columns[0]]
-  elec_df.index = energy[energy.columns[0]]
-  elec_df.index = pd.to_datetime(elec_df.index)
-  elec_df['timeOfDay'] = elec_df.index.hour
-  elec_df['dayOfWeek'] = elec_df.index.dayofweek
-  elec_df = elec_df.dropna()
+  if is_elec_clg:
+    print('Electricity use comparison enabled!')
+    elec_df = pd.DataFrame()
+    elec_df['electricity'] = energy[energy.columns[3]]
+    elec_df['tOa'] = weather[weather.columns[0]]
+    elec_df.index = energy[energy.columns[0]]
+    elec_df.index = pd.to_datetime(elec_df.index)
+    elec_df['timeOfDay'] = elec_df.index.hour
+    elec_df['dayOfWeek'] = elec_df.index.dayofweek
+    elec_df = elec_df.dropna()
+  else:
+    print('Electricity use comparison disabled!')
 
   varbound = np.array([[0, max(htg_df['heating'])/10],[0,max(htg_df['heating'])/10],[0,20],[0,max(htg_df['heating'])],[0,20],[0,max(htg_df['heating'])],[0,8],[16,23],[0,12],[12,23]])
 
@@ -292,86 +296,86 @@ def execute_function(uploaded_energy_data, uploaded_weather_data, numberOfFloors
   plt.savefig(output_path + r'\energyBase_cooling.png',dpi=600)
   print('Cooling energy use analysis completed!')
 
-  varbound = np.array([[0, max(elec_df['electricity'])/10],[0,max(elec_df['electricity'])/10],[0,20],[0,max(elec_df['electricity'])],[0,20],[0,max(elec_df['electricity'])],[0,8],[16,23],[0,12],[12,23]])
+  if is_elec_clg:
+    varbound = np.array([[0, max(elec_df['electricity'])/10],[0,max(elec_df['electricity'])/10],[0,20],[0,max(elec_df['electricity'])],[0,20],[0,max(elec_df['electricity'])],[0,8],[16,23],[0,12],[12,23]])
 
-  model_Elec_GA = ga(function=rmse_electricityChangePoint,
-                      dimension=10, 
-                      variable_type='real', 
-                      variable_boundaries = varbound,
-                      algorithm_parameters=algorithm_param,
-                      convergence_curve = False) #Use the same parameters as previous ga
+    model_Elec_GA = ga(function=rmse_electricityChangePoint,
+                        dimension=10, 
+                        variable_type='real', 
+                        variable_boundaries = varbound,
+                        algorithm_parameters=algorithm_param,
+                        convergence_curve = False) #Use the same parameters as previous ga
 
-  print('Estimating electricity use change points using GA...')
-  model_Elec_GA.run() #Run GA for electricity
-  x = model_Elec_GA.best_variable #Extract changepoints from GA
+    print('Estimating electricity use change points using GA...')
+    model_Elec_GA.run() #Run GA for electricity
+    x = model_Elec_GA.best_variable #Extract changepoints from GA
 
-  sch = ((elec_df.index.hour > x[4]) & (elec_df.index.hour < x[5]) & (elec_df.index.dayofweek >=0 ) & (elec_df.index.dayofweek < 5)) | ((elec_df.index.hour> x[6]) & (elec_df.index.hour < x[7]) & ( (elec_df.index.dayofweek==6) | (elec_df.index.dayofweek == 5)))
-  yp = (np.logical_and(elec_df['tOa'] >= x[2],sch == 1)) * ((elec_df['tOa'] - x[2]) * x[0] + x[3]) + (np.logical_and(elec_df['tOa'] >= x[2],sch == 0 ))*((elec_df['tOa'] - x[2]) * x[1] + x[3]) + (elec_df['tOa'] < x[2])*x[3]
+    sch = ((elec_df.index.hour > x[4]) & (elec_df.index.hour < x[5]) & (elec_df.index.dayofweek >=0 ) & (elec_df.index.dayofweek < 5)) | ((elec_df.index.hour> x[6]) & (elec_df.index.hour < x[7]) & ( (elec_df.index.dayofweek==6) | (elec_df.index.dayofweek == 5)))
+    yp = (np.logical_and(elec_df['tOa'] >= x[2],sch == 1)) * ((elec_df['tOa'] - x[2]) * x[0] + x[3]) + (np.logical_and(elec_df['tOa'] >= x[2],sch == 0 ))*((elec_df['tOa'] - x[2]) * x[1] + x[3]) + (elec_df['tOa'] < x[2])*x[3]
 
-  residuals = elec_df['electricity'] - yp
-  timeOfDay_handle = elec_df.index.hour
-  mdl_electricity_prmtr = x
+    residuals = elec_df['electricity'] - yp
+    timeOfDay_handle = elec_df.index.hour
+    mdl_electricity_prmtr = x
 
-  a=[]
-  b=[]
+    a=[]
+    b=[]
 
-  for i in range(0,24):
-    a.append(residuals[(timeOfDay_handle == i) & ((elec_df.index.dayofweek >= 0) & (elec_df.index.dayofweek < 5)) & (elec_df['tOa'] < x[2])].mean())
-    b.append(residuals[(timeOfDay_handle == i) & ((elec_df.index.dayofweek >= 0) & (elec_df.index.dayofweek < 5)) & (elec_df['tOa'] >= x[2])].mean())
+    for i in range(0,24):
+      a.append(residuals[(timeOfDay_handle == i) & ((elec_df.index.dayofweek >= 0) & (elec_df.index.dayofweek < 5)) & (elec_df['tOa'] < x[2])].mean())
+      b.append(residuals[(timeOfDay_handle == i) & ((elec_df.index.dayofweek >= 0) & (elec_df.index.dayofweek < 5)) & (elec_df['tOa'] >= x[2])].mean())
 
-  mdl_electricity_residual= pd.DataFrame(a,columns=['residual1'])
-  mdl_electricity_residual['residual2'] = b
+    mdl_electricity_residual= pd.DataFrame(a,columns=['residual1'])
+    mdl_electricity_residual['residual2'] = b
 
-  plt.figure(figsize=(10,5))
-  plt.subplot(121)
-  plt.scatter(elec_df['tOa'], elec_df['electricity'], alpha=0.1, c='gray',label='Measured')
-  plt.xlabel(r'Outdoor air temperature '+r'$(^{0}C)$',fontsize = 18)
-  plt.ylabel("Electricity load (kWh)", fontsize= 18)
-  plt.xticks(fontsize=12)
-  plt.yticks(fontsize=12)
-  plt.xlim(-5,35)
-  plt.ylim(bottom=0)
+    plt.figure(figsize=(10,5))
+    plt.subplot(121)
+    plt.scatter(elec_df['tOa'], elec_df['electricity'], alpha=0.1, c='gray',label='Measured')
+    plt.xlabel(r'Outdoor air temperature '+r'$(^{0}C)$',fontsize = 18)
+    plt.ylabel("Electricity load (kWh)", fontsize= 18)
+    plt.xticks(fontsize=12)
+    plt.yticks(fontsize=12)
+    plt.xlim(-5,35)
+    plt.ylim(bottom=0)
 
-  #Modelled hot operating hours and afterhours
-  print('Modeling operating and afterhours electricity use...')
-  tOa_handle = np.linspace(-5,35,100)
-  ypOperating = (tOa_handle > x[2]) * ((-x[2] + tOa_handle) * x[0] + x[3]) + (tOa_handle <= x[2]) * (x[3])
-  ypAfterHours = (tOa_handle > x[4]) * ((-x[4] + tOa_handle) * x[1] + x[5]) + (tOa_handle <= x[4]) * (x[5])
-  plt.plot(tOa_handle,ypOperating, 'k',linewidth=4,label='Modelled operating')
-  plt.plot(tOa_handle,ypAfterHours, 'k--',linewidth=4,label ='Modelled afterhours')
+    #Modelled hot operating hours and afterhours
+    print('Modeling operating and afterhours electricity use...')
+    tOa_handle = np.linspace(-5,35,100)
+    ypOperating = (tOa_handle > x[2]) * ((-x[2] + tOa_handle) * x[0] + x[3]) + (tOa_handle <= x[2]) * (x[3])
+    ypAfterHours = (tOa_handle > x[4]) * ((-x[4] + tOa_handle) * x[1] + x[5]) + (tOa_handle <= x[4]) * (x[5])
+    plt.plot(tOa_handle,ypOperating, 'k',linewidth=4,label='Modelled operating')
+    plt.plot(tOa_handle,ypAfterHours, 'k--',linewidth=4,label ='Modelled afterhours')
 
-  plt.legend(ncol=1,handlelength=3)
+    plt.legend(ncol=1,handlelength=3)
 
-  print('Modeling predicted electricity use...')
-  plt.subplot(122)
-  plt.xlim(0,23)
-  plt.ylim(0 ,math.ceil(max(elec_df['electricity'])/100)*100)
-  plt.xticks(np.arange(0,24 ,step=2), fontsize=12)
-  plt.yticks(fontsize=12)
-  plt.xlabel('Time of day (h)',fontsize = 18)
-  plt.ylabel("Predicted electricity load (kWh)", fontsize= 18)
-  timeOfDay_handle = list(range(0,24))
-  sch_handle =((timeOfDay_handle > x[6]) & (timeOfDay_handle < x[7]))
+    print('Modeling predicted electricity use...')
+    plt.subplot(122)
+    plt.xlim(0,23)
+    plt.ylim(0 ,math.ceil(max(elec_df['electricity'])/100)*100)
+    plt.xticks(np.arange(0,24 ,step=2), fontsize=12)
+    plt.yticks(fontsize=12)
+    plt.xlabel('Time of day (h)',fontsize = 18)
+    plt.ylabel("Predicted electricity load (kWh)", fontsize= 18)
+    timeOfDay_handle = list(range(0,24))
+    sch_handle =((timeOfDay_handle > x[6]) & (timeOfDay_handle < x[7]))
 
-  for i in [-5,15,35]:
-    tOa_handle = i*(np.ones(len(timeOfDay_handle)))
-    yp = (np.logical_and(tOa_handle >= x[2],sch_handle == 1 )) * ((tOa_handle - x[2]) * x[0] + x[3]) + (np.logical_and(tOa_handle >= x[2],sch_handle == 0 ))*((tOa_handle - x[2]) * x[1] + x[3]) + (tOa_handle < x[2])*x[3]
-    if i < x[2]:
-      yp = np.maximum(yp + mdl_electricity_residual['residual1'].values,0)
-    else:
-      yp = np.maximum(yp + mdl_electricity_residual['residual2'].values,0)
-    
-    plt.plot(timeOfDay_handle, yp, linewidth=4, markersize=16)
-    plt.text(x=12, y=max(yp)+10, s=r'$t_{oa} =$' + str(i) + ' C', fontsize=15)
+    for i in [-5,15,35]:
+      tOa_handle = i*(np.ones(len(timeOfDay_handle)))
+      yp = (np.logical_and(tOa_handle >= x[2],sch_handle == 1 )) * ((tOa_handle - x[2]) * x[0] + x[3]) + (np.logical_and(tOa_handle >= x[2],sch_handle == 0 ))*((tOa_handle - x[2]) * x[1] + x[3]) + (tOa_handle < x[2])*x[3]
+      if i < x[2]:
+        yp = np.maximum(yp + mdl_electricity_residual['residual1'].values,0)
+      else:
+        yp = np.maximum(yp + mdl_electricity_residual['residual2'].values,0)
+      
+      plt.plot(timeOfDay_handle, yp, linewidth=4, markersize=16)
+      plt.text(x=12, y=max(yp)+10, s=r'$t_{oa} =$' + str(i) + ' C', fontsize=15)
 
-  plt.tight_layout()
-  plt.savefig(output_path + r'\energyBase_electricity.png',dpi=600)
-  print('Electricity use analysis completed!')
+    plt.tight_layout()
+    plt.savefig(output_path + r'\energyBase_electricity.png',dpi=600)
+    print('Electricity use analysis completed!')
 
   print('Generating KPIs...')
   kpi_scheduleEffectiveness_heating = 1-(mdl_heating_prmtr[1]/mdl_heating_prmtr[0])
   kpi_scheduleEffectiveness_cooling = 1-(mdl_cooling_prmtr[1]/mdl_cooling_prmtr[0])
-  kpi_scheduleEffectiveness_electricity = 1-(mdl_electricity_prmtr[1]/mdl_electricity_prmtr[0])
   x = mdl_heating_prmtr
   sch = ((htg_df.index.hour > x[6]) & (htg_df.index.hour < x[7]) & (htg_df.index.dayofweek >=0 ) & (htg_df.index.dayofweek < 5)) | ((htg_df.index.hour> x[8]) & (htg_df.index.hour < x[9]) & ( (htg_df.index.dayofweek==6) | (htg_df.index.dayofweek == 5)))
   kpi_afterHoursEnergyFraction_heating = 1 - (htg_df['heating'][sch]).sum()/htg_df['heating'].sum()
@@ -380,15 +384,26 @@ def execute_function(uploaded_energy_data, uploaded_weather_data, numberOfFloors
   sch = ((clg_df.index.hour > x[6]) & (clg_df.index.hour < x[7]) & (clg_df.index.dayofweek >=0 ) & (clg_df.index.dayofweek < 5)) | ((clg_df.index.hour> x[8]) & (clg_df.index.hour < x[9]) & ( (clg_df.index.dayofweek==6) | (clg_df.index.dayofweek == 5)))
 
   kpi_afterHoursEnergyFraction_cooling = 1 - sum(clg_df['cooling'][sch])/sum(clg_df['cooling'])
-  x = mdl_electricity_prmtr
-  sch = ((elec_df.index.hour > x[6]) & (elec_df.index.hour < x[7]) & (elec_df.index.dayofweek >=0 ) & (elec_df.index.dayofweek < 5)) | ((elec_df.index.hour> x[8]) & (elec_df.index.hour < x[9]) & ( (elec_df.index.dayofweek==6) | (elec_df.index.dayofweek == 5)))
-  kpi_afterHoursEnergyFraction_electricity = 1 - sum(elec_df['electricity'][sch])/sum(elec_df['electricity'])
+
+  if is_elec_clg:
+    kpi_scheduleEffectiveness_electricity = 1-(mdl_electricity_prmtr[1]/mdl_electricity_prmtr[0])
+    x = mdl_electricity_prmtr
+    sch = ((elec_df.index.hour > x[6]) & (elec_df.index.hour < x[7]) & (elec_df.index.dayofweek >=0 ) & (elec_df.index.dayofweek < 5)) | ((elec_df.index.hour> x[8]) & (elec_df.index.hour < x[9]) & ( (elec_df.index.dayofweek==6) | (elec_df.index.dayofweek == 5)))
+    kpi_afterHoursEnergyFraction_electricity = 1 - sum(elec_df['electricity'][sch])/sum(elec_df['electricity'])
 
   #Output an excel table with KPIs
   print('Formatting KPIs...')
-  d = {'Utility': ['Heating', 'Cooling','Electricity'],
-      'Schedule Effectiveness': [kpi_scheduleEffectiveness_heating, kpi_scheduleEffectiveness_cooling,kpi_scheduleEffectiveness_electricity],
-      'After-hours energy use ratio':[kpi_afterHoursEnergyFraction_heating,kpi_afterHoursEnergyFraction_cooling,kpi_afterHoursEnergyFraction_electricity]}
+
+  try:
+    d = {'Utility': ['Heating', 'Cooling','Electricity'],
+        'Schedule Effectiveness': [kpi_scheduleEffectiveness_heating, kpi_scheduleEffectiveness_cooling,kpi_scheduleEffectiveness_electricity],
+        'After-hours energy use ratio':[kpi_afterHoursEnergyFraction_heating,kpi_afterHoursEnergyFraction_cooling,kpi_afterHoursEnergyFraction_electricity]}
+  
+  except:
+    d = {'Utility': ['Heating', 'Cooling'],
+        'Schedule Effectiveness': [kpi_scheduleEffectiveness_heating, kpi_scheduleEffectiveness_cooling],
+        'After-hours energy use ratio':[kpi_afterHoursEnergyFraction_heating,kpi_afterHoursEnergyFraction_cooling]}
+
   kpi_df = pd.DataFrame(data=d)
 
   writer = pd.ExcelWriter(output_path + r'\energyBase_summary.xlsx', engine='xlsxwriter')# pylint: disable=abstract-class-instantiated
