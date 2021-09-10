@@ -201,6 +201,16 @@
             <label for="formFile" class="form-label">Upload weather data file (Required)</label>
             <input class="form-control" type="file" name="weather_file[]" id="formFile" accept=".csv" required>
           </div>
+          <div class="row g-3">
+            <div class="col-md-12">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="is_elec_clg" value="" id="flexCheckDefault">
+                <label class="form-check-label" for="flexCheckDefault">
+                Enable electricity energy use comparison (ONLY available for buildings with on-site electricity-based cooling and without electricity-based heating) 
+                </label>
+              </div>
+            </div>
+          </div>
           <div class="border-top my-3">The following section is <u>optional</u> and is not required to run the function. To generate a National Energy Code of Canada for Buildings 
             (NECB) compliant heating energy use model, the below information is required*.</div>
           <div class="mb-3">
