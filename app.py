@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 
-from flask import Flask, request, redirect, render_template, url_for
+from flask import Flask, request, redirect, render_template, url_for, send_file
 import os
+import uuid
 
 import metadata
 import energyBaseline
@@ -99,8 +100,10 @@ def run_energyBaseline_function():
     floorArea = float(request.form['floorArea'])
   else:
     floorArea = 0
+  
+  is_elec_clg = 'is_elec_clg' in request.form #Check if checkbox has been checked - True if checked
 
-  energyBaseline.execute_function(uploaded_energy_file[0], uploaded_weather_file[0], numberOFFloors, wwr, floorArea, exteriorFacadeArea, path)
+  energyBaseline.execute_function(uploaded_energy_file[0], uploaded_weather_file[0], numberOFFloors, wwr, floorArea, exteriorFacadeArea, is_elec_clg, path)
   return "Success!"
 
 #AHU ANOMALY  
@@ -152,13 +155,32 @@ def zoneAnomaly_upload():
 
 @app.route('/functions/zoneAnomaly/upload/run-zoneAnomaly', methods=['POST'])
 def run_zoneAnomaly():
+  #cwd = os.getcwd()
+  #path = cwd + r'\test_outputs'
+  #uploaded_files = request.files.getlist('zone_HVAC_files[]')
+
+  #zoneAnomaly.execute_function(uploaded_files, path)
+  #return "Success!"
+
   cwd = os.getcwd()
-  path = cwd + r'\test_outputs'
+  request_uuid = str(uuid.uuid4())
+  
+  # create a new directory in unprocessed folder
+  path = os.path.join(cwd, 'userdata', 'unprocessed', request_uuid)
+  os.makedirs(path, exist_ok=True)
+  
+  # put the uploaded files there
   uploaded_files = request.files.getlist('zone_HVAC_files[]')
+  for f in uploaded_files:
+    f.save(os.path.join(path, f.filename))
 
-  zoneAnomaly.execute_function(uploaded_files, path)
-  return "Success!"
-
+  # create a ready file & function ID file
+  open(os.path.join(path, 'ready'), 'a').close()
+  open(os.path.join(path, 'zoneAnomaly'), 'a').close()
+  
+  #zoneAnomaly.execute_function(uploaded_files, path)
+  #return "Success!"
+  return f"Request accepted, check the result with this link\n http://localhost:5000/checkresult/{request_uuid}"
 
 
 #END-USE DISAGGREGATION  
@@ -273,3 +295,14 @@ def run_occupancy_motion_function():
   
   except:
     return "Something went wrong!"
+
+#Function to check results
+
+@app.route('/checkresult/<uuid:request_uuid>')
+def check_result(request_uuid):
+  cwd = os.getcwd()
+  result_dir = os.path.join(cwd, 'userdata', 'done', str(request_uuid))
+  if os.path.isfile(os.path.join(result_dir, 'ready')):
+    return send_file(os.path.join(result_dir, 'result.png'))
+  else:
+    return "Your results are not yet ready. Please check back later."
