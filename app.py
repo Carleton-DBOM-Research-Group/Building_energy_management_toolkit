@@ -180,7 +180,7 @@ def run_zoneAnomaly():
   
   #zoneAnomaly.execute_function(uploaded_files, path)
   #return "Success!"
-  return f"Request accepted, check the result with this link\n http://localhost:5000/checkresult/{request_uuid}"
+  return f"Request accepted, check the result with this link\n http://localhost:3000/checkresult/{request_uuid}"
 
 
 #END-USE DISAGGREGATION  
@@ -303,6 +303,6 @@ def check_result(request_uuid):
   cwd = os.getcwd()
   result_dir = os.path.join(cwd, 'userdata', 'done', str(request_uuid))
   if os.path.isfile(os.path.join(result_dir, 'ready')):
-    return send_file(os.path.join(result_dir, 'result.png'))
+    return send_file(os.path.join(result_dir, 'report.pdf'))
   else:
     return "Your results are not yet ready. Please check back later."
