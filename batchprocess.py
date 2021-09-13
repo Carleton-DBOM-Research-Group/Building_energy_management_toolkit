@@ -4,11 +4,20 @@ import time
 import os
 import shutil
 
+#import functions
+import ahuAnomaly
+import zoneAnomaly
+import metadata
+import endUseDisaggregation
+import occupancy
+import energyBaseline
+import complaintAnalytics
+import generate_report
+
 SLEEP_TIME = 10
 
 def is_ready(input_dir):
   return os.path.isfile(os.path.join(input_dir, 'ready'))
-
 
 def process_work(job_id, input_dir):
   cwd = os.getcwd()
@@ -19,6 +28,8 @@ def process_work(job_id, input_dir):
   if os.path.isfile(os.path.join(input_dir, 'zoneAnomaly')):
     print('Performing analysis using zone anomaly function...')
     #Do zone anomaly work here
+    zoneAnomaly.execute_function(input_dir,output_dir)
+    generate_report.zoneAnomaly(output_dir)
     open(os.path.join(output_dir, 'ready'), 'a').close()
 
   elif os.path.isfile(os.path.join(input_dir, 'ahuAnomaly')):
@@ -55,11 +66,11 @@ def watch_queue():
   cwd = os.getcwd()
   queue_dir = os.path.join(cwd, 'userdata', 'unprocessed')
   
-  for d in os.listdir(queue_dir):
-    input_dir = os.path.join(queue_dir, d)
+  for id in os.listdir(queue_dir):
+    input_dir = os.path.join(queue_dir, id)
     if os.path.isdir(input_dir) and is_ready(input_dir):
-      print(f'Processing {d}')
-      process_work(d, input_dir)
+      print(f'Processing {id}')
+      process_work(id, input_dir)
       shutil.rmtree(input_dir)  
 
 while True:
