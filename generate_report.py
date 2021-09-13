@@ -213,12 +213,10 @@ increasing the maximum terminal airflow setpoints in these overheating rooms.", 
     return
 
 #-----------------------------------------------GENERATE ZONE ANOMALY REPORT----------------------------------------------------
-def zoneAnomaly():
+def zoneAnomaly(output_path):
     print('Generating report for zone anomaly detection function...')
 
-    path = os.getcwd() #Get current directory
-    output_path = path + r'\toolkit\reports\4-zoneAnomaly' #Specify the output path for report
-    input_path = path + r'\toolkit\outputs\4-zoneAnomaly' #Specify the input path for report
+    input_path = output_path
 
     #Extract KPIs excel sheet
     kpis_heating = pd.read_excel(input_path + r'\zone_anomaly_summary.xlsx',sheet_name='Heating season')
@@ -321,8 +319,8 @@ of active (ON-state) perimeter heaters within a zone is also provided for each c
         
 
     #Save document in reports folder
-    document.save(output_path + r'\zoneAnomaly_report.docx')
-    convert(output_path + r'\zoneAnomaly_report.docx', output_path + r'\zoneAnomaly_report.pdf')
+    document.save(os.path.join(output_path, 'report.docx'))
+    convert(os.path.join(output_path, 'report.docx'), os.path.join(output_path, 'report.pdf'))
     print('Report successfully generated!')
 
     return
