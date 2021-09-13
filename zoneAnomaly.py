@@ -1,4 +1,5 @@
 #Import required modules
+import os
 import pandas as pd
 import numpy as np
 from sklearn import cluster,metrics,mixture
@@ -216,7 +217,11 @@ def zoneAnomaly (tIn,qFlo,qFloSp,sRad,output_path):
 
     return
 
-def execute_function(uploaded_zone_data, output_path):
+def execute_function(input_path, output_path):
+
+    #Read csv files in input path
+    zone_files = os.listdir(input_path)
+    zone_files_csv = [f for f in zone_files if f[-3:] == 'csv']
  
     #Create empty dataframes
     tIn = pd.DataFrame()
@@ -226,9 +231,9 @@ def execute_function(uploaded_zone_data, output_path):
 
     print('Reading zone-level HVAC data files...')
     #Populate tIn,qFlo,qFloSp,and sRad dataframes
-    for f in uploaded_zone_data:
+    for f in zone_files_csv:
         print('Reading ' + str(f) + '...')
-        data = pd.read_csv(f, index_col=0)
+        data = pd.read_csv(os.path.join(input_path,f), index_col=0)
         tIn = pd.concat([tIn,data[data.columns[0]]], axis=1,sort=False).rename(columns={data.columns[0]:str(f).replace('.csv','')})
         qFlo = pd.concat([qFlo,data[data.columns[1]]], axis=1,sort=False).rename(columns={data.columns[1]:str(f).replace('.csv','')})
         qFloSp = pd.concat([qFloSp,data[data.columns[2]]], axis=1,sort=False).rename(columns={data.columns[2]:str(f).replace('.csv','')})
