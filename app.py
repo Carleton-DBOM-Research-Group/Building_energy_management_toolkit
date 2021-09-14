@@ -77,34 +77,45 @@ def energyBaseline_upload():
 def run_energyBaseline_function():
 
   cwd = os.getcwd()
-  path = cwd + r'\test_outputs'
+  request_uuid = str(uuid.uuid4())
+  
+  # create a new directory in unprocessed folder
+  path = os.path.join(cwd, 'userdata', 'unprocessed', request_uuid)
+  os.makedirs(path, exist_ok=True)
+  energy_path = os.path.join(path, 'energy')
+  os.makedirs(energy_path, exist_ok=True)
+  weather_path = os.path.join(path, 'weather')
+  os.makedirs(weather_path, exist_ok=True)
+  
+  # put the uploaded energy file in energy subfolder
   uploaded_energy_file = request.files.getlist('energy_file[]')
+  uploaded_energy_file[0].save(os.path.join(energy_path, uploaded_energy_file[0].filename))
+
+  # put the uploaded weather file in weather subfolder
   uploaded_weather_file = request.files.getlist('weather_file[]')
+  uploaded_weather_file[0].save(os.path.join(weather_path, uploaded_weather_file[0].filename))
 
-  if (bool(request.form['exteriorFacadeArea']) == True):
-    exteriorFacadeArea = float(request.form['exteriorFacadeArea'])
+  # create text file and store variables for NECB baseline heating model
+  if (bool(request.form['numberOfFloors']) == True) and (bool(request.form['wwr']) == True) and (bool(request.form['floorArea']) == True):
+    f = open(os.path.join(path, "necb_parameters.txt"),"w+")
+    f.write(str(request.form['numberOfFloors']) + "\n")
+    f.write(str(request.form['wwr']) + "\n")
+    f.write(str(request.form['floorArea']) + "\n")
+    f.write(str(request.form['exteriorFacadeArea']))
+    f.close()
   else:
-    exteriorFacadeArea = 0
-  
-  if (bool(request.form['numberOfFloors']) == True):
-    numberOFFloors = int(request.form['numberOfFloors'])
-  else:
-    numberOFFloors = 0
-  
-  if (bool(request.form['wwr']) == True):
-    wwr = float(request.form['wwr'])
-  else:
-    wwr = 0
-  
-  if (bool(request.form['floorArea']) == True):
-    floorArea = float(request.form['floorArea'])
-  else:
-    floorArea = 0
-  
-  is_elec_clg = 'is_elec_clg' in request.form #Check if checkbox has been checked - True if checked
+    pass
 
-  energyBaseline.execute_function(uploaded_energy_file[0], uploaded_weather_file[0], numberOFFloors, wwr, floorArea, exteriorFacadeArea, is_elec_clg, path)
-  return "Success!"
+  if 'is_elec_clg' in request.form:
+    open(os.path.join(path, 'elec_true'), 'a').close()
+
+  # create a ready file & function ID file
+  open(os.path.join(path, 'ready'), 'a').close()
+  open(os.path.join(path, 'energyBaseline'), 'a').close()
+  
+  #zoneAnomaly.execute_function(uploaded_files, path)
+  #return "Success!"
+  return f"Request accepted, check the result with this link\n http://localhost:3000/checkresult/{request_uuid}"
 
 #AHU ANOMALY  
 
@@ -155,12 +166,6 @@ def zoneAnomaly_upload():
 
 @app.route('/functions/zoneAnomaly/upload/run-zoneAnomaly', methods=['POST'])
 def run_zoneAnomaly():
-  #cwd = os.getcwd()
-  #path = cwd + r'\test_outputs'
-  #uploaded_files = request.files.getlist('zone_HVAC_files[]')
-
-  #zoneAnomaly.execute_function(uploaded_files, path)
-  #return "Success!"
 
   cwd = os.getcwd()
   request_uuid = str(uuid.uuid4())
@@ -304,5 +309,7 @@ def check_result(request_uuid):
   result_dir = os.path.join(cwd, 'userdata', 'done', str(request_uuid))
   if os.path.isfile(os.path.join(result_dir, 'ready')):
     return send_file(os.path.join(result_dir, 'report.pdf'))
+  elif os.path.isfile(os.path.join(result_dir, 'error')):
+    return "Something went wrong with the analysis. Please check your input data and try again."
   else:
     return "Your results are not yet ready. Please check back later."
