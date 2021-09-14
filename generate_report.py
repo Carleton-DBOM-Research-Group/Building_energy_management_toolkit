@@ -6,12 +6,8 @@ from docx.shared import Inches
 from docx2pdf import convert
 
 #-----------------------------------------------GENERATE BASELINE ENERGY REPORT----------------------------------------------------
-def energyBaseline():
+def energyBaseline(path):
     print('Generating report for Baseline Energy function...')
-
-    path = os.getcwd() #Get current directory
-    output_path = path + r'\toolkit\reports\2-energyBaseline' #Specify the output path for report
-    input_path = path + r'\toolkit\outputs\2-energyBaseline'
 
     document = Document()
 
@@ -19,12 +15,13 @@ def energyBaseline():
 
     #Introductory paragraph
     p = document.add_paragraph('The baseline energy function ')
-    p.add_run('compares energy use during operating hours (workhours) and outside operating hours (after-hours) for heating, cooling, and electricity. ').bold=True
+    p.add_run('compares energy use during operating hours (workhours) and outside operating hours (after-hours) for heating, cooling, and electricity*. ').bold=True
     p.add_run("This function is intended to help the user assess the effectiveness of schedules and their ability to reduce \
 energy use outside of the building's operating hours. Plots are generated which compare the rate of energy use during and outside operating \
 hours with respect to outdoor air temperature, and predict energy consumption at representative outdoor air temperatures - these are \
-done separately for heating, cooling, and electrcity. The generated key performance indicators (KPI) quantify schedule \
+done separately for heating, cooling, and electricity. The generated key performance indicators (KPI) quantify schedule \
 effectiveness and afterhours energy use. More information is found in the respective sections.")
+    p = document.add_paragraph("*Electricity use comparison is shown only if electricity use analysis was conducted.")
 
     #Visualization heading and description
     document.add_heading('Visuals', level=1)
@@ -32,15 +29,20 @@ effectiveness and afterhours energy use. More information is found in the respec
 outside operating hours (after-hours) as a function of outdoor air temperatures - this is done separately for heating, \
 cooling, and electricity. Current schedules may be ineffective at reducing after-hours energy use if the after-hours energy use \
 line is similiar or identical to the workhours energy use line. If the slope of the after-hours energy use line is shallower \
-than the workhour eneegry use line, the current schedules are effectively reducing energy use outside operating hours.')
+than the workhour energy use line, the current schedules are effectively reducing energy use outside operating hours.')
     p = document.add_paragraph('The second set of visuals (to the right) illustrates the sensitivity of energy use with respect to outdoor \
 air temperatures - this is done separately for heating, cooling, and electricity. If the lines are spaced considerably apart, \
 the energy use is particularily sensitive to outdoor air temperature.')
 
     #Add visualizations
-    document.add_picture(input_path + r'\energyBase_heating.png', width=Inches(5.75))
-    document.add_picture(input_path + r'\energyBase_cooling.png', width=Inches(5.75))
-    document.add_picture(input_path + r'\energyBase_electricity.png', width=Inches(5.75))
+    document.add_picture(path + r'\energyBase_heating.png', width=Inches(5.75))
+    document.add_picture(path + r'\energyBase_cooling.png', width=Inches(5.75))
+
+    try:
+        document.add_picture(path + r'\energyBase_electricity.png', width=Inches(5.75))
+        os.remove(path + r'\energyBase_electricity.png')
+    except:
+        pass
 
     #KPIs heading and description
     document.add_heading('Key performance Indicators', level=1)
@@ -52,11 +54,11 @@ the energy use is particularily sensitive to outdoor air temperature.')
 afterhours energy use line. Values approaching zero (0%) indicate similiar or identical inclined slopes, positive (+) values indicate \
 a steeper workhours energy use slope than afterhours, and negative (-) values indicate a steeper afterhours energy use slope. Therefore, \
 a greater positive value is desirable since it indicates an effective reduction in energy use rates during afterhours.\n\n\
-The Afterhours energy use ratio is the ratio of energy use during afterhours over the total energy use. Higher value indicate a larger \
-portion of total energy consumption used during after-hours. Therefore, a lower value is desirable.')
+The Afterhours energy use ratio is the ratio of energy use during afterhours over the total energy use. A higher value indicates a larger \
+portion of the total energy consumption used during after-hours. Therefore, a lower value is desirable.')
 
     #Extract data from excel sheet and add table to document
-    kpis = pd.read_excel(input_path + r'\energyBase_summary.xlsx',sheet_name='KPIs')
+    kpis = pd.read_excel(path + r'\energyBase_summary.xlsx',sheet_name='KPIs')
     kpis.drop(kpis.columns[0],axis=1,inplace=True)
     kpis.iloc[:,1:] = (kpis.iloc[:,1:] * 100).astype(int).astype(str) + '%'
 
@@ -73,8 +75,15 @@ portion of total energy consumption used during after-hours. Therefore, a lower 
     t.style = 'Colorful List'
 
     #Save document in reports folder
-    document.save(output_path + r'\energyBaseline_report.docx')
-    convert(output_path + r'\energyBaseline_report.docx', output_path + r'\energyBaseline_report.pdf')
+    document.save(path + r'\report.docx')
+    convert(path + r'\report.docx', path + r'\report.pdf')
+
+    #Remove all used files
+    os.remove(path + r'\energyBase_heating.png')
+    os.remove(path + r'\energyBase_cooling.png')
+    os.remove(path + r'\energyBase_summary.xlsx')
+    os.remove(path + r'\report.docx')
+
     print('Report successfully generated!')
 
     return
@@ -213,16 +222,14 @@ increasing the maximum terminal airflow setpoints in these overheating rooms.", 
     return
 
 #-----------------------------------------------GENERATE ZONE ANOMALY REPORT----------------------------------------------------
-def zoneAnomaly(output_path):
+def zoneAnomaly(path):
     print('Generating report for zone anomaly detection function...')
 
-    input_path = output_path
-
     #Extract KPIs excel sheet
-    kpis_heating = pd.read_excel(input_path + r'\zone_anomaly_summary.xlsx',sheet_name='Heating season')
+    kpis_heating = pd.read_excel(path + r'\zone_anomaly_summary.xlsx',sheet_name='Heating season')
     kpis_heating.drop(kpis_heating.columns[0],axis=1,inplace=True)
 
-    kpis_cooling = pd.read_excel(input_path + r'\zone_anomaly_summary.xlsx',sheet_name='Cooling season')
+    kpis_cooling = pd.read_excel(path + r'\zone_anomaly_summary.xlsx',sheet_name='Cooling season')
     kpis_cooling.drop(kpis_cooling.columns[0],axis=1,inplace=True)
 
     #Generate Word document
@@ -261,8 +268,8 @@ airflow control errors, ensure perimeter heating devices and/or reheat coils are
 increasing the maximum airflow setpoint.", style='List Bullet')
 
     #Add visualizations
-    document.add_picture(input_path + r'\zone_heat_season.png', width=Inches(4.75))
-    document.add_picture(input_path + r'\zone_cool_season.png', width=Inches(4.75))
+    document.add_picture(path + r'\zone_heat_season.png', width=Inches(4.75))
+    document.add_picture(path + r'\zone_cool_season.png', width=Inches(4.75))
 
     #KPIs heading and description
     document.add_heading('Key performance Indicators', level=1)
@@ -319,8 +326,15 @@ of active (ON-state) perimeter heaters within a zone is also provided for each c
         
 
     #Save document in reports folder
-    document.save(os.path.join(output_path, 'report.docx'))
-    convert(os.path.join(output_path, 'report.docx'), os.path.join(output_path, 'report.pdf'))
+    document.save(os.path.join(path, 'report.docx'))
+    convert(os.path.join(path, 'report.docx'), os.path.join(path, 'report.pdf'))
+
+    #Remove all used files
+    os.remove(path + r'\zone_heat_season.png')
+    os.remove(path + r'\zone_cool_season.png')
+    os.remove(path + r'\zone_anomaly_summary.xlsx')
+    os.remove(path + r'\report.docx')
+
     print('Report successfully generated!')
 
     return
