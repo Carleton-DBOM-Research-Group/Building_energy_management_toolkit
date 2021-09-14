@@ -1,4 +1,5 @@
 #Import required libraries
+import os
 import pandas as pd
 import numpy as np
 from geneticalgorithm import geneticalgorithm as ga
@@ -7,25 +8,40 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import math
 
-def execute_function(uploaded_energy_data, uploaded_weather_data, numberOfFloors, wwr, floorArea, exteriorFacadeArea, is_elec_clg, output_path):
-
-  if (bool(exteriorFacadeArea) == False) or (exteriorFacadeArea == 0):
-    exteriorFacadeArea = floorArea * 0.4
+def execute_function(input_path, output_path):
 
   try:
+    file = open(os.path.join(input_path,'necb_parameters.txt'))
+    content = file.readlines()
+
+    numberOfFloors = int(content[0])
+    wwr = float(content[1])
+    floorArea = float(content[2])
+
+    try:
+      exteriorFacadeArea = float(content[3])
+    except:
+      exteriorFacadeArea = floorArea * 0.4
+
     ua = exteriorFacadeArea*(1-wwr)*0.25 + exteriorFacadeArea*wwr*1.9 + floorArea/numberOfFloors*0.2 #Define UA value without infiltration
     ua = (ua + 0.3*(exteriorFacadeArea + floorArea/numberOfFloors))/1000 #Define UA with infiltration(0.25 L/s-m2; air density 1.2 kg/m3 & air specific heat 1 kJ/kgdegC)
     uVen = 0.6*floorArea/1000 #0.5 L/s-m2 ashrae 62.1 office ventilation rates for default office occupancy rates
+
+    file.close()
+  
   except:
     print('Insufficient information provided - NECB compliant heating energy use rates will not be modeled...')
 
   #Read energy data files
   print('Reading energy meter data...')
-  energy = pd.read_csv(uploaded_energy_data)
+  #Read energy files in input path
+  energy_files = os.listdir(os.path.join(input_path,'energy'))
+  energy = pd.read_csv(os.path.join(input_path, 'energy',energy_files[0]))
 
   #Read AMY weather data
   print('Reading weather data...')
-  weather = pd.read_csv(uploaded_weather_data,usecols=[3],skiprows=18)
+  weather_files = os.listdir(os.path.join(input_path,'weather'))
+  weather = pd.read_csv(os.path.join(input_path, 'weather',weather_files[0]),usecols=[3],skiprows=18)
 
   #Define ga functions
 
@@ -108,7 +124,7 @@ def execute_function(uploaded_energy_data, uploaded_weather_data, numberOfFloors
   clg_df['dayOfWeek'] = clg_df.index.dayofweek
   clg_df = clg_df.dropna()
 
-  if is_elec_clg:
+  if os.path.isfile(os.path.join(input_path, 'elec_true')):
     print('Electricity use comparison enabled!')
     try:
       elec_df = pd.DataFrame()
@@ -119,15 +135,17 @@ def execute_function(uploaded_energy_data, uploaded_weather_data, numberOfFloors
       elec_df['timeOfDay'] = elec_df.index.hour
       elec_df['dayOfWeek'] = elec_df.index.dayofweek
       elec_df = elec_df.dropna()
+      is_elec_clg = True
     except:
       print('Cannot read electricity data. Electricity use comparison will be disabled.')
       is_elec_clg = False
   else:
     print('Electricity use comparison disabled!')
+    is_elec_clg = False
 
   varbound = np.array([[0, max(htg_df['heating'])/10],[0,max(htg_df['heating'])/10],[0,20],[0,max(htg_df['heating'])],[0,20],[0,max(htg_df['heating'])],[0,8],[16,23],[0,12],[12,23]])
 
-  algorithm_param = {'max_num_iteration': 20,\
+  algorithm_param = {'max_num_iteration': 10,\
                     'population_size':5000,\
                     'mutation_probability':0.1,\
                     'elit_ratio': 0.01,\
