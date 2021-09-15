@@ -107,6 +107,18 @@ def zoneAnomaly (tIn,qFlo,qFloSp,sRad,output_path):
             t.set_bbox(dict(facecolor='black', alpha=0.6, edgecolor='black'))
         t = plt.text(15.2, 99.5 - 7*(i+1), 'C'+str(i+1)+': '+str(sum(eva==i))+ ' zone(s)', fontsize=20, alpha=0.5)
 
+    #Find samples in clusters
+    cluster_map = pd.DataFrame()
+    cluster_map['data_index'] = frameWntr.index.values
+    cluster_map['cluster'] = eva
+
+    cluster_samples = pd.DataFrame()
+    for a in range(optimalK):
+        samples = (cluster_map.data_index[cluster_map.cluster == a])
+        cluster_samples = pd.concat([cluster_samples,samples], ignore_index=False, axis=1).rename(columns={'data_index':'C'+str(a+1)})
+
+    heat_cluster_samples = cluster_samples.apply(lambda x: pd.Series(x.dropna().values))
+
     #Compute Winter Health index - count number of zones where the cluster falls beyond threshold.
     centerClust['Health Index'] = ''
     centerClust['Health Index'][0] = 1 - centerClust.loc[(centerClust['Mean t_in']>25) | (centerClust['Mean t_in']<20) | (centerClust['Mean q_Flo Error']>20) | (centerClust['Mean q_Flo Error']<-20), 'Zones'].sum()/centerClust['Zones'].sum()
@@ -199,6 +211,18 @@ def zoneAnomaly (tIn,qFlo,qFloSp,sRad,output_path):
             t = plt.text(x, y, 'C'+str(i+1), fontsize=25, color = 'w', ha = 'center', va= 'center')
             t.set_bbox(dict(facecolor='black', alpha=0.6, edgecolor='black'))
         t = plt.text(15.2, 99.5 - 7*(i+1), 'C'+str(i+1)+': '+str(sum(eva==i))+ ' zone(s)', fontsize=20, alpha=0.5)
+    
+    #Find samples in clusters
+    cluster_map = pd.DataFrame()
+    cluster_map['data_index'] = frameSmr.index.values
+    cluster_map['cluster'] = eva
+
+    cluster_samples = pd.DataFrame()
+    for a in range(optimalK):
+        samples = (cluster_map.data_index[cluster_map.cluster == a])
+        cluster_samples = pd.concat([cluster_samples,samples], ignore_index=False, axis=1).rename(columns={'data_index':'C'+str(a+1)})
+
+    cool_cluster_samples = cluster_samples.apply(lambda x: pd.Series(x.dropna().values))
 
     #Compute Summer Health index - count number of zones where the cluster falls beyond threshold.
     centerClust['Health Index'] = ''
@@ -211,8 +235,10 @@ def zoneAnomaly (tIn,qFlo,qFloSp,sRad,output_path):
     #Output the zone summary tables as excel files
     print('Formatting KPIs...')
     writer = pd.ExcelWriter(output_path + r'\zone_anomaly_summary.xlsx', engine='xlsxwriter') # pylint: disable=abstract-class-instantiated
-    zoneWinterSummary.to_excel(writer, sheet_name='Heating season')
-    zoneSummerSummary.to_excel(writer, sheet_name='Cooling season')
+    zoneWinterSummary.to_excel(writer, sheet_name='Htg_summary')
+    heat_cluster_samples.to_excel(writer, sheet_name='Htg_samples')
+    zoneSummerSummary.to_excel(writer, sheet_name='Clg_summary')
+    cool_cluster_samples.to_excel(writer,sheet_name='Clg_samples')
     writer.save()
 
     return
