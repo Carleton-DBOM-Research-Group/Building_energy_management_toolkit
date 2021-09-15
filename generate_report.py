@@ -469,7 +469,8 @@ def occupancy(which_data):
         p.add_run('highest recorded occupancy').bold = True
         p.add_run(' for weekdays and weekends separately. This function can be used to inform ventilation schedules which can minimize \
     excessive ventilation during unoccupied hours, or even serve as a bssis for an occupant-driven demand controlled ventilation scheme. \
-    Visuals plot building-level and floor-level occupant count profiles.')
+    Visuals plot building-level and floor-level* occupant count profiles.')
+        p = document.add_paragraph("*Floor-level occupant count profiles are shown only if multiple files were inputted and read.")
 
         #Visualization heading and description - Building-level occupant count
         document.add_heading('Visuals - Building-level occupant count', level=1)
@@ -481,13 +482,15 @@ def occupancy(which_data):
         #Add visualizations
         document.add_picture(input_path + r'\percentile_occ.png', width=Inches(5.75))
 
-        #Visualization heading and description - Floor-level occupant count
-        document.add_heading('Visuals - Floor-level occupant count', level=1)
-        p = document.add_paragraph('This set of visuals plots hourly floor-level occupant count profiles for weekdays (to the left) and \
-    weekends (to the right) separately. The profiles are broken down by floor and are shown as the 75th, which is the higher range of typical occupancy.')
+        if os.path.isfile(os.path.join(input_path, 'floor_level_occ.png')):
 
-        #Add visualizations
-        document.add_picture(input_path + r'\floor_level_occ.png', width=Inches(5.75))
+            #Visualization heading and description - Floor-level occupant count
+            document.add_heading('Visuals - Floor-level occupant count', level=1)
+            p = document.add_paragraph('This set of visuals plots hourly floor-level occupant count profiles for weekdays (to the left) and \
+        weekends (to the right) separately. The profiles are broken down by floor and are shown as the 75th, which is the higher range of typical occupancy.')
+
+            #Add visualizations
+            document.add_picture(input_path + r'\floor_level_occ.png', width=Inches(5.75))
 
         #KPIs heading and description
         document.add_heading('Key performance Indicators', level=1)
