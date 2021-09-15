@@ -226,11 +226,17 @@ def zoneAnomaly(path):
     print('Generating report for zone anomaly detection function...')
 
     #Extract KPIs excel sheet
-    kpis_heating = pd.read_excel(path + r'\zone_anomaly_summary.xlsx',sheet_name='Heating season')
+    kpis_heating = pd.read_excel(path + r'\zone_anomaly_summary.xlsx',sheet_name='Htg_summary')
     kpis_heating.drop(kpis_heating.columns[0],axis=1,inplace=True)
 
-    kpis_cooling = pd.read_excel(path + r'\zone_anomaly_summary.xlsx',sheet_name='Cooling season')
+    kpis_cooling = pd.read_excel(path + r'\zone_anomaly_summary.xlsx',sheet_name='Clg_summary')
     kpis_cooling.drop(kpis_cooling.columns[0],axis=1,inplace=True)
+
+    samples_heating = pd.read_excel(path + r'\zone_anomaly_summary.xlsx',sheet_name='Htg_samples',keep_default_na=False)
+    samples_heating.drop(samples_heating.columns[0],axis=1,inplace=True)
+
+    samples_cooling = pd.read_excel(path + r'\zone_anomaly_summary.xlsx',sheet_name='Clg_samples',keep_default_na=False)
+    samples_cooling.drop(samples_cooling.columns[0],axis=1,inplace=True)
 
     #Generate Word document
     document = Document()
@@ -256,16 +262,16 @@ higher actual flowrate than the setpoint and a negative (-) percentage indicates
 setpoint. This visual is generated twice, once for the heating season (December through February) and again \
 for the cooling season (May through August). The following are possible symptoms of anomalous operations:')
 
-    document.add_paragraph('High flow: Zones exhibit abnormally high airflow. Ensure the VAV termianl damper and \
-airflow sensors are operating as intended. High airflow to zones may result in excessive use of perimeter heaters.', style='List Bullet')
-    document.add_paragraph('Low flow: Zones exhibit abnormally low airflow. Ensure the VAV termianl damper and \
-airflow sensors are operating as intended. Low airflow to zones may result in inadequate indoor air quality for occuapnts.', style='List Bullet')
+    document.add_paragraph('High flow: Zones exhibit abnormally high airflow. Ensure the VAV terminal damper and \
+airflow sensors are operating as intended.', style='List Bullet')
+    document.add_paragraph('Low flow: Zones exhibit abnormally low airflow. Ensure the VAV terminal damper and \
+airflow sensors are operating as intended.', style='List Bullet')
     document.add_paragraph("Cold: Zones exhibit abnormally low indoor air temperatures. If zones exhibit acceptable \
-airflow control errors, ensure perimeter heating devices and/or reheat coils are operating as intended. Consider \
-decreasing the minimum airflow setpoint.", style='List Bullet')
+airflow control errors (i.e., high/low flow faults are not present), ensure perimeter heating devices and/or reheat coils are operating as intended. Consider \
+decreasing the VAV terminal minimum airflow setpoint.", style='List Bullet')
     document.add_paragraph("Hot: Zones exhibit abnormally high indoor air temperatures. If zones exhibit acceptable \
-airflow control errors, ensure perimeter heating devices and/or reheat coils are operating as intended. Consider \
-increasing the maximum airflow setpoint.", style='List Bullet')
+airflow control errors (i.e., high/low flow faults are not present), ensure perimeter heating devices and/or reheat coils are operating as intended. Consider \
+increasing the VAV terminal maximum airflow setpoint.", style='List Bullet')
 
     #Add visualizations
     document.add_picture(path + r'\zone_heat_season.png', width=Inches(4.75))
@@ -292,11 +298,9 @@ indicates little to no detected anomalous zones.')
     p.add_run(str(cooling_health_index) + '%').bold = True
 
     #Add tables with summary tables
-    p = document.add_paragraph('The following tables lists the number of zones in each group and the average \
+    p = document.add_paragraph('The following tables are a summary of the clustering results, which lists the number of zones in each group and the average \
 indoor air temperature and average airflow control error for each group. For the heating season, the average fraction \
 of active (ON-state) perimeter heaters within a zone is also provided for each cluster.')
-    
-    document.add_page_break()
 
     kpis_heating.drop(kpis_heating.columns[-1],axis=1,inplace=True) #Drop the health index from the heating season table
     kpis_heating.iloc[:,0] = (kpis_heating.iloc[:,0]).astype(int)
@@ -307,7 +311,7 @@ of active (ON-state) perimeter heaters within a zone is also provided for each c
     kpis_cooling.iloc[:,2] = (kpis_cooling.iloc[:,2]).round(1).astype(str) + '%'
 
     table_labels = ['Number of zones','Average indoor air temperature (C)','Average airflow control error','Average fraction of active perimeter heaters']
-    table_headings = ['Heating season KPIs','Cooling season KPIs']
+    table_headings = ['Cluster summary - Heating season (December-February)','Cluster summary - Cooling season (May-August)']
     k = 0
 
     for df in [kpis_heating,kpis_cooling]:
@@ -323,6 +327,28 @@ of active (ON-state) perimeter heaters within a zone is also provided for each c
                 t.cell(i+1,j).text = str(df.values[i,j])
         k+=1
         t.style = 'Colorful List'
+    
+    document.add_page_break()
+    
+    #Add tables with cluster samples
+    p = document.add_paragraph('The following tables lists the individual zones (by filename) by its resultant group (i.e., the zones listed under C1 \
+belong to the zone cluster C1.) These tables can be used to identify the zone(s) which were determined to exhibit anomalous conditions.')
+
+    table_headings = ['Zone samples - Heating season (December-February)','Zone samples - Cooling season (May-August)']
+    k = 0
+
+    for df in [samples_heating,samples_cooling]:
+        p = document.add_heading(table_headings[k],level=2)
+        t = document.add_table(df.shape[0]+1, df.shape[1])
+        
+        for j in range(df.shape[-1]): # add the header rows.
+            t.cell(0,j).text = df.columns[j]
+        
+        for i in range(df.shape[0]): # add the rest of the data frame
+            for j in range(df.shape[-1]):
+                t.cell(i+1,j).text = str(df.values[i,j])
+        k+=1
+        t.style = 'TableGrid'
         
 
     #Save document in reports folder
