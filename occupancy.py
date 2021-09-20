@@ -6,8 +6,9 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import math
 from datetime import timedelta
+import os
 
-def occupancy(floor,output_path):   
+def occupancy(floor,input_path,output_path):   
     
     # Create a blank data frame to store KPIs
     kpi = pd.DataFrame(0,
@@ -149,71 +150,75 @@ def occupancy(floor,output_path):
     plt.tight_layout()
     fig.savefig(output_path + r'\percentile_occ.png',dpi=600,bbox_inches='tight')
 
-    #----Floor-level occupancy plots----#
-    print("Generate floor-level occupancy plots...")
-    df = floor
+    if len(floor) > 1 and os.path.isfile(os.path.join(input_path,'is_flr_lvl')) :
+        #----Floor-level occupancy plots----#
+        print("Generate floor-level occupancy plots...")
+        df = floor
 
-    # Upper quantile at the floor level for the weekday and weekend for plot
-    temp = df.loc[df['workday'] == True].groupby(['floor','hour'])['wifi counts'].quantile(0.75).unstack(level='hour').T
-    occ_wkdy_floor = round((temp-temp.min())/1.2)
-    for col in occ_wkdy_floor.columns:
-            occ_wkdy_floor.loc[occ_wkdy_floor[col]<4,col] = 0 #If occupancy count is less than four per floor, count as no occupancy.
+        # Upper quantile at the floor level for the weekday and weekend for plot
+        temp = df.loc[df['workday'] == True].groupby(['floor','hour'])['wifi counts'].quantile(0.75).unstack(level='hour').T
+        occ_wkdy_floor = round((temp-temp.min())/1.2)
+        for col in occ_wkdy_floor.columns:
+                occ_wkdy_floor.loc[occ_wkdy_floor[col]<4,col] = 0 #If occupancy count is less than four per floor, count as no occupancy.
 
-    temp = df.loc[df['workday'] == False].groupby(['floor','hour'])['wifi counts'].quantile(0.75).unstack(level='hour').T
-    occ_wknd_floor = round((temp-temp.min())/1.2)
-    for col in occ_wknd_floor.columns:
-            occ_wknd_floor.loc[occ_wknd_floor[col]<4,col] = 0 #If occupancy count is less than four per floor, count as no occupancy.
+        temp = df.loc[df['workday'] == False].groupby(['floor','hour'])['wifi counts'].quantile(0.75).unstack(level='hour').T
+        occ_wknd_floor = round((temp-temp.min())/1.2)
+        for col in occ_wknd_floor.columns:
+                occ_wknd_floor.loc[occ_wknd_floor[col]<4,col] = 0 #If occupancy count is less than four per floor, count as no occupancy.
 
-    fig = plt.figure(figsize=(8, 4), dpi=600)
+        fig = plt.figure(figsize=(8, 4), dpi=600)
 
-    # Weekday subplot
-    x = occ_wkdy_floor.index
-    y = occ_wkdy_floor.T.rename_axis('ID').values
-    ax = plt.subplot(1,2,1)
-    stacks = ax.stackplot(x,y,
-                 labels = ["Floor " + str(floor_num) for floor_num in floor.floor.unique()])
+        # Weekday subplot
+        x = occ_wkdy_floor.index
+        y = occ_wkdy_floor.T.rename_axis('ID').values
+        ax = plt.subplot(1,2,1)
+        stacks = ax.stackplot(x,y,
+                        labels = ["Floor " + str(floor_num) for floor_num in floor.floor.unique()])
 
-    #hatches=["\\", "//","+",'*','o','x','.']
-    #for stack, hatch in zip(stacks, hatches):
-            #stack.set_hatch(hatch)
+        #hatches=["\\", "//","+",'*','o','x','.']
+        #for stack, hatch in zip(stacks, hatches):
+                #stack.set_hatch(hatch)
 
-    # Hide the right and top spines
-    ax.spines['right'].set_visible(False)
-    ax.spines['top'].set_visible(False)
-    # Subplot formatting
-    plt.axis([0, 24, 0, math.ceil(bdg_wkdy.iloc[:,2].max()/50)*50])
-    ax.set_xticks([0,6,12,18,24])
-    ax.set_xticklabels(['00:00','06:00','12:00','18:00','23:45'])
-    plt.title('Weekdays', fontsize=14, fontweight='bold')
-    plt.xlabel('Time of day', fontsize=14)
-    plt.ylabel('Estimated occupancy (persons)', fontsize=14)
+        # Hide the right and top spines
+        ax.spines['right'].set_visible(False)
+        ax.spines['top'].set_visible(False)
+        # Subplot formatting
+        plt.axis([0, 24, 0, math.ceil(bdg_wkdy.iloc[:,2].max()/50)*50])
+        ax.set_xticks([0,6,12,18,24])
+        ax.set_xticklabels(['00:00','06:00','12:00','18:00','23:45'])
+        plt.title('Weekdays', fontsize=14, fontweight='bold')
+        plt.xlabel('Time of day', fontsize=14)
+        plt.ylabel('Estimated occupancy (persons)', fontsize=14)
 
-    # Weekend subplot
-    x = occ_wknd_floor.index
-    y = occ_wknd_floor.T.rename_axis('ID').values
-    ax = plt.subplot(1,2,2)
-    stacks = ax.stackplot(x,y,
-                 labels = ["Floor " + str(floor_num) for floor_num in floor.floor.unique()])
-                 
-    #for stack, hatch in zip(stacks, hatches):
-            #stack.set_hatch(hatch)    
+        # Weekend subplot
+        x = occ_wknd_floor.index
+        y = occ_wknd_floor.T.rename_axis('ID').values
+        ax = plt.subplot(1,2,2)
+        stacks = ax.stackplot(x,y,
+                        labels = ["Floor " + str(floor_num) for floor_num in floor.floor.unique()])
+                        
+        #for stack, hatch in zip(stacks, hatches):
+                #stack.set_hatch(hatch)    
 
-    # Hide the right and top spines
-    ax.spines['right'].set_visible(False)
-    ax.spines['top'].set_visible(False)
-    # Subplot formatting
-    plt.axis([0, 24, 0, math.ceil(bdg_wknd.iloc[:,2].max()/50)*50])
-    ax.set_xticks([0,6,12,18,24])
-    ax.set_xticklabels(['00:00','06:00','12:00','18:00','23:45'])
-    plt.title('Weekends', fontsize=14, fontweight='bold')
-    plt.xlabel('Time of day', fontsize=14)
-    plt.ylabel('Estimated occupancy (persons)', fontsize=14)
+        # Hide the right and top spines
+        ax.spines['right'].set_visible(False)
+        ax.spines['top'].set_visible(False)
+        # Subplot formatting
+        plt.axis([0, 24, 0, math.ceil(bdg_wknd.iloc[:,2].max()/50)*50])
+        ax.set_xticks([0,6,12,18,24])
+        ax.set_xticklabels(['00:00','06:00','12:00','18:00','23:45'])
+        plt.title('Weekends', fontsize=14, fontweight='bold')
+        plt.xlabel('Time of day', fontsize=14)
+        plt.ylabel('Estimated occupancy (persons)', fontsize=14)
+        
+        # Output figure in console
+        handles, labels = ax.get_legend_handles_labels()
+        fig.legend(handles, labels, loc='upper left', bbox_to_anchor=(0.97, 1), ncol=((len(kpi.index)//15)+1),prop={"size":10})
+        plt.tight_layout()
+        fig.savefig(output_path + r'\floor_level_occ.png',dpi=600,bbox_inches='tight')
     
-    # Output figure in console
-    handles, labels = ax.get_legend_handles_labels()
-    fig.legend(handles, labels, loc='upper left', bbox_to_anchor=(0.97, 1), ncol=((len(kpi.index)//15)+1),prop={"size":10})
-    plt.tight_layout()
-    fig.savefig(output_path + r'\floor_level_occ.png',dpi=600,bbox_inches='tight')
+    else:
+            print('Floor-level analysis disabled!')
     
     # Output KPIs in excel document
     print("Formatting KPIs...")
@@ -221,7 +226,7 @@ def occupancy(floor,output_path):
     kpi.to_excel(writer, sheet_name='KPIs')
     writer.save()
     
-    return kpi
+    return
 
 def occupancyMotion(motion_df, output_path):
         """
@@ -306,13 +311,17 @@ def occupancyMotion(motion_df, output_path):
 
         return
 
-def execute_function_wifi(wifi_data, output_path):
+def execute_function_wifi(input_path, output_path):
+
+        #Read csv files in input path
+        wifi_files = os.listdir(input_path)
+        wifi_files_csv = [f for f in wifi_files if f[-3:] == 'csv']
 
         #Read the wifi data
         floor_count = 0
         floor = []
-        for f in wifi_data:
-                temp = pd.read_csv(f)
+        for f in wifi_files_csv:
+                temp = pd.read_csv(os.path.join(input_path,f))
                 temp[temp.columns[0]] = pd.to_datetime(temp[temp.columns[0]])#Convert timeframe column time to datetime object
                 temp = temp.set_index(temp[temp.columns[0]])# Set the index to the timestamp
 
@@ -327,17 +336,18 @@ def execute_function_wifi(wifi_data, output_path):
 
                 floor.append(temp) # Store the data for this floor in the list
 
-        floor = pd.concat(floor, axis=0)
+        floor = pd.concat(floor,axis=0)
 
         #Run the occupancy analysis with wifi data
-        occupancy(floor,output_path)
+        occupancy(floor,input_path,output_path)
 
         return
 
-def execute_function_motion(motion_data, output_path):
+def execute_function_motion(input_path, output_path):
 
         #Read the motion detection data
-        motion_df = pd.read_csv(motion_data, index_col = 0, parse_dates=True)
+        motion_files = os.listdir(input_path)
+        motion_df = pd.read_csv(os.path.join(input_path, motion_files[0]), index_col = 0, parse_dates=True)
 
         #Run the occupancy analysis with motion detection data
         occupancyMotion(motion_df,output_path)

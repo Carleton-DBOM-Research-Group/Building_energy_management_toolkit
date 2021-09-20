@@ -198,6 +198,14 @@
             <label for="formFileMultiple" class="form-label">Upload Wi-Fi device count data file(s) (Required)</label>
             <input class="form-control" type="file" name="wifi_files[]" id="formFileMultiple" accept=".csv" multiple required>
           </div>
+          <div class="mb-3">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" name="is_flr_lvl" value="" id="flexCheckDefault">
+              <label class="form-check-label" for="flexCheckDefault">
+              Enable floor-level analysis (Requires multiple files. If only one file is supplied, floor-level analysis will be disabled.) 
+              </label>
+            </div>
+          </div>  
           <div class="col-12">
             <button class="btn btn-primary" type="submit">Upload and Run</button>
           </div>
