@@ -35,12 +35,12 @@ air temperatures - this is done separately for heating, cooling, and electricity
 the energy use is particularily sensitive to outdoor air temperature.')
 
     #Add visualizations
-    document.add_picture(path + r'\energyBase_heating.png', width=Inches(5.75))
-    document.add_picture(path + r'\energyBase_cooling.png', width=Inches(5.75))
+    document.add_picture(os.path.join(path,'energyBase_heating.png'), width=Inches(5.75))
+    document.add_picture(os.path.join(path,'energyBase_cooling.png'), width=Inches(5.75))
 
     try:
-        document.add_picture(path + r'\energyBase_electricity.png', width=Inches(5.75))
-        os.remove(path + r'\energyBase_electricity.png')
+        document.add_picture(os.path.join(path,'energyBase_electricity.png'), width=Inches(5.75))
+        os.remove(os.path.join(path,'energyBase_electricity.png'))
     except:
         pass
 
@@ -58,7 +58,7 @@ The Afterhours energy use ratio is the ratio of energy use during afterhours ove
 portion of the total energy consumption used during after-hours. Therefore, a lower value is desirable.')
 
     #Extract data from excel sheet and add table to document
-    kpis = pd.read_excel(path + r'\energyBase_summary.xlsx',sheet_name='KPIs')
+    kpis = pd.read_excel(os.path.join(path,'energyBase_summary.xlsx'),sheet_name='KPIs')
     kpis.drop(kpis.columns[0],axis=1,inplace=True)
     kpis.iloc[:,1:] = (kpis.iloc[:,1:] * 100).astype(int).astype(str) + '%'
 
@@ -75,14 +75,14 @@ portion of the total energy consumption used during after-hours. Therefore, a lo
     t.style = 'Colorful List'
 
     #Save document in reports folder
-    document.save(path + r'\report.docx')
-    convert(path + r'\report.docx', path + r'\report.pdf')
+    document.save(os.path.join(path,'energyBaseline_report.docx'))
+    convert(os.path.join(path,'energyBaseline_report.docx'), os.path.join(path,'report.pdf'))
 
     #Remove all used files
-    os.remove(path + r'\energyBase_heating.png')
-    os.remove(path + r'\energyBase_cooling.png')
-    os.remove(path + r'\energyBase_summary.xlsx')
-    os.remove(path + r'\report.docx')
+    os.remove(os.path.join(path,'energyBase_heating.png'))
+    os.remove(os.path.join(path,'energyBase_cooling.png'))
+    os.remove(os.path.join(path,'energyBase_summary.xlsx'))
+    os.remove(os.path.join(path,'energyBaseline_report.docx'))
 
     print('Report successfully generated!')
 
@@ -226,16 +226,16 @@ def zoneAnomaly(path):
     print('Generating report for zone anomaly detection function...')
 
     #Extract KPIs excel sheet
-    kpis_heating = pd.read_excel(path + r'\zone_anomaly_summary.xlsx',sheet_name='Htg_summary')
+    kpis_heating = pd.read_excel(os.path.join(path,'zone_anomaly_summary.xlsx'),sheet_name='Htg_summary')
     kpis_heating.drop(kpis_heating.columns[0],axis=1,inplace=True)
 
-    kpis_cooling = pd.read_excel(path + r'\zone_anomaly_summary.xlsx',sheet_name='Clg_summary')
+    kpis_cooling = pd.read_excel(os.path.join(path,'zone_anomaly_summary.xlsx'),sheet_name='Clg_summary')
     kpis_cooling.drop(kpis_cooling.columns[0],axis=1,inplace=True)
 
-    samples_heating = pd.read_excel(path + r'\zone_anomaly_summary.xlsx',sheet_name='Htg_samples',keep_default_na=False)
+    samples_heating = pd.read_excel(os.path.join(path,'zone_anomaly_summary.xlsx'),sheet_name='Htg_samples',keep_default_na=False)
     samples_heating.drop(samples_heating.columns[0],axis=1,inplace=True)
 
-    samples_cooling = pd.read_excel(path + r'\zone_anomaly_summary.xlsx',sheet_name='Clg_samples',keep_default_na=False)
+    samples_cooling = pd.read_excel(os.path.join(path,'zone_anomaly_summary.xlsx'),sheet_name='Clg_samples',keep_default_na=False)
     samples_cooling.drop(samples_cooling.columns[0],axis=1,inplace=True)
 
     #Generate Word document
@@ -274,8 +274,8 @@ airflow control errors (i.e., high/low flow faults are not present), ensure peri
 increasing the VAV terminal maximum airflow setpoint.", style='List Bullet')
 
     #Add visualizations
-    document.add_picture(path + r'\zone_heat_season.png', width=Inches(4.75))
-    document.add_picture(path + r'\zone_cool_season.png', width=Inches(4.75))
+    document.add_picture(os.path.join(path,'zone_heat_season.png'), width=Inches(4.75))
+    document.add_picture(os.path.join(path,'zone_cool_season.png'), width=Inches(4.75))
 
     #KPIs heading and description
     document.add_heading('Key performance Indicators', level=1)
@@ -352,14 +352,14 @@ belong to the zone cluster C1.) These tables can be used to identify the zone(s)
         
 
     #Save document in reports folder
-    document.save(os.path.join(path, 'report.docx'))
-    convert(os.path.join(path, 'report.docx'), os.path.join(path, 'report.pdf'))
+    document.save(os.path.join(path, 'zoneAnomaly_report.docx'))
+    convert(os.path.join(path, 'zoneAnomaly_report.docx'), os.path.join(path, 'report.pdf'))
 
     #Remove all used files
-    os.remove(path + r'\zone_heat_season.png')
-    os.remove(path + r'\zone_cool_season.png')
-    os.remove(path + r'\zone_anomaly_summary.xlsx')
-    os.remove(path + r'\report.docx')
+    os.remove(os.path.join(path,'zone_heat_season.png'))
+    os.remove(os.path.join(path,'zone_cool_season.png'))
+    os.remove(os.path.join(path,'zone_anomaly_summary.xlsx'))
+    os.remove(os.path.join(path,'zoneAnomaly_report.docx'))
 
     print('Report successfully generated!')
 
@@ -443,18 +443,14 @@ example, if three (3) AHUs were analyzed, the energy use intensites for the AHU 
     return
 
 #------------------------------------------------------GENERATE OCCUPANCY REPORT-------------------------------------------------
-def occupancy(which_data):
+def occupancy(path,is_wifi):
 
-    if which_data == 1:
+    if is_wifi:
 
         print('Generating report for occupancy function with Wi-Fi device count data...')
 
-        path = os.getcwd() #Get current directory
-        output_path = path + r'\toolkit\reports\6-occupancy' #Specify the output path for report
-        input_path = path + r'\toolkit\outputs\6-occupancy' #Specify the input path for report
-
         #Extract KPIs excel sheet
-        kpis = pd.read_excel(input_path + r'\arrive_depart_maxOcc.xlsx',sheet_name='KPIs',keep_default_na=False)
+        kpis = pd.read_excel(os.path.join(path,'arrive_depart_maxOcc.xlsx'),sheet_name='KPIs',keep_default_na=False)
 
         #Generate Word document
         document = Document()
@@ -468,41 +464,40 @@ def occupancy(which_data):
         p.add_run(' and ')
         p.add_run('highest recorded occupancy').bold = True
         p.add_run(' for weekdays and weekends separately. This function can be used to inform ventilation schedules which can minimize \
-    excessive ventilation during unoccupied hours, or even serve as a bssis for an occupant-driven demand controlled ventilation scheme. \
-    Visuals plot building-level and floor-level* occupant count profiles.')
+excessive ventilation during unoccupied hours, or even serve as a bssis for an occupant-driven demand controlled ventilation scheme. \
+Visuals plot building-level and floor-level* occupant count profiles.')
         p = document.add_paragraph("*Floor-level occupant count profiles are shown only if multiple files were inputted and read.")
 
         #Visualization heading and description - Building-level occupant count
         document.add_heading('Visuals - Building-level occupant count', level=1)
         p = document.add_paragraph('This set of visuals plots hourly building-level occupant count profiles for weekdays (to the left) and \
-    weekends (to the right) separately. The profiles are shown as the 25th, 50th (median), and 75th percentile. The 25th percentile represents \
-    the lower range of typical occupancy and the 75th represents the higher range. The second set of visualizations are \
-    occupant count profiles taken at the 75th percentile and broken down by floor.')
+weekends (to the right) separately. The profiles are shown as the 25th, 50th (median), and 75th percentile. The 25th percentile represents \
+the lower range of typical occupancy and the 75th represents the higher range. The second set of visualizations are \
+occupant count profiles taken at the 75th percentile and broken down by floor.')
 
         #Add visualizations
-        document.add_picture(input_path + r'\percentile_occ.png', width=Inches(5.75))
+        document.add_picture(os.path.join(path,'percentile_occ.png'), width=Inches(5.75))
 
-        if os.path.isfile(os.path.join(input_path, 'floor_level_occ.png')):
+        if os.path.isfile(os.path.join(path, 'floor_level_occ.png')):
 
             #Visualization heading and description - Floor-level occupant count
             document.add_heading('Visuals - Floor-level occupant count', level=1)
             p = document.add_paragraph('This set of visuals plots hourly floor-level occupant count profiles for weekdays (to the left) and \
-        weekends (to the right) separately. The profiles are broken down by floor and are shown as the 75th, which is the higher range of typical occupancy.')
+weekends (to the right) separately. The profiles are broken down by floor and are shown as the 75th, which is the higher range of typical occupancy.')
 
-            #Add visualizations
-            document.add_picture(input_path + r'\floor_level_occ.png', width=Inches(5.75))
+            #Add visualizations and remove after used
+            document.add_picture(os.path.join(path, 'floor_level_occ.png'), width=Inches(5.75))
+            os.remove(os.path.join(path,'floor_level_occ.png'))
 
         #KPIs heading and description
         document.add_heading('Key performance Indicators', level=1)
         p = document.add_paragraph('This section presents the generated KPIs - ')
         p.add_run('typical earliest arrival times, latest departure times, and highest occupant count').bold = True
         p.add_run(' which are broken down by floor and determined sparately for weekdays and weekends. The typical earliest arrival time \
-    is the hour when the occupant count exceeds '+r'10%'+' of the maximum recorded count per floor. Similiarily, the typical latest \
-    departure time is the hours when occupant count dips below '+r'10%'+' of the maximum recorded count per floor. The highest occupant count \
-    is taken as the highest recorded occupant count. Note all these calculations are determined at the 75th percentile, meaning the higher range \
-    of typical occupancy.')
-
-        document.add_page_break()
+is the hour when the occupant count exceeds '+r'10%'+' of the maximum recorded count per floor. Similiarily, the typical latest \
+departure time is the hours when occupant count dips below '+r'10%'+' of the maximum recorded count per floor. The highest occupant count \
+is taken as the highest recorded occupant count. Note all these calculations are determined at the 75th percentile, meaning the higher range \
+of typical occupancy.')
 
         #Add tables with summary tables
         table_labels = ['Floor',
@@ -526,22 +521,21 @@ def occupancy(which_data):
         t.style = 'Colorful List'
 
         #Save document in reports folder
-        document.save(output_path + r'\occupancy_wifi_report.docx')
-        convert(output_path + r'\occupancy_wifi_report.docx', output_path + r'\occupancy_wifi_report.pdf')
+        document.save(os.path.join(path,'occupancy_wifi_report.docx'))
+        convert(os.path.join(path,'occupancy_wifi_report.docx'), os.path.join(path,'report.pdf'))
         print('Report successfully generated!')
 
-        return
+        #Remove all used files
+        os.remove(os.path.join(path,'occupancy_wifi_report.docx'))
+        os.remove(os.path.join(path,'percentile_occ.png'))
+        os.remove(os.path.join(path,'arrive_depart_maxOcc.xlsx'))
     
     else:
 
         print('Generating report for occupancy function with motion-detection data...')
 
-        path = os.getcwd() #Get current directory
-        output_path = path + r'\toolkit\reports\6-occupancy' #Specify the output path for report
-        input_path = path + r'\toolkit\outputs\6-occupancy' #Specify the input path for report
-
         #Extract KPIs excel sheet
-        kpis = pd.read_excel(input_path + r'\motion_detection_kpis.xlsx',sheet_name='KPIs',keep_default_na=False)
+        kpis = pd.read_excel(os.path.join(path,'motion_detection_kpis.xlsx'),sheet_name='KPIs',keep_default_na=False)
         kpis.drop(kpis.columns[0],axis=1,inplace=True)
 
         #Generate Word document
@@ -555,18 +549,24 @@ def occupancy(which_data):
         p.add_run('earliest arrival time, latest arrival time, latest departure time,').bold = True
         p.add_run(' and ')
         p.add_run('longest break duration').bold = True
-        p.add_run(' for weekdays ONLY. This function can be used to inform ventilation schedules which can minimize \
-    excessive ventilation during unoccupied hours, or even serve as a bssis for an occupant-driven demand controlled ventilation scheme. \
-    Visuals plot building-level and floor-level occupant count profiles.')
+        p.add_run(' for weekdays only.')
+        p = document.add_paragraph("This function can be used to inform ventilation schedules which can minimize \
+excessive ventilation during unoccupied hours, or even serve as a basis for an occupant-driven demand controlled ventilation scheme. \
+The calculated earliest arrival time and latest departure time can be used to inform whole building-level schedules, including start/stop \
+times, whereas the calculated latest arrival time and longest break duration can be used to inform zone-level schedules, including time-out \
+durations for zone air flow. For example, if the calculated latest arrival time is 13:00 (1PM), a possible schema may be to reinstate the \
+'vacant' state at 1PM in zones where vacancy is detected, thus shutting off unnecessary airflow to such zones. If the calculated longest \
+break duration is 3:00 (3 hours), a time-out duration of three hours may be implemented where certain zones have the 'vacant' state \
+reinstated after three hours of no detected occupancy.")
 
         #KPIs heading and description
         document.add_heading('Key performance Indicators', level=1)
         p = document.add_paragraph('This section presents the generated KPIs - ')
         p.add_run('typical earliest arrival time, latest arrival time, latest departure time, and longest break duration').bold = True
-        p.add_run(' for weekdays ONLY.')
+        p.add_run(' for weekdays only.')
 
         #Add tables with summary tables
-        table_labels = ['Earlist arrival time',
+        table_labels = ['Earliest arrival time',
                         'Latest arrival time',
                         'Latest departure time',
                         'Longest break duration (hours)'
@@ -584,11 +584,16 @@ def occupancy(which_data):
         t.style = 'Colorful List'
 
         #Save document in reports folder
-        document.save(output_path + r'\occupancy_motion_report.docx')
-        convert(output_path + r'\occupancy_motion_report.docx', output_path + r'\occupancy_motion_report.pdf')
-        print('Report successfully generated!')
+        document.save(os.path.join(path,'occupancy_motion_report.docx'))
+        convert(os.path.join(path,'occupancy_motion_report.docx'), os.path.join(path,'report.pdf'))
 
-        return
+        #Remove all used files
+        os.remove(os.path.join(path,'occupancy_motion_report.docx'))
+        os.remove(os.path.join(path,'motion_detection_kpis.xlsx'))
+    
+    print('Report successfully generated!')
+
+    return
 
 #------------------------------------------------------GENERATE COMPLAINTS REPORT-------------------------------------------------
 def complaints():
