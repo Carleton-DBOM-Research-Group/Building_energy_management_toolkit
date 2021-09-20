@@ -311,7 +311,6 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path):
         tOa = dataWrkHrs[dataWrkHrs.columns[2]][htgEconMdInd] #Note: tOa is redefined here.
         sOa = dataWrkHrs[dataWrkHrs.columns[4]][htgEconMdInd] 
         sHc = dataWrkHrs[dataWrkHrs.columns[5]][htgEconMdInd] 
-        #tSaSp = dataWrkHrs[dataWrkHrs.columns[8]][htgEconMdInd] 
 
         #Optimize parameters for genetic algorithms for ahuMdlMode1_2
         varbound = np.array([[0.0,1.5],[-1,1],[0,0.5]]) # ([lower_bound,upper_bound])
@@ -334,7 +333,6 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path):
         tOa = dataWrkHrs[dataWrkHrs.columns[2]][clgMdInd] #Note: tOa is redefined here.
         sOa = dataWrkHrs[dataWrkHrs.columns[4]][clgMdInd] 
         sCc = dataWrkHrs[dataWrkHrs.columns[6]][clgMdInd] 
-        #tSaSp = dataWrkHrs[dataWrkHrs.columns[8]][clgMdInd] 
 
         #Optimize parameters for genetic algorithms for ahuMdlMode4
         varbound = np.array([[-0.5,0],[-1,1]]) # ([lower_bound,upper_bound])
@@ -469,7 +467,7 @@ def execute_function(uploaded_ahu_files, uploaded_zone_files, output_path):
     for f in uploaded_ahu_files:
         print('Reading ' + str(f.filename) + '...')
         data = pd.read_csv(f) #Specify the sample data for ahu files
-        data = data.rename(columns={data.columns[1]:'tSa',data.columns[2]:'tRa',data.columns[3]:'tOa',data.columns[4]:'pSa',data.columns[5]:'sOa',data.columns[6]:'sHc',data.columns[7]:'sCc',data.columns[8]:'sFan',data.columns[9]:'tSaSp',data.columns[10]:'pSaSp'})
+        data = data.rename(columns={data.columns[1]:'tSa',data.columns[2]:'tRa',data.columns[3]:'tOa',data.columns[4]:'pSa',data.columns[5]:'sOa',data.columns[6]:'sHc',data.columns[7]:'sCc',data.columns[8]:'sFan'})
         dfs.append(data)
         file_names.append(f.filename)
     ahu = pd.concat(dfs,keys=file_names).reset_index(level=1, drop=True)
