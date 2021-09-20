@@ -276,6 +276,8 @@ def occupancy_upload():
 
 @app.route('/functions/occupancy/upload/run-occupancy-wifi', methods=['POST'])
 def run_occupancy_wifi_function():
+
+  '''
   try:
     cwd = os.getcwd()
     path = cwd + r'\test_outputs'
@@ -286,10 +288,36 @@ def run_occupancy_wifi_function():
 
   except:
     return "Something went wrong!"
+  '''
+  
+  cwd = os.getcwd()
+  request_uuid = str(uuid.uuid4())
+  
+  # create a new directory in unprocessed folder
+  path = os.path.join(cwd, 'userdata', 'unprocessed', request_uuid)
+  os.makedirs(path, exist_ok=True)
+  
+  # put the uploaded files there
+  uploaded_files = request.files.getlist('wifi_files[]')
+  for f in uploaded_files:
+    f.save(os.path.join(path, f.filename))
+  
+  # create flag for floor level analysis
+  if 'is_flr_lvl' in request.form:
+    open(os.path.join(path, 'is_flr_lvl'), 'a').close()
+
+  # create a ready file & function ID file
+  open(os.path.join(path, 'ready'), 'a').close()
+  open(os.path.join(path, 'occupancy_wifi'), 'a').close()
+  
+  #zoneAnomaly.execute_function(uploaded_files, path)
+  #return "Success!"
+  return f"Request accepted, check the result with this link\n http://localhost:3000/checkresult/{request_uuid}"
 
   
 @app.route('/functions/occupancy/upload/run-occupancy-motion', methods=['POST'])
 def run_occupancy_motion_function():
+  '''
   try:
     cwd = os.getcwd()
     path = cwd + r'\test_outputs'
@@ -300,6 +328,27 @@ def run_occupancy_motion_function():
   
   except:
     return "Something went wrong!"
+  '''
+
+  cwd = os.getcwd()
+  request_uuid = str(uuid.uuid4())
+  
+  # create a new directory in unprocessed folder
+  path = os.path.join(cwd, 'userdata', 'unprocessed', request_uuid)
+  os.makedirs(path, exist_ok=True)
+  
+  # put the uploaded files there
+  uploaded_files = request.files.getlist('motion_files[]')
+  for f in uploaded_files:
+    f.save(os.path.join(path, f.filename))
+
+  # create a ready file & function ID file
+  open(os.path.join(path, 'ready'), 'a').close()
+  open(os.path.join(path, 'occupancy_motion'), 'a').close()
+  
+  #zoneAnomaly.execute_function(uploaded_files, path)
+  #return "Success!"
+  return f"Request accepted, check the result with this link\n http://localhost:3000/checkresult/{request_uuid}"
 
 #Function to check results
 
@@ -312,4 +361,4 @@ def check_result(request_uuid):
   elif os.path.isfile(os.path.join(result_dir, 'error')):
     return "Something went wrong with the analysis. Please check your input data and try again."
   else:
-    return "Your results are not yet ready. Please check back later."
+    return "Your results are not ready yet. Please check back later."

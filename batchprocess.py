@@ -60,10 +60,25 @@ def process_work(job_id, input_dir):
     #Do metadata work here
     open(os.path.join(output_dir, 'ready'), 'a').close()
   
-  elif os.path.isfile(os.path.join(input_dir, 'occupancy')):
-    print('Performing analysis using occupancy function...')
-    #Do occupancy work here
-    open(os.path.join(output_dir, 'ready'), 'a').close()
+  elif os.path.isfile(os.path.join(input_dir, 'occupancy_wifi')):
+    print('Performing analysis using occupancy function (Wi-Fi)...')
+    #Do occupancy(Wi-Fi) work here
+    try:
+      occupancy.execute_function_wifi(input_dir,output_dir)
+      generate_report.occupancy(output_dir, True)
+      open(os.path.join(output_dir, 'ready'), 'a').close()
+    except:
+      open(os.path.join(output_dir, 'error'), 'a').close()
+  
+  elif os.path.isfile(os.path.join(input_dir, 'occupancy_motion')):
+    print('Performing analysis using occupancy function (Motion-detection)...')
+    #Do occupancy(motion-detection) work here
+    try:
+      occupancy.execute_function_motion(input_dir,output_dir)
+      generate_report.occupancy(output_dir, False)
+      open(os.path.join(output_dir, 'ready'), 'a').close()
+    except:
+      open(os.path.join(output_dir, 'error'), 'a').close()
   
   elif os.path.isfile(os.path.join(input_dir, 'complaintAnalytics')):
     print('Performing analysis using complaint analytics function...')
