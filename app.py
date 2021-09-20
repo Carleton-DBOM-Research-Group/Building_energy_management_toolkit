@@ -113,8 +113,6 @@ def run_energyBaseline_function():
   open(os.path.join(path, 'ready'), 'a').close()
   open(os.path.join(path, 'energyBaseline'), 'a').close()
   
-  #zoneAnomaly.execute_function(uploaded_files, path)
-  #return "Success!"
   return f"Request accepted, check the result with this link\n http://localhost:3000/checkresult/{request_uuid}"
 
 #AHU ANOMALY  
@@ -139,12 +137,31 @@ def ahuAnomaly_upload():
 def run_ahuAnomaly_function():
 
   cwd = os.getcwd()
-  path = cwd + r'\test_outputs'
+  request_uuid = str(uuid.uuid4())
+  
+  # create a new directory in unprocessed folder
+  path = os.path.join(cwd, 'userdata', 'unprocessed', request_uuid)
+  os.makedirs(path, exist_ok=True)
+  ahu_path = os.path.join(path, 'ahu')
+  os.makedirs(ahu_path, exist_ok=True)
+  zone_path = os.path.join(path, 'zone')
+  os.makedirs(zone_path, exist_ok=True)
+  
+  # put the uploaded energy file in energy subfolder
   uploaded_ahu_files = request.files.getlist('ahu_HVAC_files[]')
-  uploaded_zone_files = request.files.getlist('zone_HVAC_files[]')
+  for f in uploaded_ahu_files:
+    f.save(os.path.join(ahu_path, f.filename))
 
-  ahuAnomaly.execute_function(uploaded_ahu_files, uploaded_zone_files, path)
-  return "Success!"
+  # put the uploaded weather file in weather subfolder
+  uploaded_zone_files = request.files.getlist('zone_HVAC_files[]')
+  for f in uploaded_zone_files:
+    f.save(os.path.join(zone_path, f.filename))
+
+  # create a ready file & function ID file
+  open(os.path.join(path, 'ready'), 'a').close()
+  open(os.path.join(path, 'ahuAnomaly'), 'a').close()
+
+  return f"Request accepted, check the result with this link\n http://localhost:3000/checkresult/{request_uuid}"
 
 #ZONE ANOMALY  
 
@@ -276,19 +293,6 @@ def occupancy_upload():
 
 @app.route('/functions/occupancy/upload/run-occupancy-wifi', methods=['POST'])
 def run_occupancy_wifi_function():
-
-  '''
-  try:
-    cwd = os.getcwd()
-    path = cwd + r'\test_outputs'
-    uploaded_files = request.files.getlist('wifi_files[]')
-  
-    occupancy.execute_function_wifi(uploaded_files,path)
-    return "Success!"
-
-  except:
-    return "Something went wrong!"
-  '''
   
   cwd = os.getcwd()
   request_uuid = str(uuid.uuid4())
@@ -317,18 +321,6 @@ def run_occupancy_wifi_function():
   
 @app.route('/functions/occupancy/upload/run-occupancy-motion', methods=['POST'])
 def run_occupancy_motion_function():
-  '''
-  try:
-    cwd = os.getcwd()
-    path = cwd + r'\test_outputs'
-    uploaded_files = request.files.getlist('motion_files[]')
-
-    occupancy.execute_function_motion(uploaded_files[0],path)
-    return "Success!"
-  
-  except:
-    return "Something went wrong!"
-  '''
 
   cwd = os.getcwd()
   request_uuid = str(uuid.uuid4())

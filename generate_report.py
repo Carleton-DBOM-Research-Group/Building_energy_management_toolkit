@@ -89,15 +89,11 @@ portion of the total energy consumption used during after-hours. Therefore, a lo
     return
 
 #-----------------------------------------------GENERATE AHU ANOMALY REPORT----------------------------------------------------
-def ahuAnomaly():
+def ahuAnomaly(path):
     print('Generating report for AHU anomaly detection function...')
 
-    path = os.getcwd() #Get current directory
-    output_path = path + r'\toolkit\reports\3-ahuAnomaly' #Specify the output path for report
-    input_path = path + r'\toolkit\outputs\3-ahuAnomaly'
-
     #Extract KPIs excel sheet
-    faults_df = pd.read_excel(input_path + r'\ahu_anomaly_summary.xlsx',sheet_name='faults')
+    faults_df = pd.read_excel(os.path.join(path,'ahu_anomaly_summary.xlsx'),sheet_name='faults')
     faults_df.drop(faults_df.columns[0],axis=1,inplace=True)
     faults_df.iloc[:,1] = (faults_df.iloc[:,1]).astype(int).astype(str) + '%'
 
@@ -124,8 +120,8 @@ plots the outdoor air damper position (OA), heating coil valve position (HC), co
 of active perimeter heaters (RAD) with respect to outdoor air temperature. The four underlaying color zones represent the four \
 distinct operating mode: Heating (red zone), economizer (yellow zone), economizer with cooling (grey zone), and cooling (blue zone). \
 As an example, the below Split-range controller diagram is representative of normal, healthy AHU operations. Some ')
-    p=document.add_paragraph('key characteristics of normal, healthy AHU operation').bold=True
-    p=document.add_paragraph(' include:')
+    p.add_run('key characteristics of normal, healthy AHU operation').bold=True
+    p.add_run(' include:')
 
     document.add_paragraph('Heating coil active ONLY in heating mode', style='List Bullet')
     document.add_paragraph('Cooling coil active ONLY in economizer with cooling and cooling mode', style='List Bullet')
@@ -133,40 +129,38 @@ As an example, the below Split-range controller diagram is representative of nor
     document.add_paragraph('Perimeter heating should be minimal in economizer mode. This can be achieved by increasing the supply air \
 temperature setpoint in the heating season, while monitoring any occurence of overheating.', style='List Bullet')
 
-    document.add_picture(output_path + r'\SRC_example.png', width=Inches(5.75))
+    cwd = os.getcwd()
+    document.add_picture(os.path.join(cwd,'static','img','SRC_example.png'), width=Inches(5.75))
 
-    p = document.add_paragraph('Suboptimal supply air temperatures can result excessive energy consumption from excessive perimeter heating use, \
-economizing, or fan use. To guide supply air temperature setpoint adjustments, the typical "ideal" supply air temperature range is provided as a \
-reference. If the supply air temperature is LOWER than this range in the heating season, excessive use of perimeter heating and economizing may \
-result; only a few overheating rooms may trigger this behaviour. If this is the case, consider increasing the maximum terminal airflow setpoints \
-in these overheating rooms.\n\nIf the supply air temperature is HIGHER than this range in the cooling season, excessive fan power to deliver \
-required necessary cooling may result; a few overcooling rooms may trigger this behaviour. If this is the case, consider decreasing the minimum \
-terminal airflow setpoints in these overcooling rooms within reason. In both of these cases, ensure that the airflow and temperature sensors work \
-as intended in these rooms.')
+    p = document.add_paragraph("Suboptimal supply air temperatures can result excessive energy consumption from excessive perimeter heating use, \
+economizing, or fan use. To guide supply air temperature setpoint adjustments, the typical 'ideal' supply air temperature range is provided as a \
+reference.\n\nFirst, ensure that the supply air temperature is not constant and is controlled by a program. Review the BAS program responsible for \
+the supply air temperature setpoint analog variable.\n\nIf the supply air temperature is ABOVE the 'ideal' range in the cooling season, excessive \
+fan power to deliver required necessary cooling may result. Inspect what may be causing this in the BAS program. Likely causes include:")
+    document.add_paragraph('Inappropriate logic in the BAS program', style='List Bullet')
+    document.add_paragraph('VAV terminal unit dampers stuck open causing overcooling in select rooms', style='List Bullet')
+    document.add_paragraph("If the supply air temperature is BELOW the 'ideal' range in the heating season, excessive use of the perimeter heaters \
+or economizing may result. Likely causes include:")
+    document.add_paragraph('Inappropriate logic in the BAS program', style='List Bullet')
+    document.add_paragraph('VAV terminal unit dampers stuck closed', style='List Bullet')
+    document.add_paragraph('Radiators stuck on', style='List Bullet')
+    document.add_paragraph('Overheating rooms caused by internal/external heat gains', style='List Bullet')
+    document.add_paragraph("In both of these cases, ensure that the airflow and temperature sensors work \
+as intended in these rooms.")
 
     #For each AHU, output the first set of visuals
     for i in faults_df.index:
 
         document.add_heading('AHU: ' + str(faults_df.iloc[i][0]), level=2)
-        document.add_picture(input_path + r'\f2a_ahu_'+str(i+1)+'.png', width=Inches(5))
+        document.add_picture(os.path.join(path,'f2a_ahu_'+str(i+1)+'.png'), width=Inches(5))
+        os.remove(os.path.join(path,'f2a_ahu_'+str(i+1)+'.png'))
     
     #Visualization heading and description - Part 2
     document.add_heading('Visuals - AHU operating periods', level=1)
     p = document.add_paragraph("A set of four to six visuals per AHU are generated which depict characteristic operating \
 periods of the AHU and the average damper and valve positions and temperatures at those periods. The fraction of time of \
 operation is the percentage of the total time of the AHU's operation which exhibit the displayed damper/valve positions \
-and temperatures. Some ")
-    p=document.add_paragraph('key characteristics of normal, healthy AHU operation').bold=True
-    p=document.add_paragraph(' include:')
-
-    document.add_paragraph('Heating coil active ONLY when the outdoor air temperature is below the upper setpoint for heating mode. (In the example \
-split-range controller diagram provided, this is -5C.)', style='List Bullet')
-    document.add_paragraph('Cooling coil active ONLY when the outdoor air temperature is above the upper setpoint for economizer mode. (In the \
-example split-range controller diagram provided, this is 10C.)', style='List Bullet')
-    document.add_paragraph('Heating and cooling coils should not operate simutaneously', style='List Bullet')
-    document.add_paragraph('Perimeter heating should be minimal in economizer mode (i.e. when both the heating and cooling \
-coils are inactive). This can be achieved by increasing the supply air temperature setpoint in the heating season, while \
-monitoring any occurence of overheating.', style='List Bullet')
+and temperatures.")
     
     #For each AHU, output the second set of visuals
     for i in faults_df.index:
@@ -175,7 +169,8 @@ monitoring any occurence of overheating.', style='List Bullet')
 
         for j in range(1,7):
             try:
-                document.add_picture(input_path + r'\f2b_ahu_'+str(i+1)+'_C_'+str(j)+'.png', width=Inches(5))
+                document.add_picture(os.path.join(path,'f2b_ahu_'+str(i+1)+'_C_'+str(j)+'.png'), width=Inches(5))
+                os.remove(os.path.join(path,'f2b_ahu_'+str(i+1)+'_C_'+str(j)+'.png'))
             except FileNotFoundError:
                 break
 
@@ -197,10 +192,11 @@ AHU's economizer mode.", style='List Bullet')
     document.add_paragraph('Low/High outdoor air: This fault is generated if an inadequate or excessive amount of outdoor air was observed. \
 This may be symptomatic of a stuck outdoor air damper or faulty damper sensor/actuator.', style='List Bullet')
     document.add_paragraph('Check mode of operation logic: This fault is generated if the weekly operational time (i.e. when the AHU fans are \
-operational) exceeds 100 hours a week. This considered excessive operations. It is suggested to check the operational logic for any conflicts \
+operational) exceeds 100 hours a week. This is typically considered excessive operations. It is suggested to check the operational logic for any conflicts \
 which may result in unintended operation of the AHUs', style='List Bullet')
-    document.add_paragraph("Check supply air temperature reset logic: This fault is generated if there is excessive use of perimeter heating \
-devices during the AHUs' economizer mode. This may be a result of select rooms overheating in the heatinmg season. If this is the case, consider \
+    document.add_paragraph("Check supply air temperature reset logic: This fault is generated if a setpoint reset scheme was not detected or there \
+is a logic mistake in the reset program. Ensuring that an appropriate setpoint reset scheme is present and operating as intended, there may be excessive use of the perimeter heating \
+devices during the AHUs' economizer mode. This may be a result of select rooms overheating in the heating season. If this is the case, consider \
 increasing the maximum terminal airflow setpoints in these overheating rooms.", style='List Bullet')
 
     t = document.add_table(faults_df.shape[0]+1, faults_df.shape[1])
@@ -215,9 +211,13 @@ increasing the maximum terminal airflow setpoints in these overheating rooms.", 
     t.style = 'Colorful List'
 
     #Save document in reports folder
-    document.save(output_path + r'\ahuAnomaly_report.docx')
-    convert(output_path + r'\ahuAnomaly_report.docx', output_path + r'\ahuAnomaly_report.pdf')
+    document.save(os.path.join(path,'ahuAnomaly_report.docx'))
+    convert(os.path.join(path,'ahuAnomaly_report.docx'), os.path.join(path,'report.pdf'))
     print('Report successfully generated!')
+
+    #Remove used files
+    os.remove(os.path.join(path,'ahuAnomaly_report.docx'))
+    os.remove(os.path.join(path,'ahu_anomaly_summary.xlsx'))
 
     return
 

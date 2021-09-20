@@ -1,4 +1,5 @@
 #Import required libraries
+import os
 import pandas as pd
 import numpy as np
 import matplotlib
@@ -170,7 +171,7 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path):
 
         #Optimize parameters for all genetic algorithms
         varbound = np.array([[0,100],[-20,30],[-20,30],[-20,30],[0,100]]) # ([lower_bound,upper_bound])
-        algorithm_param = {'max_num_iteration': 15,\
+        algorithm_param = {'max_num_iteration': 12,\
                    'population_size':5000,\
                    'mutation_probability':0.1,\
                    'elit_ratio': 0.01,\
@@ -458,37 +459,38 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path):
     return ahuMdl,faults_df
 
 
-def execute_function(uploaded_ahu_files, uploaded_zone_files, output_path):
+def execute_function(input_path, output_path):
 
     #Reading AHU data
     print("Reading AHU-level HVAC controls network data files...")
+    ahu_files = os.listdir(os.path.join(input_path,'ahu'))
+    ahu_files_csv = [f for f in ahu_files if f[-3:] == 'csv']
     dfs = []
-    file_names = []
-    for f in uploaded_ahu_files:
-        print('Reading ' + str(f.filename) + '...')
-        data = pd.read_csv(f) #Specify the sample data for ahu files
+    for f in ahu_files_csv:
+        data = pd.read_csv(os.path.join(input_path,'ahu',f))
         data = data.rename(columns={data.columns[1]:'tSa',data.columns[2]:'tRa',data.columns[3]:'tOa',data.columns[4]:'pSa',data.columns[5]:'sOa',data.columns[6]:'sHc',data.columns[7]:'sCc',data.columns[8]:'sFan'})
         dfs.append(data)
-        file_names.append(f.filename)
-    ahu = pd.concat(dfs,keys=file_names).reset_index(level=1, drop=True)
+    ahu = pd.concat(dfs,keys=ahu_files_csv).reset_index(level=1, drop=True)
     ahu[ahu.columns[0]] = pd.to_datetime(ahu[ahu.columns[0]])
-    print("Reading AHU-level HVAC controls network data files successful!")
+    print("AHU-level HVAC controls network data files read successful!")
+    print("Number of AHUs detected: " + str(len(dfs)))
 
     
     #Reading zone data
     print("Reading zone-level HVAC controls network data files...")
+    zone_files = os.listdir(os.path.join(input_path,'zone'))
+    zone_files_csv = [f for f in zone_files if f[-3:] == 'csv']
     tIn = pd.DataFrame()
     sRad = pd.DataFrame()
-    for f in uploaded_zone_files:
-        print('Reading ' + str(f.filename) + '...')
-        data = pd.read_csv(f, index_col=0) #Specify the sample data and sheet name for zones
+    for f in zone_files_csv:
+        data = pd.read_csv(os.path.join(input_path,'zone',f), index_col=0) #Specify the sample data and sheet name for zones
         data = data.rename(columns={data.columns[0]:'tIn',data.columns[1]:'qFlo',data.columns[2]:'qFloSp',data.columns[3]:'sRad'})
         tIn = pd.concat([tIn,data[data.columns[0]]], axis=1,sort=False).rename(columns={data.columns[0]:str(f).replace('.csv','')})
         sRad = pd.concat([sRad,data[data.columns[3]]], axis=1,sort=False).rename(columns={data.columns[3]:str(f).replace('.csv','')})
     for df in [tIn,sRad]:
         df.index = pd.to_datetime(df.index)
-    print("Reading zone-level HVAC controls network data successful!")
-    print("Number of AHUs detected: " + str(len(dfs)) + "\nNumber of zones detected: " + str(len(tIn.columns)))
+    print("Zone-level HVAC controls network data read successful!")
+    print("Number of zones detected: " + str(len(tIn.columns)))
 
     #Analyze the data and generate KPIs and visuals
     ahuMdl, faults = ahuAnomaly(ahu,sRad,tIn,output_path) #Call ahuAnomaly local function, generate KPIs and visualizations
@@ -497,5 +499,7 @@ def execute_function(uploaded_ahu_files, uploaded_zone_files, output_path):
     writer = pd.ExcelWriter(output_path + r'\ahu_anomaly_summary.xlsx', engine='xlsxwriter') # pylint: disable=abstract-class-instantiated
     ahuMdl.to_excel(writer, sheet_name='ahuMdl')
     faults.to_excel(writer, sheet_name='faults')
-    writer.save()  
+    writer.save()
+
+    return
 
