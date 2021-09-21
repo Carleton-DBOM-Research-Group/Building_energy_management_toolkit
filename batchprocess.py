@@ -87,7 +87,13 @@ def process_work(job_id, input_dir):
   elif os.path.isfile(os.path.join(input_dir, 'complaintAnalytics')):
     print('Performing analysis using complaint analytics function...')
     #Do complaint analytics work here
-    open(os.path.join(output_dir, 'ready'), 'a').close()
+    try:
+      complaintAnalytics.execute_function(input_dir,output_dir)
+      generate_report.complaintAnalytics(output_dir)
+      open(os.path.join(output_dir, 'ready'), 'a').close()
+    except:
+      open(os.path.join(output_dir, 'error'), 'a').close()
+
 
 def watch_queue():
   cwd = os.getcwd()

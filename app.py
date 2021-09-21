@@ -139,7 +139,7 @@ def run_ahuAnomaly_function():
   cwd = os.getcwd()
   request_uuid = str(uuid.uuid4())
   
-  # create a new directory in unprocessed folder
+  # create a new directory and subdirectories in unprocessed folder
   path = os.path.join(cwd, 'userdata', 'unprocessed', request_uuid)
   os.makedirs(path, exist_ok=True)
   ahu_path = os.path.join(path, 'ahu')
@@ -147,12 +147,12 @@ def run_ahuAnomaly_function():
   zone_path = os.path.join(path, 'zone')
   os.makedirs(zone_path, exist_ok=True)
   
-  # put the uploaded energy file in energy subfolder
+  # put the uploaded AHU HVAC file in ahu subfolder
   uploaded_ahu_files = request.files.getlist('ahu_HVAC_files[]')
   for f in uploaded_ahu_files:
     f.save(os.path.join(ahu_path, f.filename))
 
-  # put the uploaded weather file in weather subfolder
+  # put the uploaded zone HVAC files in zone subfolder
   uploaded_zone_files = request.files.getlist('zone_HVAC_files[]')
   for f in uploaded_zone_files:
     f.save(os.path.join(zone_path, f.filename))
@@ -262,15 +262,41 @@ def complaintAnalytics_upload():
 def run_complaintAnalytics_function():
 
   cwd = os.getcwd()
-  path = cwd + r'\test_outputs'
+  request_uuid = str(uuid.uuid4())
+  
+  # create a new directory and subdirectories in unprocessed folder
+  path = os.path.join(cwd, 'userdata', 'unprocessed', request_uuid)
+  os.makedirs(path, exist_ok=True)
+  cmms_path = os.path.join(path, 'cmms')
+  os.makedirs(cmms_path, exist_ok=True)
+  zone_path = os.path.join(path, 'zone')
+  os.makedirs(zone_path, exist_ok=True)
+  weather_path = os.path.join(path, 'weather')
+  os.makedirs(weather_path, exist_ok=True)
+  
+  # put the uploaded energy file in energy subfolder
   uploaded_cmms_file = request.files.getlist('cmms_file[]')
+  uploaded_cmms_file[0].save(os.path.join(cmms_path, uploaded_cmms_file[0].filename))
+
+  # put the uploaded zone HVAC files in zone subfolder
   uploaded_zone_files = request.files.getlist('zone_HVAC_files[]')
+  for f in uploaded_zone_files:
+    f.save(os.path.join(zone_path, f.filename))
+
+  # put the uploaded weather file in weather subfolder
   uploaded_weather_file = request.files.getlist('weather_file[]')
+  uploaded_weather_file[0].save(os.path.join(weather_path, uploaded_weather_file[0].filename))
 
-  bldg_area = int(request.form['floorArea'])
+  # create text file and store inputted floor area
+  f = open(os.path.join(path, "floor_area.txt"),"w+")
+  f.write(str(request.form['floorArea']))
+  f.close()
 
-  complaintAnalytics.execute_function(uploaded_cmms_file[0], uploaded_zone_files, uploaded_weather_file[0], bldg_area, path)
-  return "Success!"
+  # create a ready file & function ID file
+  open(os.path.join(path, 'ready'), 'a').close()
+  open(os.path.join(path, 'complaintAnalytics'), 'a').close()
+  
+  return f"Request accepted, check the result with this link\n http://localhost:3000/checkresult/{request_uuid}"
 
 
 #OCCUPANCY  

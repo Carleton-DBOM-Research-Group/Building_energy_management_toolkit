@@ -596,15 +596,11 @@ reinstated after three hours of no detected occupancy.")
     return
 
 #------------------------------------------------------GENERATE COMPLAINTS REPORT-------------------------------------------------
-def complaints():
+def complaintAnalytics(path):
     print('Generating report for occupant complaints analytics function...')
 
-    path = os.getcwd() #Get current directory
-    output_path = path + r'\toolkit\reports\7-complaintsAnalytics' #Specify the output path for report
-    input_path = path + r'\toolkit\outputs\7-complaintsAnalytics' #Specify the input path for report
-
     #Extract KPIs excel sheet
-    kpis = pd.read_excel(input_path + r'\complaints_freq.xlsx',sheet_name='Daily frequency of complaints')
+    kpis = pd.read_excel(os.path.join(path,'complaints_freq.xlsx'),sheet_name='Daily frequency of complaints')
     kpis.drop(kpis.columns[0],axis=1,inplace=True)
     kpis.iloc[:,1:] = kpis.iloc[:,1:].astype(float).round(3)
 
@@ -630,7 +626,7 @@ respective sections.')
 registered.')
 
     #Add first visualizations
-    document.add_picture(input_path + r'\complaints_breakdown.png', width=Inches(5.75))
+    document.add_picture(os.path.join(path,'complaints_breakdown.png'), width=Inches(5.75))
 
     #Second visualization heading and description
     document.add_heading('Visuals - Indoor and outdoor air temperature', level=1)
@@ -638,7 +634,7 @@ registered.')
 and the indoor and outdoor air temperature at the time the complaint was registered.')
 
     #Add second visualizations
-    document.add_picture(input_path + r'\complaint_scatter.png', width=Inches(5.75))
+    document.add_picture(os.path.join(path,'complaint_scatter.png'), width=Inches(5.75))
 
     #Third visualization heading and description
     document.add_heading('Visuals - Predicted proportion of complaints', level=1)
@@ -650,7 +646,7 @@ made will occur before 10 am. The condition is displayed at the top of the box, 
 proportion is displayed at the center of each box between the 0.0s.")
 
     #Add third visualizations
-    document.add_picture(input_path + r'\decision_tree.png', width=Inches(5.75))
+    document.add_picture(os.path.join(path,'decision_tree.png'), width=Inches(5.75))
 
     #KPIs heading and description
     document.add_heading('Key performance Indicators', level=1)
@@ -676,8 +672,16 @@ rate of occurence of a type of complaint for the particular season.')
     t.style = 'Colorful List'
 
     #Save document in reports folder
-    document.save(output_path + r'\complaint_report.docx')
-    convert(output_path + r'\complaint_report.docx', output_path + r'\complaint_report.pdf')
+    document.save(os.path.join(path,'complaint_report.docx'))
+    convert(os.path.join(path,'complaint_report.docx'), os.path.join(path,'report.pdf'))
+
+    #remove all used files
+    os.remove(os.path.join(path,'complaints_freq.xlsx'))
+    os.remove(os.path.join(path,'complaints_breakdown.png'))
+    os.remove(os.path.join(path,'complaint_scatter.png'))
+    os.remove(os.path.join(path,'decision_tree.png'))
+    os.remove(os.path.join(path,'complaint_report.docx'))
+
     print('Report successfully generated!')
 
     return

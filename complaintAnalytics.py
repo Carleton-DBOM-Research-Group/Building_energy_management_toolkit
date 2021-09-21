@@ -1,4 +1,5 @@
 #Import required modules
+import os
 import pandas as pd
 import numpy as np
 import matplotlib
@@ -9,7 +10,7 @@ from sklearn.tree import DecisionTreeRegressor
 from sklearn import tree
 from sklearn import preprocessing
 
-def complaintsAnalytics(cmms_data,weather,tOa,time_tOa,zone,zone_time,area,output_path):
+def complaintsAnalytics(cmms_data,tOa,time_tOa,zone,zone_time,area,output_path):
 
     cmms_data = cmms_data.rename(columns={cmms_data.columns[0]: "Report Time", cmms_data.columns[1]: "Operator comments"})
     cmms_time = cmms_data['Report Time']
@@ -182,25 +183,29 @@ def complaintsAnalytics(cmms_data,weather,tOa,time_tOa,zone,zone_time,area,outpu
 
     return
 
-def execute_function(uploaded_cmms_file, uploaded_zone_files, uploaded_weather_file, bldg_area, output_path):
+def execute_function(input_path, output_path):
 
     #Try reading CMMS data file
     print('Reading CMMS data file...')
-    cmms = pd.read_csv(uploaded_cmms_file,encoding='unicode escape')
+    cmms_files = os.listdir(os.path.join(input_path,'cmms'))
+    cmms = pd.read_csv(os.path.join(input_path, 'cmms',cmms_files[0]),encoding='unicode escape')
 
     # try reading AMY weather data
     print('Reading weather data file...')
-    weather = pd.read_csv(uploaded_weather_file,usecols=[3],skiprows=18)
+    weather_files = os.listdir(os.path.join(input_path,'weather'))
+    weather = pd.read_csv(os.path.join(input_path, 'weather',weather_files[0]),usecols=[3],skiprows=18)
     tOa = weather[weather.columns[0]]
     time_tOa = pd.date_range(start="2019-01-01",end="2019-12-31 23:00:00" ,freq='h')
+    
 
     # Try reading zone-level HVAC data files
     print('Reading zone-level HVAC data files...')
+    zone_files = os.listdir(os.path.join(input_path,'zone'))
+    zone_files_csv = [f for f in zone_files if f[-3:] == 'csv']
     zone = pd.DataFrame()
     read_first_file = False
-    for f in uploaded_zone_files:
-        print('Reading ' + str(f.filename) + '...')
-        data = pd.read_csv(f, usecols=[0,1,2,3,4])
+    for f in zone_files_csv:
+        data = pd.read_csv(os.path.join(input_path,'zone',f), usecols=[0,1,2,3,4])
 
         #Remove any entries over 8760 hours
         if len(data) > 8760:
@@ -214,6 +219,12 @@ def execute_function(uploaded_cmms_file, uploaded_zone_files, uploaded_weather_f
 
         data.drop(data.columns[0], axis=1, inplace=True)
         zone = pd.concat([zone,data],axis=1)
+    
+    # read inputted floor area from floor_area.txt
+    file = open(os.path.join(input_path,'floor_area.txt'))
+    content = file.readlines()
+
+    bldg_area = int(content[0])
 
     #Try analyzing the data
-    complaintsAnalytics(cmms,weather,tOa,time_tOa,zone,zone_time,bldg_area,output_path)
+    complaintsAnalytics(cmms,tOa,time_tOa,zone,zone_time,bldg_area,output_path)
