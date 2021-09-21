@@ -32,9 +32,8 @@ def execute_function(input_path, output_path):
   except:
     print('Insufficient information provided - NECB compliant heating energy use rates will not be modeled...')
 
-  #Read energy data files
+  #Read energy data file
   print('Reading energy meter data...')
-  #Read energy files in input path
   energy_files = os.listdir(os.path.join(input_path,'energy'))
   energy = pd.read_csv(os.path.join(input_path, 'energy',energy_files[0]))
 
