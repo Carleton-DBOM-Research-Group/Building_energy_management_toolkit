@@ -227,17 +227,50 @@ def endUseDisaggregation_upload():
 def run_endUseDisaggregation_function():
 
   cwd = os.getcwd()
-  path = cwd + r'\test_outputs'
+  request_uuid = str(uuid.uuid4())
+  
+  # create a new directory and subdirectories in unprocessed folder
+  path = os.path.join(cwd, 'userdata', 'unprocessed', request_uuid)
+  os.makedirs(path, exist_ok=True)
+  energy_path = os.path.join(path, 'energy')
+  os.makedirs(energy_path, exist_ok=True)
+  ahu_path = os.path.join(path, 'ahu')
+  os.makedirs(ahu_path, exist_ok=True)
+  zone_path = os.path.join(path, 'zone')
+  os.makedirs(zone_path, exist_ok=True)
+  wifi_path = os.path.join(path, 'wifi')
+  os.makedirs(wifi_path, exist_ok=True)
+  
+  # put the uploaded energy file in energy subfolder
   uploaded_energy_file = request.files.getlist('energy_file[]')
+  uploaded_energy_file[0].save(os.path.join(energy_path, uploaded_energy_file[0].filename))
+
+  # put the uploaded AHU HVAC file in ahu subfolder
   uploaded_ahu_files = request.files.getlist('ahu_HVAC_files[]')
+  for f in uploaded_ahu_files:
+    f.save(os.path.join(ahu_path, f.filename))
+
+  # put the uploaded zone HVAC files in zone subfolder
   uploaded_zone_files = request.files.getlist('zone_HVAC_files[]')
+  for f in uploaded_zone_files:
+    f.save(os.path.join(zone_path, f.filename))
+
+  # put the uploaded wifi filies in wifi subfolder
   uploaded_wifi_files = request.files.getlist('wifi_files[]')
+  for f in uploaded_wifi_files:
+    f.save(os.path.join(wifi_path, f.filename))
 
-  bldg_area = int(request.form['floorArea'])
-  cooling_type = request.form['coolingType']
+  # create text file and store variables
+  f = open(os.path.join(path, "endUseDisaggregation_var.txt"),"w+")
+  f.write(str(request.form['floorArea']) + "\n")
+  f.write(str(request.form['coolingType']))
+  f.close()
 
-  endUseDisaggregation.execute_function(uploaded_energy_file[0], uploaded_ahu_files, uploaded_zone_files, uploaded_wifi_files, bldg_area, cooling_type, path)
-  return "Success!"
+  # create a ready file & function ID file
+  open(os.path.join(path, 'ready'), 'a').close()
+  open(os.path.join(path, 'endUseDisaggregation'), 'a').close()
+  
+  return f"Request accepted, check the result with this link\n http://localhost:3000/checkresult/{request_uuid}"
 
 
 #COMPLAINT ANALYTICS  
@@ -327,9 +360,9 @@ def run_occupancy_wifi_function():
   path = os.path.join(cwd, 'userdata', 'unprocessed', request_uuid)
   os.makedirs(path, exist_ok=True)
   
-  # put the uploaded files there
-  uploaded_files = request.files.getlist('wifi_files[]')
-  for f in uploaded_files:
+  # put the uploaded wifi files there
+  uploaded_wifi_files = request.files.getlist('wifi_files[]')
+  for f in uploaded_wifi_files:
     f.save(os.path.join(path, f.filename))
   
   # create flag for floor level analysis

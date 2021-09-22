@@ -57,7 +57,12 @@ def process_work(job_id, input_dir):
   elif os.path.isfile(os.path.join(input_dir, 'endUseDisaggregation')):
     print('Performing analysis using end use disaggregation function...')
     #Do end use disaggregation work here
-    open(os.path.join(output_dir, 'ready'), 'a').close()
+    try:
+      endUseDisaggregation.execute_function(input_dir,output_dir)
+      generate_report.endUseDisaggregation(output_dir)
+      open(os.path.join(output_dir, 'ready'), 'a').close()
+    except:
+      open(os.path.join(output_dir, 'error'), 'a').close()
 
   elif os.path.isfile(os.path.join(input_dir, 'metadata')):
     print('Performing analysis using metadata function...')

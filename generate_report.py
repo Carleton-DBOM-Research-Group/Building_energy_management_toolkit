@@ -366,17 +366,13 @@ belong to the zone cluster C1.) These tables can be used to identify the zone(s)
     return
 
 #------------------------------------------------------GENERATE END-USE DISAGGREGATION REPORT -------------------------------------------------
-def endUseDisaggregation():
+def endUseDisaggregation(path):
     print('Generating report for end-uses disaggregation function...')
 
-    path = os.getcwd() #Get current directory
-    output_path = path + r'\toolkit\reports\5-endUseDisaggregation' #Specify the output path for report
-    input_path = path + r'\toolkit\outputs\5-endUseDisaggregation' #Specify the input path for report
-
     #Extract KPIs excel sheet
-    kpis_htg = pd.read_excel(input_path + r'\endUseDisagg_summary.xlsx',sheet_name='Heating')
-    kpis_clg = pd.read_excel(input_path + r'\endUseDisagg_summary.xlsx',sheet_name='Cooling')
-    kpis_ele = pd.read_excel(input_path + r'\endUseDisagg_summary.xlsx',sheet_name='Electricity')
+    kpis_htg = pd.read_excel(os.path.join(path,'endUseDisagg_summary.xlsx'),sheet_name='Heating')
+    kpis_clg = pd.read_excel(os.path.join(path,'endUseDisagg_summary.xlsx'),sheet_name='Cooling')
+    kpis_ele = pd.read_excel(os.path.join(path,'endUseDisagg_summary.xlsx'),sheet_name='Electricity')
     kpis_htg.drop(kpis_htg.columns[0],axis=1,inplace=True)
     kpis_clg.drop(kpis_clg.columns[0],axis=1,inplace=True)
     kpis_ele.drop(kpis_ele.columns[0],axis=1,inplace=True)
@@ -401,7 +397,7 @@ the distribution of energy consumption within a building and can be used to iden
 of the major end-uses for electricity, cooling, and heating separately.')
 
     #Add visualizations
-    document.add_picture(input_path + r'\endUseDisaggregation.png', width=Inches(5.75))
+    document.add_picture(os.path.join(path,'endUseDisaggregation.png'), width=Inches(5.75))
 
     #KPIs heading and description
     document.add_heading('Key performance Indicators', level=1)
@@ -436,9 +432,14 @@ example, if three (3) AHUs were analyzed, the energy use intensites for the AHU 
         t.style = 'Colorful List'
 
     #Save document in reports folder
-    document.save(output_path + r'\endUseDisaggregation_report.docx')
-    convert(output_path + r'\endUseDisaggregation_report.docx', output_path + r'\endUseDisaggregation_report.pdf')
+    document.save(os.path.join(path,'endUseDisaggregation_report.docx'))
+    convert(os.path.join(path,'endUseDisaggregation_report.docx'), os.path.join(path,'report.pdf'))
     print('Report successfully generated!')
+
+    # remove used files
+    os.remove(os.path.join(path,'endUseDisaggregation.png'))
+    os.remove(os.path.join(path,'endUseDisaggregation_report.docx'))
+    os.remove(os.path.join(path,'endUseDisagg_summary.xlsx'))
 
     return
 

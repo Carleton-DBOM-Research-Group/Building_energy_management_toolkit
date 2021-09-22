@@ -1,4 +1,5 @@
 #Import required libraries
+import os
 import pandas as pd
 import numpy as np
 import matplotlib
@@ -9,25 +10,28 @@ import warnings
 warnings.filterwarnings('ignore')
 import ruptures as rpt
 
-def execute_function(uploaded_energy_file, uploaded_ahu_files, uploaded_zone_files, uploaded_wifi_files, bldg_area, cooling_type, output_path):
+def execute_function(input_path, output_path):
 
     # Define Constant Values - Will need to be changed to suit different buildings
     device_to_occ = 1.2 # Assumed number of devices per person
 
-    #try reading energy data file
+    # read energy data file
     print("Reading energy meter data...")
-    energy = pd.read_csv(uploaded_energy_file)
+    energy_files = os.listdir(os.path.join(input_path,'energy'))
+    energy = pd.read_csv(os.path.join(input_path, 'energy',energy_files[0]))
 
-    #Try read Wi-Fi data files
+    # read Wi-Fi data files
     print("Reading Wi-Fi device count data files...")
+    wifi_files = os.listdir(os.path.join(input_path,'wifi'))
+    wifi_files_csv = [f for f in wifi_files if f[-3:] == 'csv']
     wifi = pd.DataFrame()
     read_first_wifi_file = False
-    for f in uploaded_wifi_files:
+    for f in wifi_files_csv:
         if read_first_wifi_file == False:
-            wifi1 = pd.read_csv(f,index_col=0,parse_dates=True)
+            wifi1 = pd.read_csv(os.path.join(input_path,'wifi',f),index_col=0,parse_dates=True)
             wifi = pd.concat([wifi,wifi1[wifi1.columns[0]]],axis=1)
         else:
-            data = pd.read_csv(f, usecols=[1])
+            data = pd.read_csv(os.path.join(input_path,'wifi',f), usecols=[1])
             wifi = pd.concat([wifi,data],axis=1)
 
     wifi['total'] = wifi.sum(axis=1)
@@ -35,29 +39,40 @@ def execute_function(uploaded_energy_file, uploaded_ahu_files, uploaded_zone_fil
     wifi = wifi.set_index(wifi1.index)
     wifi = wifi.asfreq('1H')
 
-    #Try reading zone-level HVAC data - extract fraction of active perimeter heating devices in all zones
+    # read zone-level HVAC data - extract fraction of active perimeter heating devices in all zones
     print("Reading zone-level HVAC data...")
+    zone_files = os.listdir(os.path.join(input_path,'zone'))
+    zone_files_csv = [f for f in zone_files if f[-3:] == 'csv']
     sRad = pd.DataFrame()
-    for f in uploaded_zone_files:
-        data = pd.read_csv(f, usecols=[4])
+    for f in zone_files_csv:
+        data = pd.read_csv(os.path.join(input_path,'zone',f), usecols=[4])
         sRad = pd.concat([sRad,data],axis=1)
         
     sRad.drop(sRad.tail(1).index,inplace=True) # drop last row of sRad
     
 
-    #Try reading AHU-level HVAC data
+    # read AHU-level HVAC data
     print("Reading AHU-level HVAC data...")
+    ahu_files = os.listdir(os.path.join(input_path,'ahu'))
+    ahu_files_csv = [f for f in ahu_files if f[-3:] == 'csv']
     dfs = []
     num_of_ahus = 0
-    for f in uploaded_ahu_files:
+    for f in ahu_files_csv:
         num_of_ahus += 1
-        data = pd.read_csv(f) #Specify the sample data for ahu files
+        data = pd.read_csv(os.path.join(input_path,'ahu',f)) #Specify the sample data for ahu files
         if len(data) > 8760:
             data.drop(data.tail(len(data)-8760).index,inplace=True)
-        data = data.rename(columns={data.columns[1]:'tSa'+str(num_of_ahus),data.columns[2]:'tRa'+str(num_of_ahus),data.columns[3]:'tOa'+str(num_of_ahus),data.columns[4]:'pSa'+str(num_of_ahus),data.columns[5]:'sOa'+str(num_of_ahus),data.columns[6]:'sHc'+str(num_of_ahus),data.columns[7]:'sCc'+str(num_of_ahus),data.columns[8]:'sFan'+str(num_of_ahus),data.columns[9]:'tSaSp'+str(num_of_ahus),data.columns[10]:'pSaSp'+str(num_of_ahus)})
+        data = data.rename(columns={data.columns[1]:'tSa'+str(num_of_ahus),data.columns[2]:'tRa'+str(num_of_ahus),data.columns[3]:'tOa'+str(num_of_ahus),data.columns[4]:'pSa'+str(num_of_ahus),data.columns[5]:'sOa'+str(num_of_ahus),data.columns[6]:'sHc'+str(num_of_ahus),data.columns[7]:'sCc'+str(num_of_ahus),data.columns[8]:'sFan'+str(num_of_ahus)})
         dfs.append(data)
 
-    ahu = pd.concat(dfs,axis=1)    
+    ahu = pd.concat(dfs,axis=1)   
+
+    # read inputted variables
+    file = open(os.path.join(input_path,'endUseDisaggregation_var.txt'))
+    content = file.readlines()
+
+    bldg_area = int(content[0])
+    cooling_type = str(content[1]) 
 
     #Extract normalized heating/cooling
     normalized_heating = (energy[energy.columns[3]]-energy[energy.columns[3]].min())/(energy[energy.columns[3]].max()-energy[energy.columns[3]].min())
