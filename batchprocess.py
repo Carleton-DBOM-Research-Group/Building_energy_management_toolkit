@@ -16,6 +16,10 @@ import generate_report
 
 SLEEP_TIME = 10
 
+cwd = os.getcwd()
+os.makedirs(os.path.join(cwd,'userdata','unprocessed'), exist_ok=True)
+os.makedirs(os.path.join(cwd,'userdata','done'), exist_ok=True)
+
 def is_ready(input_dir):
   return os.path.isfile(os.path.join(input_dir, 'ready'))
 
