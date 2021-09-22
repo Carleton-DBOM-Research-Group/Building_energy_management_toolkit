@@ -1,5 +1,4 @@
 test_outputs/
-userdata/
 __pycache__/
 *.py[cod]
 *$py.class
