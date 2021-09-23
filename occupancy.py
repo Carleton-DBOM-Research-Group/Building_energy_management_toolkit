@@ -347,7 +347,8 @@ def execute_function_motion(input_path, output_path):
 
         #Read the motion detection data
         motion_files = os.listdir(input_path)
-        motion_df = pd.read_csv(os.path.join(input_path, motion_files[0]), index_col = 0, parse_dates=True)
+        motion_files_csv = [f for f in motion_files if f[-3:] == 'csv']
+        motion_df = pd.read_csv(os.path.join(input_path, motion_files_csv[0]), index_col = 0, parse_dates=True)
 
         #Run the occupancy analysis with motion detection data
         occupancyMotion(motion_df,output_path)
