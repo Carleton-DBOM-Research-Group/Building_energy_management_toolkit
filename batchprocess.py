@@ -37,7 +37,7 @@ def process_work(job_id, input_dir):
       generate_report.zoneAnomaly(output_dir)
       open(os.path.join(output_dir, 'ready'), 'a').close()
     except Exception as e:
-      print(e.message)
+      print(e)
       open(os.path.join(output_dir, 'error'), 'a').close()
 
   elif os.path.isfile(os.path.join(input_dir, 'ahuAnomaly')):
