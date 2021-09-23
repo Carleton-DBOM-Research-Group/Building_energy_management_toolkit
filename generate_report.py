@@ -686,3 +686,77 @@ rate of occurence of a type of complaint for the particular season.')
     print('Report successfully generated!')
 
     return
+
+#METADATA
+
+def metadata(path):
+    print('Generating report for metadata function...')
+
+    #Extract KPIs excel sheet
+    ahu_meta = pd.read_excel(os.path.join(path,'metadata_summary.xlsx'),sheet_name='ahu')
+    zone_meta = pd.read_excel(os.path.join(path,'metadata_summary.xlsx'),sheet_name='zone')
+    ahu_meta.drop(ahu_meta.columns[0],axis=1,inplace=True)
+    zone_meta.drop(ahu_meta.columns[0],axis=1,inplace=True)
+
+    #Generate Word document
+    document = Document()
+
+    #Report title
+    document.add_heading('Metadata - Analysis Report', 0)
+
+    #Introductory paragraph
+    p = document.add_paragraph('The metadata inference function automatically ')
+    p.add_run('identifies and associates BAS metadata labels into corresponding data point types and AHU or zone. ').bold = True
+    p.add_run('This function is unique as it is intended as a pre-processing step rather than the other functions within the \
+toolkit which are intended to help the user identify energy deficiencies and anomalies and oppurtunities for energy-savings. \
+This function does not output any key performance indicators (KPI) or visuals like the other functions in the toolkit. Rather, \
+it outputs a set of metadata labels which are organized by its data type (i.e., temperature sensor, \
+actuator position, valve position) and by system hierarchy (AHU or zone). Note that this function works by identifying labels based on \
+a predefined dictionary of common abbreviations for certain data points (i.e., "TSA" or "SAT" for supply air temperature sensor) and \
+associates them based on the alphanumeric similiarity of certain labels to other labels. Hence, this function may not work as effectively \
+with BAS labels with unique ontologies and inconsistent labelling schema.')
+
+    #KPIs heading and description
+    document.add_heading('Metadata labels', level=1)
+
+    table_labels = ['AHU',
+                    'tSa label',
+                    'tSa ID',
+                    'tRa label',
+                    'tRa ID',
+                    'tOa label',
+                    'tOa ID',
+                    'pSa label',
+                    'pSa ID',
+                    'sOa label',
+                    'sOa ID',
+                    'sHc label',
+                    'sHc ID',
+                    'sCc label',
+                    'sCc ID',
+                    'sFan label',
+                    'sFan ID']
+
+    p = document.add_heading('Metadata label for AHUs',level=2)
+    t = document.add_table(ahu_meta.shape[0]+1, ahu_meta.shape[1])
+    
+    for j in range(ahu_meta.shape[-1]): # add the header rows.
+        t.cell(0,j).text = table_labels[j]
+    
+    for i in range(ahu_meta.shape[0]): # add the rest of the data frame
+        for j in range(ahu_meta.shape[-1]):
+            t.cell(i+1,j).text = str(ahu_meta.values[i,j])
+    
+    t.style = 'Colorful List'
+
+    #Save document in reports folder
+    document.save(os.path.join(path,'meta_report.docx'))
+    convert(os.path.join(path,'meta_report.docx'), os.path.join(path,'report.pdf'))
+
+    #remove all used files
+    os.remove(os.path.join(path,'metadata_summary.xlsx'))
+    os.remove(os.path.join(path,'meta_report.docx'))
+
+    print('Report successfully generated!')
+
+    return
