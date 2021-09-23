@@ -17,9 +17,9 @@ def energyBaseline(path):
     p = document.add_paragraph('The baseline energy function ')
     p.add_run('compares energy use during operating hours (workhours) and outside operating hours (after-hours) for heating, cooling, and electricity*. ').bold=True
     p.add_run("This function is intended to help the user assess the effectiveness of schedules and their ability to reduce \
-energy use outside of the building's operating hours. Plots are generated which compare the rate of energy use during and outside operating \
-hours with respect to outdoor air temperature, and predict energy consumption at representative outdoor air temperatures - these are \
-done separately for heating, cooling, and electricity. The generated key performance indicators (KPI) quantify schedule \
+energy use outside of a building's operating hours. Plots are generated which compare the rate of energy use during and outside operating \
+hours with respect to outdoor air temperature, and predict energy consumption at certain outdoor air temperatures - these are \
+done separately for heating, cooling, and electricity*. The generated key performance indicators (KPI) quantify schedule \
 effectiveness and afterhours energy use. More information is found in the respective sections.")
     p = document.add_paragraph("*Electricity use comparison is shown only if electricity use analysis was conducted.")
 
@@ -27,12 +27,12 @@ effectiveness and afterhours energy use. More information is found in the respec
     document.add_heading('Visuals', level=1)
     p = document.add_paragraph('The first set of visuals (to the left) compare the rate of energy use during operating hours (workhours) and \
 outside operating hours (after-hours) as a function of outdoor air temperatures - this is done separately for heating, \
-cooling, and electricity. Current schedules may be ineffective at reducing after-hours energy use if the after-hours energy use \
+cooling, and electricity. Current schedules may be ineffective at reducing after-hours energy use if the inclined slope of the after-hours energy use \
 line is similiar or identical to the workhours energy use line. If the slope of the after-hours energy use line is shallower \
-than the workhour energy use line, the current schedules are effectively reducing energy use outside operating hours.')
+than the workhour energy use line, the current schedules are effective at reducing energy use outside operating hours.')
     p = document.add_paragraph('The second set of visuals (to the right) illustrates the sensitivity of energy use with respect to outdoor \
 air temperatures - this is done separately for heating, cooling, and electricity. If the lines are spaced considerably apart, \
-the energy use is particularily sensitive to outdoor air temperature.')
+the energy use is particularily sensitive to fluctuations in outdoor air temperature.')
 
     #Add visualizations
     document.add_picture(os.path.join(path,'energyBase_heating.png'), width=Inches(5.75))
@@ -249,13 +249,13 @@ def zoneAnomaly(path):
     p.add_run('detects anomalous zones based on indoor air temperature and airflow control errors. ').bold = True
     p.add_run('This function can help identify potential faults in variable air volume (VAV) units which \
 may result in anomalous airflow and temperature conditions in thermal zones. Visuals are also generated which \
-plot the average indoor air temperature and airflow control error or groups of zones; this is done separately \
+plot the average indoor air temperature and airflow control error of groups of zones; this is done separately \
 for the heating and cooling season.')
 
     #Visualization heading and description
     document.add_heading('Visuals', level=1)
     p = document.add_paragraph('The generated visuals plot the average indoor air temperature and average \
-airflow control error or groups of zones. Each group of zones (C1, C2, C3, etc.) represents a number of zones \
+airflow control error of each group of zones. Each group of zones (C1, C2, C3, etc.) represents a number of zones \
 which is presented at the top-left of the visual. The airflow control error is the difference between the \
 actual and setpoint airflow rate with respect to the airflow rate setpoint. A positive (+) percentage indicates a \
 higher actual flowrate than the setpoint and a negative (-) percentage indicates a lower actual flowrate than the \
