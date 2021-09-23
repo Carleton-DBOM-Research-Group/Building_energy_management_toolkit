@@ -202,7 +202,7 @@ def run_zoneAnomaly():
   
   #zoneAnomaly.execute_function(uploaded_files, path)
   #return "Success!"
-  return f"Request accepted, check the result with this link\n http://localhost:3000/checkresult/{request_uuid}"
+  return f"Request accepted, check the result with this link\n http://building-energy-management-toolkit.com/checkresult/{request_uuid}"
 
 
 #END-USE DISAGGREGATION  
