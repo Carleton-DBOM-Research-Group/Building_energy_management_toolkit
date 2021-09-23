@@ -536,6 +536,9 @@ of typical occupancy.')
 
         print('Generating report for occupancy function with motion-detection data...')
 
+        # get working directory
+        cwd = os.getcwd()
+
         #Extract KPIs excel sheet
         kpis = pd.read_excel(os.path.join(path,'motion_detection_kpis.xlsx'),sheet_name='KPIs',keep_default_na=False)
         kpis.drop(kpis.columns[0],axis=1,inplace=True)
@@ -556,10 +559,11 @@ of typical occupancy.')
 excessive ventilation during unoccupied hours, or even serve as a basis for an occupant-driven demand controlled ventilation scheme. \
 The calculated earliest arrival time and latest departure time can be used to inform whole building-level schedules, including start/stop \
 times, whereas the calculated latest arrival time and longest break duration can be used to inform zone-level schedules, including time-out \
-durations for zone air flow. For example, if the calculated latest arrival time is 13:00 (1PM), a possible schema may be to reinstate the \
-'vacant' state at 1PM in zones where vacancy is detected, thus shutting off unnecessary airflow to such zones. If the calculated longest \
-break duration is 3:00 (3 hours), a time-out duration of three hours may be implemented where certain zones have the 'vacant' state \
-reinstated after three hours of no detected occupancy.")
+durations for zone air flow. For example, if the calculated latest arrival time is 13:00 (1PM), you may implement a simple logic to each \
+zone's controller which switches the zone to the 'unoccupied mode' when the motion detector of the zone has not been triggered until 1 pm \
+on a given day. Similarly, if the calculated longest break duration is 3:00 (3 hours), then you may implement another simple logic to each \
+zone's controller to switch the zone to the 'unoccupied mode' when the room's motion detector has not been triggered for longer than 3 hours \
+on a given day. The below pseudo-code demonstrates these two implementations.")
 
         #KPIs heading and description
         document.add_heading('Key performance Indicators', level=1)
