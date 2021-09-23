@@ -388,10 +388,9 @@ def run_occupancy_motion_function():
   path = os.path.join(cwd, 'userdata', 'unprocessed', request_uuid)
   os.makedirs(path, exist_ok=True)
   
-  # put the uploaded files there
-  uploaded_files = request.files.getlist('motion_files[]')
-  for f in uploaded_files:
-    f.save(os.path.join(path, f.filename))
+  # put the uploaded motion file there
+  uploaded_motion_file = request.files.getlist('motion_files[]')
+  uploaded_motion_file[0].save(os.path.join(path, uploaded_motion_file[0].filename))
 
   # create a ready file & function ID file
   open(os.path.join(path, 'ready'), 'a').close()
