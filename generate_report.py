@@ -3,6 +3,7 @@ import os
 import pandas as pd
 from docx import Document
 from docx.shared import Inches
+from docx.enum.section import WD_ORIENT
 from docx2pdf import convert
 
 #-----------------------------------------------GENERATE BASELINE ENERGY REPORT----------------------------------------------------
@@ -698,8 +699,10 @@ def metadata(path):
     ahu_meta.drop(ahu_meta.columns[0],axis=1,inplace=True)
     zone_meta.drop(ahu_meta.columns[0],axis=1,inplace=True)
 
-    #Generate Word document
+    #Generate Word document in landscape orientation
     document = Document()
+    section = document.sections[-1]
+    section.orientation = WD_ORIENT.LANDSCAPE
 
     #Report title
     document.add_heading('Metadata - Analysis Report', 0)
@@ -716,9 +719,8 @@ a predefined dictionary of common abbreviations for certain data points (i.e., "
 associates them based on the alphanumeric similiarity of certain labels to other labels. Hence, this function may not work as effectively \
 with BAS labels with unique ontologies and inconsistent labelling schema.')
 
-    #KPIs heading and description
+    #Output metadata labels for AHUs
     document.add_heading('Metadata labels', level=1)
-
     table_labels = ['AHU',
                     'tSa label',
                     'tSa ID',
@@ -746,6 +748,29 @@ with BAS labels with unique ontologies and inconsistent labelling schema.')
     for i in range(ahu_meta.shape[0]): # add the rest of the data frame
         for j in range(ahu_meta.shape[-1]):
             t.cell(i+1,j).text = str(ahu_meta.values[i,j])
+    
+    t.style = 'Colorful List'
+
+    #Output metadata labels for zones
+    table_labels = ['Zone',
+                    'tIn label',
+                    'tIn ID',
+                    'qFlo label',
+                    'qFlo ID',
+                    'qFloSp label',
+                    'qFloSp ID',
+                    'sRad label',
+                    'sRad ID']
+
+    p = document.add_heading('Metadata label for zones',level=2)
+    t = document.add_table(zone_meta.shape[0]+1, zone_meta.shape[1])
+    
+    for j in range(zone_meta.shape[-1]): # add the header rows.
+        t.cell(0,j).text = table_labels[j]
+    
+    for i in range(zone_meta.shape[0]): # add the rest of the data frame
+        for j in range(zone_meta.shape[-1]):
+            t.cell(i+1,j).text = str(zone_meta.values[i,j])
     
     t.style = 'Colorful List'
 
