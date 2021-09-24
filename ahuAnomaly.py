@@ -210,6 +210,7 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path):
         tSaPrmtr = model.output_dict['variable'] #Extract estimated parameters
 
         #Plot first subplot of f2a_ahu_
+        print('Plotting warmest/coldest/average tIns and tSa...', flush=True)
         fig, ax = plt.subplots(2,figsize=(15,12))
         ax[0].set_xlabel(r'Outdoor air temperature '+r'$(^{0}C)$', fontsize=24)
         ax[0].set_ylabel(r'Air temperature '+r'$(^{0}C)$', fontsize=24)
@@ -255,6 +256,7 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path):
         ax[0].legend(ncol=4,loc='upper center',prop={"size":22})
 
         #Plot second subplot f2a_ahu_
+        print('Plotting split-range controller diagram...')
         ax[1].set_xlabel(r'Outdoor air temperature '+r'$(^{0}C)$', fontsize=24)
         ax[1].set_ylabel('Damper/Valve position (%)', fontsize=24)
         ax[1].set_xlim(-25,35)
@@ -306,7 +308,7 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path):
         plt.savefig(os.path.join(output_path,'f2a_ahu_' + str(ahu_num+1) + '.png'),dpi=600)
 
         #MULTIPLE LINEAR REGRESSION to extract ahuMdl
-
+        print('Extracting data points in htgEconMd', flush=True)
         tSa = dataWrkHrs[dataWrkHrs.columns[0]][htgEconMdInd] 
         tRa = dataWrkHrs[dataWrkHrs.columns[1]][htgEconMdInd] 
         tOa = dataWrkHrs[dataWrkHrs.columns[2]][htgEconMdInd] #Note: tOa is redefined here.
