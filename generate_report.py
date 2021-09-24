@@ -351,16 +351,14 @@ belong to the zone cluster C1.) These tables can be used to identify the zone(s)
         k+=1
         t.style = 'TableGrid'
         
-
-    #Save document in reports folder
-    document.save(os.path.join(path, 'zoneAnomaly_report.docx'))
-    convert(os.path.join(path, 'zoneAnomaly_report.docx'), os.path.join(path, 'report.pdf'))
-
     #Remove all used files
     os.remove(os.path.join(path,'zone_heat_season.png'))
     os.remove(os.path.join(path,'zone_cool_season.png'))
-    os.remove(os.path.join(path,'zone_anomaly_summary.xlsx'))
     os.remove(os.path.join(path,'zoneAnomaly_report.docx'))
+
+    #Save document in reports folder
+    document.close()
+    document.save(os.path.join(path, 'zoneAnomaly_report.docx'))
 
     print('Report successfully generated!')
 
