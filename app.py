@@ -113,7 +113,7 @@ def run_energyBaseline_function():
   open(os.path.join(path, 'ready'), 'a').close()
   open(os.path.join(path, 'energyBaseline'), 'a').close()
   
-  return f"Request accepted, check the result with this link\n http://localhost:3000/checkresult/{request_uuid}"
+  return f"Request accepted, check the result with this link:\n http://building-energy-management-toolkit.com/checkresult/{request_uuid}"
 
 #AHU ANOMALY  
 
@@ -161,7 +161,7 @@ def run_ahuAnomaly_function():
   open(os.path.join(path, 'ready'), 'a').close()
   open(os.path.join(path, 'ahuAnomaly'), 'a').close()
 
-  return f"Request accepted, check the result with this link\n http://localhost:3000/checkresult/{request_uuid}"
+  return f"Request accepted, check the result with this link:\n http://building-energy-management-toolkit.com/checkresult/{request_uuid}"
 
 #ZONE ANOMALY  
 
@@ -202,7 +202,7 @@ def run_zoneAnomaly():
   
   #zoneAnomaly.execute_function(uploaded_files, path)
   #return "Success!"
-  return f"Request accepted, check the result with this link\n http://building-energy-management-toolkit.com/checkresult/{request_uuid}"
+  return f"Request accepted, check the result with this link:\n http://building-energy-management-toolkit.com/checkresult/{request_uuid}"
 
 
 #END-USE DISAGGREGATION  
@@ -270,7 +270,7 @@ def run_endUseDisaggregation_function():
   open(os.path.join(path, 'ready'), 'a').close()
   open(os.path.join(path, 'endUseDisaggregation'), 'a').close()
   
-  return f"Request accepted, check the result with this link\n http://localhost:3000/checkresult/{request_uuid}"
+  return f"Request accepted, check the result with this link:\n http://building-energy-management-toolkit.com/checkresult/{request_uuid}"
 
 
 #COMPLAINT ANALYTICS  
@@ -329,7 +329,7 @@ def run_complaintAnalytics_function():
   open(os.path.join(path, 'ready'), 'a').close()
   open(os.path.join(path, 'complaintAnalytics'), 'a').close()
   
-  return f"Request accepted, check the result with this link\n http://localhost:3000/checkresult/{request_uuid}"
+  return f"Request accepted, check the result with this link:\n http://building-energy-management-toolkit.com/checkresult/{request_uuid}"
 
 
 #OCCUPANCY  
@@ -375,7 +375,7 @@ def run_occupancy_wifi_function():
   
   #zoneAnomaly.execute_function(uploaded_files, path)
   #return "Success!"
-  return f"Request accepted, check the result with this link\n http://localhost:3000/checkresult/{request_uuid}"
+  return f"Request accepted, check the result with this link:\n http://building-energy-management-toolkit.com/checkresult/{request_uuid}"
 
   
 @app.route('/functions/occupancy/upload/run-occupancy-motion', methods=['POST'])
@@ -398,7 +398,7 @@ def run_occupancy_motion_function():
   
   #zoneAnomaly.execute_function(uploaded_files, path)
   #return "Success!"
-  return f"Request accepted, check the result with this link\n http://localhost:3000/checkresult/{request_uuid}"
+  return f"Request accepted, check the result with this link:\n http://building-energy-management-toolkit.com/checkresult/{request_uuid}"
 
 #Function to check results
 
@@ -409,6 +409,6 @@ def check_result(request_uuid):
   if os.path.isfile(os.path.join(result_dir, 'ready')):
     return send_file(os.path.join(result_dir, 'report.docx'))
   elif os.path.isfile(os.path.join(result_dir, 'error')):
-    return "Something went wrong with the analysis. Please check your input data and try again."
+    return "Something went wrong with the analysis. Please check your input data and try again. (︶︹︺)"
   else:
-    return "Your results are not ready yet. Please check back later."
+    return "Your results are not ready yet. Please check back later. ヾ(￣0￣ )ノ"
