@@ -223,22 +223,27 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path):
 
         a = np.linspace(-25,35,num=100)
         #Plot coldest zone temperature
+        print('Plotting coldest zone temperature...', flush=True)
         p = np.polyfit(tOa,tInCldWrkHrs,2)
         ax[0].plot(a,np.polyval(p,a),'b-', linewidth=4, label=r'Coldest')
         #Plot average zone temperature
+        print('Plotting average zone temperature...', flush=True)
         p = np.polyfit(tOa,tInAvgWrkHrs,2) #tIn,avg
         ax[0].plot(a,np.polyval(p,a),'k-', linewidth=4, label=r'Average')
         #Plot warmest zone temperature
+        print('Plotting warmest zone temperature...', flush=True)
         p = np.polyfit(tOa,tInWrmWrkHrs,2) #tIn,Wrm
         ax[0].plot(a,np.polyval(p,a),'r-', linewidth=4, label=r'Warmest')
 
         #Estimate/plot supply air temperature as a function of outdoor air temperature using tSaPrmtr
+        print('Plotting supply air temperature as a function of outdoor air temperature using tSaPrmtr...', flush=True)
         conditions = [a <= tSaPrmtr[2], (a > tSaPrmtr[2]) & (a <= tSaPrmtr[3]), a > tSaPrmtr[3]]
         choices = [tSaPrmtr[0], (tSaPrmtr[0]-tSaPrmtr[1])/(tSaPrmtr[2]-tSaPrmtr[3])*(a-tSaPrmtr[2])+tSaPrmtr[0], tSaPrmtr[1]]
         tSaPr = np.select(conditions,choices,default=0)
         ax[0].plot(a,tSaPr,'k--', linewidth=4, label=r'Supply')
 
         #Plot ideal low/high supply air temperature
+        print('Plotting ideal low/high supply air temperature...', flush=True)
         x_handle = [-12,12]
         y_handle = [17,12]
         tSaIdealLow = np.interp(a,x_handle,y_handle)
