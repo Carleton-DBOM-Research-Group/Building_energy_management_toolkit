@@ -124,7 +124,7 @@ def zoneAnomaly (tIn,qFlo,qFloSp,sRad,output_path):
     centerClust['Health Index'][0] = 1 - centerClust.loc[(centerClust['Mean t_in']>25) | (centerClust['Mean t_in']<20) | (centerClust['Mean q_Flo Error']>20) | (centerClust['Mean q_Flo Error']<-20), 'Zones'].sum()/centerClust['Zones'].sum()
     t = plt.text(15.2,-98,'Health Index=' + str(round(centerClust['Health Index'].iloc[0]*100,1))+'%', fontsize=25, alpha=0.5)
 
-    plt.savefig(output_path + r'\zone_heat_season.png',dpi=600)
+    plt.savefig(os.path.join(output_path,'zone_heat_season.png'),dpi=600)
     zoneWinterSummary = centerClust
 
     print('Extracting data for cooling season...')
@@ -229,12 +229,12 @@ def zoneAnomaly (tIn,qFlo,qFloSp,sRad,output_path):
     centerClust['Health Index'][0] = 1 - centerClust.loc[(centerClust['Mean t_in']>25) | (centerClust['Mean t_in']<20) | (centerClust['Mean q_Flo Error']>20) | (centerClust['Mean q_Flo Error']<-20), 'Zones'].sum()/centerClust['Zones'].sum()
     t = plt.text(15.2,-98,'Health Index=' + str(round(centerClust['Health Index'].iloc[0]*100,1))+'%', fontsize=25, alpha=0.5)
 
-    plt.savefig(output_path + r'\zone_cool_season.png',dpi=600)
+    plt.savefig(os.path.join(output_path,'zone_cool_season.png'),dpi=600)
     zoneSummerSummary = centerClust
 
     #Output the zone summary tables as excel files
     print('Formatting KPIs...')
-    writer = pd.ExcelWriter(output_path + r'\zone_anomaly_summary.xlsx', engine='xlsxwriter') # pylint: disable=abstract-class-instantiated
+    writer = pd.ExcelWriter(os.path.join(output_path,'zone_anomaly_summary.xlsx'), engine='xlsxwriter') # pylint: disable=abstract-class-instantiated
     zoneWinterSummary.to_excel(writer, sheet_name='Htg_summary')
     heat_cluster_samples.to_excel(writer, sheet_name='Htg_samples')
     zoneSummerSummary.to_excel(writer, sheet_name='Clg_summary')
