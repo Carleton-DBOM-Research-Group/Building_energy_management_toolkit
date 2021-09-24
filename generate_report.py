@@ -254,6 +254,7 @@ plot the average indoor air temperature and airflow control error of groups of z
 for the heating and cooling season.')
 
     #Visualization heading and description
+    print('Adding visuals...')
     document.add_heading('Visuals', level=1)
     p = document.add_paragraph('The generated visuals plot the average indoor air temperature and average \
 airflow control error of each group of zones. Each group of zones (C1, C2, C3, etc.) represents a number of zones \
@@ -279,6 +280,7 @@ increasing the VAV terminal maximum airflow setpoint.", style='List Bullet')
     document.add_picture(os.path.join(path,'zone_cool_season.png'), width=Inches(4.75))
 
     #KPIs heading and description
+    print('Adding KPIs...')
     document.add_heading('Key performance Indicators', level=1)
     p = document.add_paragraph('This section presents the generated KPIs - ')
     p.add_run('the zone health index').bold = True
@@ -352,11 +354,13 @@ belong to the zone cluster C1.) These tables can be used to identify the zone(s)
         t.style = 'TableGrid'
         
     #Remove all used files
+    print('Removing used files...')
     os.remove(os.path.join(path,'zone_heat_season.png'))
     os.remove(os.path.join(path,'zone_cool_season.png'))
-    os.remove(os.path.join(path,'zoneAnomaly_report.docx'))
+    os.remove(os.path.join(path,'zone_anomaly_summary.xlsx'))
 
     #Save document in reports folder
+    print('Save and close document...')
     document.save(os.path.join(path, 'report.docx'))
     document.close()
 
