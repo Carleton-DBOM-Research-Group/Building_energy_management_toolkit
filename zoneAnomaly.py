@@ -259,7 +259,6 @@ def execute_function(input_path, output_path):
     print('Reading zone-level HVAC data files...')
     #Populate tIn,qFlo,qFloSp,and sRad dataframes
     for f in zone_files_csv:
-        print('Reading ' + str(f) + '...')
         data = pd.read_csv(os.path.join(input_path,f), index_col=0)
         tIn = pd.concat([tIn,data[data.columns[0]]], axis=1,sort=False).rename(columns={data.columns[0]:str(f).replace('.csv','')})
         qFlo = pd.concat([qFlo,data[data.columns[1]]], axis=1,sort=False).rename(columns={data.columns[1]:str(f).replace('.csv','')})
