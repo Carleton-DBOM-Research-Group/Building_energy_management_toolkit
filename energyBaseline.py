@@ -11,9 +11,9 @@ import math
 def execute_function(input_path, output_path):
 
   try:
+    #Open text file containing variables for NECB baseline htg model
     file = open(os.path.join(input_path,'necb_parameters.txt'))
     content = file.readlines()
-
     numberOfFloors = int(content[0])
     wwr = float(content[1])
     floorArea = float(content[2])
@@ -22,12 +22,12 @@ def execute_function(input_path, output_path):
       exteriorFacadeArea = float(content[3])
     except:
       exteriorFacadeArea = floorArea * 0.4
+    
+    file.close()
 
     ua = exteriorFacadeArea*(1-wwr)*0.25 + exteriorFacadeArea*wwr*1.9 + floorArea/numberOfFloors*0.2 #Define UA value without infiltration
     ua = (ua + 0.3*(exteriorFacadeArea + floorArea/numberOfFloors))/1000 #Define UA with infiltration(0.25 L/s-m2; air density 1.2 kg/m3 & air specific heat 1 kJ/kgdegC)
     uVen = 0.6*floorArea/1000 #0.5 L/s-m2 ashrae 62.1 office ventilation rates for default office occupancy rates
-
-    file.close()
   
   except:
     print('Insufficient information provided - NECB compliant heating energy use rates will not be modeled...')
@@ -40,7 +40,7 @@ def execute_function(input_path, output_path):
   #Read AMY weather data
   print('Reading weather data...')
   weather_files = os.listdir(os.path.join(input_path,'weather'))
-  weather = pd.read_csv(os.path.join(input_path, 'weather',weather_files[0]),usecols=[3],skiprows=18)
+  weather = pd.read_csv(os.path.join(input_path, 'weather',weather_files[0]),usecols=[3],skiprows=18,encoding='unicode escape')
 
   #Define ga functions
 
@@ -160,7 +160,7 @@ def execute_function(input_path, output_path):
                     algorithm_parameters = algorithm_param,
                     convergence_curve = False)
 
-  print('Estimating heating energy use change points using GA...')
+  print('Estimating heating energy use change points using GA...', flush=True)
   model_Htg_GA.run() #Run GA
   x = model_Htg_GA.best_variable #Extract estimated changepoints
 
@@ -233,8 +233,8 @@ def execute_function(input_path, output_path):
     plt.text(x=12,y=max(yp)+10,s=r'$T_{oa} =$' + str(i) + ' C', fontsize=15)
 
   plt.tight_layout()
-  plt.savefig(output_path + r'\energyBase_heating.png',dpi=600)
-  print('Heating energy use analysis completed!')
+  plt.savefig(os.path.join(output_path,'energyBase_heating.png'),dpi=600)
+  print('Heating energy use analysis completed!', flush=True)
 
   varbound = np.array([[0, max(clg_df['cooling'])/10],[0,max(clg_df['cooling'])/10],[0,20],[0,max(clg_df['cooling'])],[0,20],[0,max(clg_df['cooling'])],[0,8],[16,23],[0,12],[12,23]])
 
@@ -245,7 +245,7 @@ def execute_function(input_path, output_path):
                     algorithm_parameters=algorithm_param,
                     convergence_curve = False) #Use the same parameters as previous ga
 
-  print('Estimating cooling energy use change points using GA...')
+  print('Estimating cooling energy use change points using GA...', flush=True)
   model_Clg_GA.run() #Run GA for cooling
   x = model_Clg_GA.best_variable #Extract estimated changepoints from GA
 
@@ -314,8 +314,8 @@ def execute_function(input_path, output_path):
     plt.text(x=12, y=max(yp)+10, s=r'$t_{oa} =$' + str(i) + ' C', fontsize=15)
 
   plt.tight_layout()
-  plt.savefig(output_path + r'\energyBase_cooling.png',dpi=600)
-  print('Cooling energy use analysis completed!')
+  plt.savefig(os.path.join(output_path,'energyBase_cooling.png'),dpi=600)
+  print('Cooling energy use analysis completed!',flush=True)
 
   if is_elec_clg:
     varbound = np.array([[0, max(elec_df['electricity'])/10],[0,max(elec_df['electricity'])/10],[0,20],[0,max(elec_df['electricity'])],[0,20],[0,max(elec_df['electricity'])],[0,8],[16,23],[0,12],[12,23]])
@@ -327,7 +327,7 @@ def execute_function(input_path, output_path):
                         algorithm_parameters=algorithm_param,
                         convergence_curve = False) #Use the same parameters as previous ga
 
-    print('Estimating electricity use change points using GA...')
+    print('Estimating electricity use change points using GA...', flush=True)
     model_Elec_GA.run() #Run GA for electricity
     x = model_Elec_GA.best_variable #Extract changepoints from GA
 
@@ -391,8 +391,8 @@ def execute_function(input_path, output_path):
       plt.text(x=12, y=max(yp)+10, s=r'$t_{oa} =$' + str(i) + ' C', fontsize=15)
 
     plt.tight_layout()
-    plt.savefig(output_path + r'\energyBase_electricity.png',dpi=600)
-    print('Electricity use analysis completed!')
+    plt.savefig(os.path.join(output_path,'energyBase_electricity.png'),dpi=600)
+    print('Electricity use analysis completed!', flush=True)
 
   print('Generating KPIs...')
   kpi_scheduleEffectiveness_heating = 1-(mdl_heating_prmtr[1]/mdl_heating_prmtr[0])
@@ -427,7 +427,10 @@ def execute_function(input_path, output_path):
 
   kpi_df = pd.DataFrame(data=d)
 
-  writer = pd.ExcelWriter(output_path + r'\energyBase_summary.xlsx', engine='xlsxwriter')# pylint: disable=abstract-class-instantiated
+  writer = pd.ExcelWriter(os.path.join(output_path,'energyBase_summary.xlsx'), engine='xlsxwriter')# pylint: disable=abstract-class-instantiated
   kpi_df.to_excel(writer, sheet_name='KPIs')
   writer.save()
+  writer.close()
+
+  return
 
