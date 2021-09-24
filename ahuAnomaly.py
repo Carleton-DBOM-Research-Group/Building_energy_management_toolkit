@@ -44,7 +44,7 @@ def drawAHU (ahu,clustCenter,oaSlope,oaBias,output_path):
 
         # Add text
         font = ImageFont.truetype("arial.ttf", 100)
-        font = ImageFont.load_default()
+        #font = ImageFont.load_default()
         d.text((1220, 40), "return", font=font, fill='black')
         d.text((1240, 260), str(clustCenter.iloc[k][clustCenter.columns[6]])+" C", font=font, fill='black')#tRa
         d.text((150, 640), "outdoor", font=font, fill='black')
