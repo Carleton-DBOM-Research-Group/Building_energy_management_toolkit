@@ -194,7 +194,7 @@ def execute_function(input_path, output_path):
     # try reading AMY weather data
     print('Reading weather data file...')
     weather_files = os.listdir(os.path.join(input_path,'weather'))
-    weather = pd.read_csv(os.path.join(input_path, 'weather',weather_files[0]),usecols=[3],skiprows=18)
+    weather = pd.read_csv(os.path.join(input_path, 'weather',weather_files[0]),usecols=[3],skiprows=18,encoding='unicode escape')
     tOa = weather[weather.columns[0]]
     time_tOa = pd.date_range(start="2019-01-01",end="2019-12-31 23:00:00" ,freq='h')
     
