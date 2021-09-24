@@ -220,7 +220,7 @@ increasing the maximum terminal airflow setpoints in these overheating rooms.", 
 
     #Save document in reports folder
     print('Saving document...')
-    document.save(os.path.join(path,'ahuAnomaly_report.docx'))
+    document.save(os.path.join(path,'report.docx'))
     
     print('Report successfully generated!')
 
