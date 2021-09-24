@@ -46,7 +46,8 @@ def process_work(job_id, input_dir):
       ahuAnomaly.execute_function(input_dir,output_dir)
       generate_report.ahuAnomaly(output_dir)
       open(os.path.join(output_dir, 'ready'), 'a').close()
-    except:
+    except Exception as e:
+      print(e)
       open(os.path.join(output_dir, 'error'), 'a').close()
 
   elif os.path.isfile(os.path.join(input_dir, 'energyBaseline')):
@@ -56,7 +57,8 @@ def process_work(job_id, input_dir):
       energyBaseline.execute_function(input_dir,output_dir)
       generate_report.energyBaseline(output_dir)
       open(os.path.join(output_dir, 'ready'), 'a').close()
-    except:
+    except Exception as e:
+      print(e)
       open(os.path.join(output_dir, 'error'), 'a').close()
 
   elif os.path.isfile(os.path.join(input_dir, 'endUseDisaggregation')):
@@ -66,7 +68,8 @@ def process_work(job_id, input_dir):
       endUseDisaggregation.execute_function(input_dir,output_dir)
       generate_report.endUseDisaggregation(output_dir)
       open(os.path.join(output_dir, 'ready'), 'a').close()
-    except:
+    except Exception as e:
+      print(e)
       open(os.path.join(output_dir, 'error'), 'a').close()
 
   elif os.path.isfile(os.path.join(input_dir, 'metadata')):
@@ -76,7 +79,8 @@ def process_work(job_id, input_dir):
       metadata.execute_function(input_dir,output_dir)
       generate_report.metadata(output_dir)
       open(os.path.join(output_dir, 'ready'), 'a').close()
-    except:
+    except Exception as e:
+      print(e)
       open(os.path.join(output_dir, 'error'), 'a').close()
   
   elif os.path.isfile(os.path.join(input_dir, 'occupancy_wifi')):
@@ -86,7 +90,8 @@ def process_work(job_id, input_dir):
       occupancy.execute_function_wifi(input_dir,output_dir)
       generate_report.occupancy(output_dir, True)
       open(os.path.join(output_dir, 'ready'), 'a').close()
-    except:
+    except Exception as e:
+      print(e)
       open(os.path.join(output_dir, 'error'), 'a').close()
   
   elif os.path.isfile(os.path.join(input_dir, 'occupancy_motion')):
@@ -96,7 +101,8 @@ def process_work(job_id, input_dir):
       occupancy.execute_function_motion(input_dir,output_dir)
       generate_report.occupancy(output_dir, False)
       open(os.path.join(output_dir, 'ready'), 'a').close()
-    except:
+    except Exception as e:
+      print(e)
       open(os.path.join(output_dir, 'error'), 'a').close()
   
   elif os.path.isfile(os.path.join(input_dir, 'complaintAnalytics')):
@@ -106,7 +112,8 @@ def process_work(job_id, input_dir):
       complaintAnalytics.execute_function(input_dir,output_dir)
       generate_report.complaintAnalytics(output_dir)
       open(os.path.join(output_dir, 'ready'), 'a').close()
-    except:
+    except Exception as e:
+      print(e)
       open(os.path.join(output_dir, 'error'), 'a').close()
 
 
