@@ -34,7 +34,7 @@ def process_work(job_id, input_dir):
     #Do zone anomaly work here
     try:
       zoneAnomaly.execute_function(input_dir,output_dir)
-      generate_report.zoneAnomaly(output_dir)
+      #generate_report.zoneAnomaly(output_dir)
       open(os.path.join(output_dir, 'ready'), 'a').close()
     except Exception as e:
       print(e)
