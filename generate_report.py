@@ -630,6 +630,7 @@ of the complaints based on time of day, day of the week, and outdoor air tempera
 respective sections.')
 
     #First visualization heading and description
+    print('Adding visuals...')
     document.add_heading('Visuals - Occupant complaints breakdown', level=1)
     p = document.add_paragraph('This set of visuals categorizes the complaints by the type of complaint \
 (hot or cold related), and counts the number of complaints by the month and period of the day the complaint was \
@@ -659,6 +660,7 @@ proportion is displayed at the center of each box between the 0.0s.")
     document.add_picture(os.path.join(path,'decision_tree.png'), width=Inches(5.75))
 
     #KPIs heading and description
+    print('Adding KPIs...')
     document.add_heading('Key performance Indicators', level=1)
     p = document.add_paragraph('This section presents the generated KPIs - ')
     p.add_run('daily frequency of hot and cold complaints in the heating and cooling season.').bold = True
@@ -681,16 +683,16 @@ rate of occurence of a type of complaint for the particular season.')
     
     t.style = 'Colorful List'
 
-    #Save document in reports folder
-    document.save(os.path.join(path,'complaint_report.docx'))
-    convert(os.path.join(path,'complaint_report.docx'), os.path.join(path,'report.pdf'))
-
     #remove all used files
+    print('Removing used files...')
     os.remove(os.path.join(path,'complaints_freq.xlsx'))
     os.remove(os.path.join(path,'complaints_breakdown.png'))
     os.remove(os.path.join(path,'complaint_scatter.png'))
     os.remove(os.path.join(path,'decision_tree.png'))
-    os.remove(os.path.join(path,'complaint_report.docx'))
+
+    #Save document in reports folder
+    print('Saving document...')
+    document.save(os.path.join(path,'report.docx'))
 
     print('Report successfully generated!')
 
