@@ -212,37 +212,36 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path):
 
         #Plot first subplot of f2a_ahu_
         print('Plotting warmest/coldest/average tIns and tSa...', flush=True)
-        fig = plt.figure(figsize=(15,12))
-        ax = plt.subplots(2,1,1)
-        ax.set_xlabel(r'Outdoor air temperature '+r'$(^{0}C)$', fontsize=24)
-        ax.set_ylabel(r'Air temperature '+r'$(^{0}C)$', fontsize=24)
-        ax.set_xlim(-25,35)
-        ax.set_ylim(10,30)
-        ax.set_xticks(np.arange(-25,36,5))
-        ax.set_yticks(np.arange(12,31,3))
-        ax.set_xticklabels(np.arange(-25,36,5),fontsize=25)
-        ax.set_yticklabels(np.arange(12,31,3),fontsize=25)
+        fig, ax = plt.subplots(2,figsize=(15,12))
+        ax[0].set_xlabel(r'Outdoor air temperature '+r'$(^{0}C)$', fontsize=24)
+        ax[0].set_ylabel(r'Air temperature '+r'$(^{0}C)$', fontsize=24)
+        ax[0].set_xlim(-25,35)
+        ax[0].set_ylim(10,30)
+        ax[0].set_xticks(np.arange(-25,36,5))
+        ax[0].set_yticks(np.arange(12,31,3))
+        ax[0].set_xticklabels(np.arange(-25,36,5),fontsize=25)
+        ax[0].set_yticklabels(np.arange(12,31,3),fontsize=25)
 
         a = np.linspace(-25,35,num=100)
         #Plot coldest zone temperature
         print('Plotting coldest zone temperature...', flush=True)
         p = np.polyfit(tOa,tInCldWrkHrs,2)
-        ax.plot(a,np.polyval(p,a),'b-', linewidth=4, label=r'Coldest')
+        ax[0].plot(a,np.polyval(p,a),'b-', linewidth=4, label=r'Coldest')
         #Plot average zone temperature
         print('Plotting average zone temperature...', flush=True)
         p = np.polyfit(tOa,tInAvgWrkHrs,2) #tIn,avg
-        ax.plot(a,np.polyval(p,a),'k-', linewidth=4, label=r'Average')
+        ax[0].plot(a,np.polyval(p,a),'k-', linewidth=4, label=r'Average')
         #Plot warmest zone temperature
         print('Plotting warmest zone temperature...', flush=True)
         p = np.polyfit(tOa,tInWrmWrkHrs,2) #tIn,Wrm
-        ax.plot(a,np.polyval(p,a),'r-', linewidth=4, label=r'Warmest')
+        ax[0].plot(a,np.polyval(p,a),'r-', linewidth=4, label=r'Warmest')
 
         #Estimate/plot supply air temperature as a function of outdoor air temperature using tSaPrmtr
         print('Plotting supply air temperature as a function of outdoor air temperature using tSaPrmtr...', flush=True)
         conditions = [a <= tSaPrmtr[2], (a > tSaPrmtr[2]) & (a <= tSaPrmtr[3]), a > tSaPrmtr[3]]
         choices = [tSaPrmtr[0], (tSaPrmtr[0]-tSaPrmtr[1])/(tSaPrmtr[2]-tSaPrmtr[3])*(a-tSaPrmtr[2])+tSaPrmtr[0], tSaPrmtr[1]]
         tSaPr = np.select(conditions,choices,default=0)
-        ax.plot(a,tSaPr,'k--', linewidth=4, label=r'Supply')
+        ax[0].plot(a,tSaPr,'k--', linewidth=4, label=r'Supply')
 
         #Plot ideal low/high supply air temperature
         print('Plotting ideal low supply air temperature...', flush=True)
@@ -260,24 +259,23 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path):
         tSaIdealHigh[tSaIdealHigh > y_handle[0]] = y_handle[0]
         
         print('Fill gap in between high/low ideal tSa', flush=True)
-        ax.fill_between(a,tSaIdealLow,tSaIdealHigh,facecolor='green',alpha=0.3)
-        ax.text(-8.5, 13, 'Ideal supply air temperature',weight='bold',fontsize=22,rotation=-13,color='green')
-        ax.legend(ncol=4,loc='upper center',prop={"size":22})
+        ax[0].fill_between(a,tSaIdealLow,tSaIdealHigh,facecolor='green',alpha=0.3)
+        ax[0].text(-8.5, 13, 'Ideal supply air temperature',weight='bold',fontsize=22,rotation=-13,color='green')
+        ax[0].legend(ncol=4,loc='upper center',prop={"size":22})
 
         #Plot second subplot f2a_ahu_
         print('Plotting split-range controller diagram...', flush=True)
-        ax = plt.subplots(2,1,2)
-        ax.set_xlabel(r'Outdoor air temperature '+r'$(^{0}C)$', fontsize=24)
-        ax.set_ylabel('Damper/Valve position (%)', fontsize=24)
-        ax.set_xlim(-25,35)
-        ax.set_ylim(0,100)
-        ax.set_xticks(np.arange(-25,36,5))
-        ax.set_yticks(np.arange(0,101,10))
-        ax.set_xticklabels(np.arange(-25,36,5),fontsize=25)
-        ax.set_yticklabels(np.arange(0,101,10),fontsize=25)
+        ax[1].set_xlabel(r'Outdoor air temperature '+r'$(^{0}C)$', fontsize=24)
+        ax[1].set_ylabel('Damper/Valve position (%)', fontsize=24)
+        ax[1].set_xlim(-25,35)
+        ax[1].set_ylim(0,100)
+        ax[1].set_xticks(np.arange(-25,36,5))
+        ax[1].set_yticks(np.arange(0,101,10))
+        ax[1].set_xticklabels(np.arange(-25,36,5),fontsize=25)
+        ax[1].set_yticklabels(np.arange(0,101,10),fontsize=25)
 
         print('Plotting sOa...', flush=True)
-        ax.plot(tOa_range,y,'k-.',linewidth=4,label='OA')
+        ax[1].plot(tOa_range,y,'k-.',linewidth=4,label='OA')
 
         print('Plotting sHc...', flush=True)
         htgMdInd = tOa <= cp[1]
@@ -287,7 +285,7 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path):
         mdl = linear_model.LinearRegression(fit_intercept=False).fit(x_train, sHcHtgMode)
         x_test = np.select([tOa_range < cp[1]],[cp[1]-tOa_range],default=0)[np.newaxis].T
         y = mdl.predict(x_test) #Note y is overwritten
-        ax.plot(tOa_range,y,'r-',linewidth=4,label='HC')
+        ax[1].plot(tOa_range,y,'r-',linewidth=4,label='HC')
 
         print('Plotting sCc...', flush=True)
         clgMdInd = tOa > cp[2]
@@ -297,7 +295,7 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path):
         mdl = linear_model.LinearRegression(fit_intercept=False).fit(x_train, sCcClgMode)
         x_test = np.select([tOa_range > cp[2]],[cp[2]-tOa_range],default=0)[np.newaxis].T
         y = mdl.predict(x_test)
-        ax.plot(tOa_range,y,'b:',linewidth=4,label='CC')
+        ax[1].plot(tOa_range,y,'b:',linewidth=4,label='CC')
 
         print('Plotting sRad...', flush=True)
         htgEconMdInd = tOa < cp[2]
@@ -310,17 +308,17 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path):
         y = np.where(tOa_range >= cp[2],0,y)
         y = np.where(y>100,100,y)
         y = np.where(y<0,0,y)
-        ax.plot(tOa_range,y,'r--',linewidth=4,label='RAD')
+        ax[1].plot(tOa_range,y,'r--',linewidth=4,label='RAD')
 
-        ax.axvspan(-25, cp[1], alpha=0.2, color='r')
-        ax.axvspan(cp[1], cp[2], alpha=0.2, color='y')
-        ax.axvspan(cp[2], cp[3], alpha=0.2, color='k')
-        ax.axvspan(cp[3], 35, alpha=0.2, color='b')
-        ax.legend(ncol=4,loc='lower center',prop={"size":25},bbox_to_anchor=(0.5,-0.4))
+        ax[1].axvspan(-25, cp[1], alpha=0.2, color='r')
+        ax[1].axvspan(cp[1], cp[2], alpha=0.2, color='y')
+        ax[1].axvspan(cp[2], cp[3], alpha=0.2, color='k')
+        ax[1].axvspan(cp[3], 35, alpha=0.2, color='b')
+        ax[1].legend(ncol=4,loc='lower center',prop={"size":25},bbox_to_anchor=(0.5,-0.4))
 
         plt.tight_layout()
         print('Saving plot...', flush=True)
-        fig.savefig(os.path.join(output_path,'f2a_ahu_' + str(ahu_num+1) + '.png'),dpi=600)
+        plt.savefig(os.path.join(output_path,'f2a_ahu_' + str(ahu_num+1) + '.png'),dpi=600)
 
         #MULTIPLE LINEAR REGRESSION to extract ahuMdl
         print('Extracting data points in htgEconMd', flush=True)
