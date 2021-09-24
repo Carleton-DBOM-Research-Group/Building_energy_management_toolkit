@@ -540,9 +540,6 @@ of typical occupancy.')
 
         print('Generating report for occupancy function with motion-detection data...')
 
-        # get working directory
-        cwd = os.getcwd()
-
         #Extract KPIs excel sheet
         kpis = pd.read_excel(os.path.join(path,'motion_detection_kpis.xlsx'),sheet_name='KPIs',keep_default_na=False)
         kpis.drop(kpis.columns[0],axis=1,inplace=True)
@@ -568,6 +565,9 @@ zone's controller which switches the zone to the 'unoccupied mode' when the moti
 on a given day. Similarly, if the calculated longest break duration is 3:00 (3 hours), then you may implement another simple logic to each \
 zone's controller to switch the zone to the 'unoccupied mode' when the room's motion detector has not been triggered for longer than 3 hours \
 on a given day. The below pseudo-code demonstrates these two implementations.")
+
+        cwd = os.getcwd()
+        document.add_picture(os.path.join(cwd,'static','img','occupancy_motion_pseudocode.png'), width=Inches(5.75))
 
         #KPIs heading and description
         print('Adding KPIs...')
