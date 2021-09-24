@@ -171,7 +171,7 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path):
 
         #Optimize parameters for all genetic algorithms
         varbound = np.array([[0,100],[-20,30],[-20,30],[-20,30],[0,100]]) # ([lower_bound,upper_bound])
-        algorithm_param = {'max_num_iteration': 12,\
+        algorithm_param = {'max_num_iteration': 4,\
                    'population_size':5000,\
                    'mutation_probability':0.1,\
                    'elit_ratio': 0.01,\
@@ -243,19 +243,21 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path):
         ax[0].plot(a,tSaPr,'k--', linewidth=4, label=r'Supply')
 
         #Plot ideal low/high supply air temperature
-        print('Plotting ideal low/high supply air temperature...', flush=True)
+        print('Plotting ideal low supply air temperature...', flush=True)
         x_handle = [-12,12]
         y_handle = [17,12]
         tSaIdealLow = np.interp(a,x_handle,y_handle)
         tSaIdealLow[tSaIdealLow < y_handle[1]] = y_handle[1]
         tSaIdealLow[tSaIdealLow > y_handle[0]] = y_handle[0]
 
+        print('Plotting ideal high supply air temperature...', flush=True)
         x_handle = [-6,19]
         y_handle = [20,13]
         tSaIdealHigh = np.interp(a,x_handle,y_handle)
         tSaIdealHigh[tSaIdealHigh < y_handle[1]] = y_handle[1]
         tSaIdealHigh[tSaIdealHigh > y_handle[0]] = y_handle[0]
         
+        print('Fill gap in between high/low ideal tSa')
         ax[0].fill_between(a,tSaIdealLow,tSaIdealHigh,facecolor='green',alpha=0.3)
         ax[0].text(-8.5, 13, 'Ideal supply air temperature',weight='bold',fontsize=22,rotation=-13,color='green')
         ax[0].legend(ncol=4,loc='upper center',prop={"size":22})
