@@ -122,6 +122,6 @@ def watch_queue():
       shutil.rmtree(input_dir)  
 
 while True:
-  print('Looking for work')
+  print('Looking for work', flush=True)
   watch_queue()
   time.sleep(SLEEP_TIME)
