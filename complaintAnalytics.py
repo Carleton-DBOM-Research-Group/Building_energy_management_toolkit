@@ -96,7 +96,7 @@ def complaintsAnalytics(cmms_data,tOa,time_tOa,zone,zone_time,area,output_path):
     ax.yaxis.set_major_locator(MaxNLocator(integer=True))
     plt.yticks(fontsize=13)
     plt.tight_layout()
-    plt.savefig(output_path + r'\complaints_breakdown.png',dpi=600)
+    plt.savefig(os.path.join(output_path,'complaints_breakdown.png'),dpi=600)
 
     #Merge CMMS data with tOa and zone temp data
     cmms_data = pd.concat([cmms_data, data], ignore_index = True)
@@ -124,7 +124,7 @@ def complaintsAnalytics(cmms_data,tOa,time_tOa,zone,zone_time,area,output_path):
     plt.grid()
     plt.legend(['Cold complaint','Hot complaint'],loc='upper center', bbox_to_anchor=(0.5, 1.15), ncol=2, prop={"size":16},frameon=False)
     plt.tight_layout()
-    plt.savefig(output_path + r'\complaint_scatter.png',dpi=600)
+    plt.savefig(os.path.join(output_path,'complaint_scatter.png'),dpi=600)
 
 
     cmms_data['dayOfWeek'] =pd.to_datetime(cmms_data['Report Time']).dt.dayofweek
@@ -151,7 +151,7 @@ def complaintsAnalytics(cmms_data,tOa,time_tOa,zone,zone_time,area,output_path):
     #plt.ylabel('Frequency of Complaints')
 
     plt.tight_layout()
-    fig.savefig(output_path + r'\decision_tree.png',dpi=600)
+    fig.savefig(os.path.join(output_path,'decision_tree.png'),dpi=600)
 
 
     #Calculate KPIs
@@ -177,9 +177,10 @@ def complaintsAnalytics(cmms_data,tOa,time_tOa,zone,zone_time,area,output_path):
         'Summer':[kpi_freqHot_summer,kpi_freqCold_summer]}
     kpi_df = pd.DataFrame(data=d)
 
-    writer = pd.ExcelWriter(output_path + r'\complaints_freq.xlsx', engine='xlsxwriter') # pylint: disable=abstract-class-instantiated
+    writer = pd.ExcelWriter(os.path.join(output_path,'complaints_freq.xlsx'), engine='xlsxwriter') # pylint: disable=abstract-class-instantiated
     kpi_df.to_excel(writer, sheet_name='Daily frequency of complaints')
     writer.save()
+    writer.close()
 
     return
 
@@ -223,8 +224,8 @@ def execute_function(input_path, output_path):
     # read inputted floor area from floor_area.txt
     file = open(os.path.join(input_path,'floor_area.txt'))
     content = file.readlines()
-
     bldg_area = int(content[0])
+    file.close()
 
     #Try analyzing the data
     complaintsAnalytics(cmms,tOa,time_tOa,zone,zone_time,bldg_area,output_path)
