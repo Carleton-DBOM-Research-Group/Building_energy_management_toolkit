@@ -246,10 +246,10 @@ def occupancyMotion(motion_df, output_path):
         lastDepTime_df = pd.DataFrame()
         breakDuration_df = pd.DataFrame()
 
+        print('Analyzing ' + str(delta.days + 1) + ' days...')
         for i in range(delta.days + 1): #Cycle through each day
                 day = start_date + timedelta(days=i)
                 temp = motion_df[str(day.date())] #Create a temp df of hourly data for each day
-                print('Analyzing day: ' + str(i+1) + ' of ' + str(delta.days + 1))
 
                 temp_firstArrTime = []
                 temp_lastDepTime = []
