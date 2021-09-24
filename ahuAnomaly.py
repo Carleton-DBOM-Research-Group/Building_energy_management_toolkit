@@ -213,7 +213,7 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path):
         #Plot first subplot of f2a_ahu_
         print('Plotting warmest/coldest/average tIns and tSa...', flush=True)
         fig = plt.figure(figsize=(15,12))
-        ax = plt.subplots(211)
+        ax = plt.subplot(2,1,1)
         ax.set_xlabel(r'Outdoor air temperature '+r'$(^{0}C)$', fontsize=24)
         ax.set_ylabel(r'Air temperature '+r'$(^{0}C)$', fontsize=24)
         ax.set_xlim(-25,35)
@@ -266,7 +266,7 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path):
 
         #Plot second subplot f2a_ahu_
         print('Plotting split-range controller diagram...', flush=True)
-        ax = plt.subplots(212)
+        ax = plt.subplot(2,1,2)
         ax.set_xlabel(r'Outdoor air temperature '+r'$(^{0}C)$', fontsize=24)
         ax.set_ylabel('Damper/Valve position (%)', fontsize=24)
         ax.set_xlim(-25,35)
