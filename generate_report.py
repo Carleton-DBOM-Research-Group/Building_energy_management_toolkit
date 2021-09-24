@@ -362,7 +362,6 @@ belong to the zone cluster C1.) These tables can be used to identify the zone(s)
     #Save document in reports folder
     print('Save and close document...')
     document.save(os.path.join(path, 'report.docx'))
-    document.close()
 
     print('Report successfully generated!')
 
