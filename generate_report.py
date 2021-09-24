@@ -115,6 +115,7 @@ depict damper and valve actuator positions and temperature readings at character
 available at the respective sections.")
 
     #Visualization heading and description - Part 1
+    print('Adding visuals...')
     document.add_heading('Visuals - Split-range controller', level=1)
     p = document.add_paragraph('A set of two charts are generated for each AHU dataset inputted. The first (top) plots supply air \
 temperature, and the coolest/warmest/average return air temperatures as a function of outdoor air temperature. For \
@@ -180,7 +181,7 @@ and temperatures.")
     document.add_page_break()
 
     #Extract data from excel sheet and add table to document
-
+    print('Adding KPIs...')
     p = document.add_heading('Key performance indicators - AHU faults',level=1)
     p = document.add_paragraph('The following table lists the hard and soft faults identified by the function. The AHU health \
 index is also provided for each AHU which is '+ r'100%'+' if no faults are detected and '+ r'0%'+' if all six faults are detected. \
@@ -213,14 +214,15 @@ increasing the maximum terminal airflow setpoints in these overheating rooms.", 
 
     t.style = 'Colorful List'
 
-    #Save document in reports folder
-    document.save(os.path.join(path,'ahuAnomaly_report.docx'))
-    convert(os.path.join(path,'ahuAnomaly_report.docx'), os.path.join(path,'report.pdf'))
-    print('Report successfully generated!')
-
     #Remove used files
-    os.remove(os.path.join(path,'ahuAnomaly_report.docx'))
+    print('Removing used files...')
     os.remove(os.path.join(path,'ahu_anomaly_summary.xlsx'))
+
+    #Save document in reports folder
+    print('Saving document...')
+    document.save(os.path.join(path,'ahuAnomaly_report.docx'))
+    
+    print('Report successfully generated!')
 
     return
 
