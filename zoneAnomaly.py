@@ -240,6 +240,7 @@ def zoneAnomaly (tIn,qFlo,qFloSp,sRad,output_path):
     zoneSummerSummary.to_excel(writer, sheet_name='Clg_summary')
     cool_cluster_samples.to_excel(writer,sheet_name='Clg_samples')
     writer.save()
+    writer.close()
 
     return
 
