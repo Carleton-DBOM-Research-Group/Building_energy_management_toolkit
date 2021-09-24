@@ -148,9 +148,9 @@ def occupancy(floor,input_path,output_path):
     handles, labels = ax.get_legend_handles_labels()
     fig.legend(handles, labels, loc='upper center', bbox_to_anchor=(0.5, 1.12), ncol=3,prop={"size":12})
     plt.tight_layout()
-    fig.savefig(output_path + r'\percentile_occ.png',dpi=600,bbox_inches='tight')
+    fig.savefig(os.path.join(output_path,'percentile_occ.png'),dpi=600,bbox_inches='tight')
 
-    if len(floor) > 1 and os.path.isfile(os.path.join(input_path,'is_flr_lvl')) :
+    if len(floor) > 1 and os.path.isfile(os.path.join(input_path,'is_flr_lvl')):
         #----Floor-level occupancy plots----#
         print("Generate floor-level occupancy plots...")
         df = floor
@@ -215,16 +215,17 @@ def occupancy(floor,input_path,output_path):
         handles, labels = ax.get_legend_handles_labels()
         fig.legend(handles, labels, loc='upper left', bbox_to_anchor=(0.97, 1), ncol=((len(kpi.index)//15)+1),prop={"size":10})
         plt.tight_layout()
-        fig.savefig(output_path + r'\floor_level_occ.png',dpi=600,bbox_inches='tight')
+        fig.savefig(os.path.join(output_path,'floor_level_occ.png'),dpi=600,bbox_inches='tight')
     
     else:
             print('Floor-level analysis disabled!')
     
     # Output KPIs in excel document
     print("Formatting KPIs...")
-    writer = pd.ExcelWriter(output_path + r'\arrive_depart_maxOcc.xlsx', engine='xlsxwriter')# pylint: disable=abstract-class-instantiated
+    writer = pd.ExcelWriter(os.path.join(output_path,'arrive_depart_maxOcc.xlsx'), engine='xlsxwriter')# pylint: disable=abstract-class-instantiated
     kpi.to_excel(writer, sheet_name='KPIs')
     writer.save()
+    writer.close()
     
     return
 
@@ -305,9 +306,10 @@ def occupancyMotion(motion_df, output_path):
 
         #Output the KPIs in an excel spreadsheet
         print("Formatting KPIs...")
-        writer = pd.ExcelWriter(output_path + r'\motion_detection_kpis.xlsx', engine='xlsxwriter')# pylint: disable=abstract-class-instantiated
+        writer = pd.ExcelWriter(os.path.join(output_path,'motion_detection_kpis.xlsx'), engine='xlsxwriter')# pylint: disable=abstract-class-instantiated
         kpis_df.to_excel(writer, sheet_name='KPIs')
         writer.save()
+        writer.close()
 
         return
 
