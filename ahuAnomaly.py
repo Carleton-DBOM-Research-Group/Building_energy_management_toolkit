@@ -467,7 +467,7 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path):
             ahuHealthInd += 100/6
         
         #Save faults in faults_df
-        faults_df = faults_df.append({'AHU':str(i),'Outdoor Air Damper':sOa_fault,'Heating Coil':sHc_fault,'Cooling coil':sCc_fault,'Supply air temperature':tSaReset_fault,'Schedule':modeOfOperation_fault,'Economizer':economizer_fault,'AHU Health Index (%)':ahuHealthInd}, ignore_index=True)
+        faults_df = faults_df.append({'AHU':str(i),'Outdoor Air Damper':sOa_fault,'Heating Coil':sHc_fault,'Cooling coil':sCc_fault,'Supply air temperature':tSaReset_fault,'Schedule':modeOfOperation_fault,'Economizer':economizer_fault,'AHU Health Index (%)':int(ahuHealthInd)}, ignore_index=True)
 
         ahu_num += 1 #Plus 1 ahu_num per AHU loop
 

@@ -98,7 +98,7 @@ def ahuAnomaly(path):
     #Extract KPIs excel sheet
     faults_df = pd.read_excel(os.path.join(path,'ahu_anomaly_summary.xlsx'),sheet_name='faults')
     faults_df.drop(faults_df.columns[0],axis=1,inplace=True)
-    faults_df.iloc[:,1] = (faults_df.iloc[:,1]).astype(int).astype(str) + '%'
+    faults_df.iloc[:,1] = (faults_df.iloc[:,1]).astype(str) + '%'
 
     document = Document()
 
