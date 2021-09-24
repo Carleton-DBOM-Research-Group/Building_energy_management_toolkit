@@ -407,7 +407,7 @@ def check_result(request_uuid):
   cwd = os.getcwd()
   result_dir = os.path.join(cwd, 'userdata', 'done', str(request_uuid))
   if os.path.isfile(os.path.join(result_dir, 'ready')):
-    return send_file(os.path.join(result_dir, 'report.pdf'))
+    return send_file(os.path.join(result_dir, 'report.docx'))
   elif os.path.isfile(os.path.join(result_dir, 'error')):
     return "Something went wrong with the analysis. Please check your input data and try again."
   else:

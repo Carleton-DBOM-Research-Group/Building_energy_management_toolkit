@@ -358,7 +358,7 @@ belong to the zone cluster C1.) These tables can be used to identify the zone(s)
 
     #Save document in reports folder
     document.close()
-    document.save(os.path.join(path, 'zoneAnomaly_report.docx'))
+    document.save(os.path.join(path, 'report.docx'))
 
     print('Report successfully generated!')
 
