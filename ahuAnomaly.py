@@ -68,7 +68,7 @@ def drawAHU (ahu,clustCenter,oaSlope,oaBias,output_path):
         d.text((1550, 300), "Fraction with active perimeter heaters: " + str(clustCenter.iloc[k][clustCenter.columns[0]])+'%', font=font, fill='black')#perimeter heaters
         d.text((800,365), str(clustCenter.iloc[k][clustCenter.columns[4]])+'%', font=font, fill='black')#damper
     
-        img.save(output_path + r'\f2b_ahu_' + str(ahu+1) + '_C_' + str(k+1) + '.png')
+        img.save(os.path.join(output_path,'f2b_ahu_' + str(ahu+1) + '_C_' + str(k+1) + '.png'))
 
     return
 
@@ -187,7 +187,7 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path):
             algorithm_parameters=algorithm_param,
             convergence_curve = False)
             
-        print('Estimating change-points for split-range controller diagram using GA... This will take a while...')
+        print('Estimating change-points for split-range controller diagram using GA... This will take a while...',flush=True)
         model.run() #run ahuModes
         cp = model.output_dict['variable']
         
@@ -205,7 +205,7 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path):
             algorithm_parameters=algorithm_param,
             convergence_curve = False) 
         
-        print('Estimating change-points for supply air temperature using GA... This will take a while...')
+        print('Estimating change-points for supply air temperature using GA... This will take a while...',flush=True)
         model.run() #Run tSaMdl
         tSaPrmtr = model.output_dict['variable'] #Extract estimated parameters
 
@@ -303,7 +303,7 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path):
         ax[1].legend(ncol=4,loc='lower center',prop={"size":25},bbox_to_anchor=(0.5,-0.4))
 
         plt.tight_layout()
-        plt.savefig(output_path + r'\f2a_ahu_' + str(ahu_num+1) + '.png',dpi=600)
+        plt.savefig(os.path.join(output_path,'f2a_ahu_' + str(ahu_num+1) + '.png'),dpi=600)
 
         #MULTIPLE LINEAR REGRESSION to extract ahuMdl
 
@@ -324,7 +324,7 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path):
             algorithm_parameters=algorithm_param,
             convergence_curve = False)
         
-        print('Estimating temperature biases across heating coil(s) using GA... This will take a while...')
+        print('Estimating temperature biases across heating coil(s) using GA... This will take a while...',flush=True)
         model.run() #Run ahuMdlMode1_2
         ahuMdlMode1_2_Prmtr = model.output_dict['variable']
         
@@ -346,7 +346,7 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path):
             algorithm_parameters=algorithm_param,
             convergence_curve = False)
         
-        print('Estimating temperature biases across cooling coil(s) using GA... This will take a while...')
+        print('Estimating temperature biases across cooling coil(s) using GA... This will take a while...',flush=True)
         model.run() #Run ahuMdlMode4
         ahuMdlMode4_Prmtr = model.output_dict['variable']
 
@@ -496,10 +496,11 @@ def execute_function(input_path, output_path):
     ahuMdl, faults = ahuAnomaly(ahu,sRad,tIn,output_path) #Call ahuAnomaly local function, generate KPIs and visualizations
 
     #Output KPIs in excel spreadsheet
-    writer = pd.ExcelWriter(output_path + r'\ahu_anomaly_summary.xlsx', engine='xlsxwriter') # pylint: disable=abstract-class-instantiated
+    writer = pd.ExcelWriter(os.path.join(output_path,'ahu_anomaly_summary.xlsx'), engine='xlsxwriter') # pylint: disable=abstract-class-instantiated
     ahuMdl.to_excel(writer, sheet_name='ahuMdl')
     faults.to_excel(writer, sheet_name='faults')
     writer.save()
+    writer.close()
 
     return
 
