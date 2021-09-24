@@ -317,7 +317,7 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path):
 
         plt.tight_layout()
         print('Saving plot...', flush=True)
-        plt.savefig(os.path.join(output_path,'f2a_ahu.png'),dpi=600)
+        fig.savefig(os.path.join(output_path,'f2a_ahu_' + str(ahu_num+1) + '.png'),dpi=600)
 
         #MULTIPLE LINEAR REGRESSION to extract ahuMdl
         print('Extracting data points in htgEconMd', flush=True)
