@@ -360,7 +360,7 @@ belong to the zone cluster C1.) These tables can be used to identify the zone(s)
     os.remove(os.path.join(path,'zone_anomaly_summary.xlsx'))
 
     #Save document in reports folder
-    print('Save and close document...')
+    print('Saving document...')
     document.save(os.path.join(path, 'report.docx'))
 
     print('Report successfully generated!')
@@ -472,6 +472,7 @@ Visuals plot building-level and floor-level* occupant count profiles.')
         p = document.add_paragraph("*Floor-level occupant count profiles are shown only if multiple files were inputted and read.")
 
         #Visualization heading and description - Building-level occupant count
+        print('Adding visuals...')
         document.add_heading('Visuals - Building-level occupant count', level=1)
         p = document.add_paragraph('This set of visuals plots hourly building-level occupant count profiles for weekdays (to the left) and \
 weekends (to the right) separately. The profiles are shown as the 25th, 50th (median), and 75th percentile. The 25th percentile represents \
@@ -493,6 +494,7 @@ weekends (to the right) separately. The profiles are broken down by floor and ar
             os.remove(os.path.join(path,'floor_level_occ.png'))
 
         #KPIs heading and description
+        print('Adding KPIs...')
         document.add_heading('Key performance Indicators', level=1)
         p = document.add_paragraph('This section presents the generated KPIs - ')
         p.add_run('typical earliest arrival times, latest departure times, and highest occupant count').bold = True
@@ -523,15 +525,14 @@ of typical occupancy.')
         
         t.style = 'Colorful List'
 
-        #Save document in reports folder
-        document.save(os.path.join(path,'occupancy_wifi_report.docx'))
-        convert(os.path.join(path,'occupancy_wifi_report.docx'), os.path.join(path,'report.pdf'))
-        print('Report successfully generated!')
-
         #Remove all used files
-        os.remove(os.path.join(path,'occupancy_wifi_report.docx'))
+        print('Removing used files...')
         os.remove(os.path.join(path,'percentile_occ.png'))
         os.remove(os.path.join(path,'arrive_depart_maxOcc.xlsx'))
+
+        #Save document in reports folder
+        print('Saving document...')
+        document.save(os.path.join(path,'report.docx'))
     
     else:
 
@@ -567,6 +568,7 @@ zone's controller to switch the zone to the 'unoccupied mode' when the room's mo
 on a given day. The below pseudo-code demonstrates these two implementations.")
 
         #KPIs heading and description
+        print('Adding KPIs...')
         document.add_heading('Key performance Indicators', level=1)
         p = document.add_paragraph('This section presents the generated KPIs - ')
         p.add_run('typical earliest arrival time, latest arrival time, latest departure time, and longest break duration').bold = True
@@ -590,13 +592,14 @@ on a given day. The below pseudo-code demonstrates these two implementations.")
         
         t.style = 'Colorful List'
 
-        #Save document in reports folder
-        document.save(os.path.join(path,'occupancy_motion_report.docx'))
-        convert(os.path.join(path,'occupancy_motion_report.docx'), os.path.join(path,'report.pdf'))
-
         #Remove all used files
-        os.remove(os.path.join(path,'occupancy_motion_report.docx'))
+        print('Removing used files...')
         os.remove(os.path.join(path,'motion_detection_kpis.xlsx'))
+
+        #Save document in reports folder
+        print('Saving document...')
+        document.save(os.path.join(path,'report.docx'))
+
     
     print('Report successfully generated!')
 
