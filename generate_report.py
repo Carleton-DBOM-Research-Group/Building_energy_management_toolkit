@@ -25,6 +25,7 @@ effectiveness and afterhours energy use. More information is found in the respec
     p = document.add_paragraph("*Electricity use comparison is shown only if electricity use analysis was conducted.")
 
     #Visualization heading and description
+    print('Adding visuals...')
     document.add_heading('Visuals', level=1)
     p = document.add_paragraph('The first set of visuals (to the left) compare the rate of energy use during operating hours (workhours) and \
 outside operating hours (after-hours) as a function of outdoor air temperatures - this is done separately for heating, \
@@ -46,6 +47,7 @@ the energy use is particularily sensitive to fluctuations in outdoor air tempera
         pass
 
     #KPIs heading and description
+    print('Adding KPIs...')
     document.add_heading('Key performance Indicators', level=1)
     p = document.add_paragraph('The key performance indicators (KPIs) are ')
     p.add_run('Schedule effectiveness').bold = True
@@ -75,15 +77,15 @@ portion of the total energy consumption used during after-hours. Therefore, a lo
     
     t.style = 'Colorful List'
 
-    #Save document in reports folder
-    document.save(os.path.join(path,'energyBaseline_report.docx'))
-    convert(os.path.join(path,'energyBaseline_report.docx'), os.path.join(path,'report.pdf'))
-
     #Remove all used files
+    print('Removing used files...')
     os.remove(os.path.join(path,'energyBase_heating.png'))
     os.remove(os.path.join(path,'energyBase_cooling.png'))
     os.remove(os.path.join(path,'energyBase_summary.xlsx'))
-    os.remove(os.path.join(path,'energyBaseline_report.docx'))
+
+    #Save document in reports folder
+    print('Saving document...')
+    document.save(os.path.join(path,'report.docx'))
 
     print('Report successfully generated!')
 
