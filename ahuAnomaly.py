@@ -257,13 +257,13 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path):
         tSaIdealHigh[tSaIdealHigh < y_handle[1]] = y_handle[1]
         tSaIdealHigh[tSaIdealHigh > y_handle[0]] = y_handle[0]
         
-        print('Fill gap in between high/low ideal tSa')
+        print('Fill gap in between high/low ideal tSa', flush=True)
         ax[0].fill_between(a,tSaIdealLow,tSaIdealHigh,facecolor='green',alpha=0.3)
         ax[0].text(-8.5, 13, 'Ideal supply air temperature',weight='bold',fontsize=22,rotation=-13,color='green')
         ax[0].legend(ncol=4,loc='upper center',prop={"size":22})
 
         #Plot second subplot f2a_ahu_
-        print('Plotting split-range controller diagram...')
+        print('Plotting split-range controller diagram...', flush=True)
         ax[1].set_xlabel(r'Outdoor air temperature '+r'$(^{0}C)$', fontsize=24)
         ax[1].set_ylabel('Damper/Valve position (%)', fontsize=24)
         ax[1].set_xlim(-25,35)
@@ -273,8 +273,10 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path):
         ax[1].set_xticklabels(np.arange(-25,36,5),fontsize=25)
         ax[1].set_yticklabels(np.arange(0,101,10),fontsize=25)
 
+        print('Plotting sOa...', flush=True)
         ax[1].plot(tOa_range,y,'k-.',linewidth=4,label='OA')
 
+        print('Plotting sHc...', flush=True)
         htgMdInd = tOa <= cp[1]
         sHcHtgMode = dataWrkHrs[dataWrkHrs.columns[5]][htgMdInd]
         tOaHtgMode = tOa[htgMdInd]
@@ -284,6 +286,7 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path):
         y = mdl.predict(x_test) #Note y is overwritten
         ax[1].plot(tOa_range,y,'r-',linewidth=4,label='HC')
 
+        print('Plotting sCc...', flush=True)
         clgMdInd = tOa > cp[2]
         sCcClgMode = dataWrkHrs[dataWrkHrs.columns[6]][clgMdInd]
         tOaClgMode = tOa[clgMdInd]
@@ -293,6 +296,7 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path):
         y = mdl.predict(x_test)
         ax[1].plot(tOa_range,y,'b:',linewidth=4,label='CC')
 
+        print('Plotting sRad...', flush=True)
         htgEconMdInd = tOa < cp[2]
         sRadHtgEconMode = sRadAvgWrkHrs[htgEconMdInd]
         tOaHtgEconMode = tOa[htgEconMdInd]
@@ -312,6 +316,7 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path):
         ax[1].legend(ncol=4,loc='lower center',prop={"size":25},bbox_to_anchor=(0.5,-0.4))
 
         plt.tight_layout()
+        print('Saving plot...', flush=True)
         plt.savefig(os.path.join(output_path,'f2a_ahu_' + str(ahu_num+1) + '.png'),dpi=600)
 
         #MULTIPLE LINEAR REGRESSION to extract ahuMdl
