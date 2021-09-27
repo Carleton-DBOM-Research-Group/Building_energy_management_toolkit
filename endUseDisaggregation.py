@@ -77,7 +77,7 @@ def execute_function(input_path, output_path):
     file.close()
     
     #Extract normalized heating/cooling
-    normalized_heating = (energy[energy.columns[3]]-energy[energy.columns[3]].min())/(energy[energy.columns[3]].max()-energy[energy.columns[3]].min())
+    normalized_heating = (energy[energy.columns[1]]-energy[energy.columns[1]].min())/(energy[energy.columns[1]].max()-energy[energy.columns[1]].min())
     normalized_cooling = (energy[energy.columns[2]]-energy[energy.columns[2]].min())/(energy[energy.columns[2]].max()-energy[energy.columns[2]].min())
 
     #If heat/cool valve position > 0 while heat/cool energy is near zero, set  valve position to zero (no hot/chilled water in pipes to respond to valve opening/closing.
@@ -105,9 +105,9 @@ def execute_function(input_path, output_path):
 
 
     data['sRad'] = sRad.mean(axis=1) #Populate with sRad data
-    data['Elec'] = energy[energy.columns[1]]#Populate with electricity data
+    data['Elec'] = energy[energy.columns[3]]#Populate with electricity data
     data['Clg'] = energy[energy.columns[2]]#Populate with cooling data
-    data['Htg'] = energy[energy.columns[3]]#Populate with heating data
+    data['Htg'] = energy[energy.columns[1]]#Populate with heating data
 
     occDataStart = min(wifi.index) #Define occupancy data collection start time
     occDataStop = max(wifi.index) #Define occupancy data collection end time
@@ -115,6 +115,9 @@ def execute_function(input_path, output_path):
     energy_time = pd.to_datetime(energy[energy.columns[0]])
     start = max(occDataStart,min(energy_time))
     end = min(occDataStop, max(energy_time))
+
+    print(str(start),flush=True)
+    print(str(end),flush=True)
 
     ind = pd.date_range(start, end, freq='1H')
 
@@ -310,7 +313,7 @@ def execute_function(input_path, output_path):
     htg_kpi_df = pd.DataFrame(data=d_htg)
     clg_kpi_df = pd.DataFrame(data=d_clg)
 
-    writer = pd.ExcelWriter(output_path + r'\endUseDisagg_summary.xlsx', engine='xlsxwriter') # pylint: disable=abstract-class-instantiated
+    writer = pd.ExcelWriter(os.path.join(output_path,'endUseDisagg_summary.xlsx'), engine='xlsxwriter') # pylint: disable=abstract-class-instantiated
     elec_kpi_df.to_excel(writer, sheet_name='Electricity')
     htg_kpi_df.to_excel(writer, sheet_name='Heating')
     clg_kpi_df.to_excel(writer, sheet_name='Cooling')
@@ -428,4 +431,4 @@ def execute_function(input_path, output_path):
     plt.legend(ahu_legend_labels,loc='upper center', bbox_to_anchor=(0.5, 1.16+0.09*(((2+num_of_ahus)//2)-1)), ncol=2, prop={"size":17})
 
     plt.tight_layout()
-    plt.savefig(output_path + r'\endUseDisaggregation.png',dpi=900)
+    plt.savefig(os.path.join(output_path,'endUseDisaggregation.png'),dpi=400)
