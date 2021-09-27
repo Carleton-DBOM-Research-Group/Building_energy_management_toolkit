@@ -313,6 +313,7 @@ def execute_function(input_path, output_path):
     htg_kpi_df.to_excel(writer, sheet_name='Heating')
     clg_kpi_df.to_excel(writer, sheet_name='Cooling')
     writer.save()
+    writer.close()
 
     print('Creating disaggregation plots...',flush=True)
     disagg_Elect= pd.DataFrame()
