@@ -48,12 +48,29 @@ def metadata_upload():
 @app.route('/functions/metadata/upload/run-metadata', methods=['POST'])
 def run_metadata_function():
 
-  cwd = os.getcwd()
+  '''cwd = os.getcwd()
   path = cwd + r'\test_outputs'
   uploaded_metadata_file = request.files.getlist('metadata_file[]')
 
   metadata.execute_function(uploaded_metadata_file[0], path)
-  return "Success!"
+  return "Success!"'''
+
+  cwd = os.getcwd()
+  request_uuid = str(uuid.uuid4())
+  
+  # create a new directory in unprocessed folder
+  path = os.path.join(cwd, 'userdata', 'unprocessed', request_uuid)
+  os.makedirs(path, exist_ok=True)
+  
+  # put the uploaded metadata file in folder
+  uploaded_meta_file = request.files.getlist('metadata_file[]')
+  uploaded_meta_file[0].save(os.path.join(path, uploaded_meta_file[0].filename))
+
+  # create a ready file & function ID file
+  open(os.path.join(path, 'ready'), 'a').close()
+  open(os.path.join(path, 'metadata'), 'a').close()
+  
+  return f"Request accepted, check the result with this link:\n http://building-energy-management-toolkit.com/checkresult/{request_uuid}"
 
 #ENERGY BASELINE  
 
