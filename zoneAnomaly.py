@@ -265,13 +265,16 @@ def execute_function(input_path, output_path):
         qFloSp = pd.concat([qFloSp,data[data.columns[2]]], axis=1,sort=False).rename(columns={data.columns[2]:str(f).replace('.csv','')})
         sRad = pd.concat([sRad,data[data.columns[3]]], axis=1,sort=False).rename(columns={data.columns[3]:str(f).replace('.csv','')})
     
-    # extract start and end time from last read zone file
-    print("Start time: "+str(min(data.index)),flush=True)
-    print("End time: "+str(max(data.index)),flush=True)
 
     #Set index of all dataframes to datetime
     for df in [tIn,qFlo,qFloSp,sRad]:
         df.index = pd.to_datetime(df.index)
+    
+    # extract start and end time from tIn
+    f = open(os.path.join(output_path, "period.txt"),"w+")
+    f.write(str(min(tIn.index)) + "\n")
+    f.write(str(max(tIn.index)))
+    f.close()
 
     print("Reading zone-level HVAC controls network data files successful!")
     print("Number of zones detected: " + str(len(tIn.columns)))

@@ -359,8 +359,15 @@ belong to the zone cluster C1.) These tables can be used to identify the zone(s)
         k+=1
         t.style = 'TableGrid'
         
+    # output the start and end time of the analysis period
+    file = open(os.path.join(path,'period.txt'))
+    content = file.readlines()
+    p = document.add_paragraph('Data analysis period: ' + str(content[0]) + ' to ' + str(content[1]))
+    file.close()
+    
     #Remove all used files
     print('Removing used files...')
+    os.remove(os.path.join(path,'period.txt'))
     os.remove(os.path.join(path,'zone_heat_season.png'))
     os.remove(os.path.join(path,'zone_cool_season.png'))
     os.remove(os.path.join(path,'zone_anomaly_summary.xlsx'))
