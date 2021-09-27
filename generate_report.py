@@ -77,8 +77,16 @@ portion of the total energy consumption used during after-hours. Therefore, a lo
     
     t.style = 'Colorful List'
 
+    # output the start and end time of the analysis period
+    file = open(os.path.join(path,'period.txt'))
+    content = file.readlines()
+    p = document.add_paragraph()
+    p = document.add_paragraph('Data analysis period: ' + str(content[0]))
+    file.close()
+    
     #Remove all used files
     print('Removing used files...')
+    os.remove(os.path.join(path,'period.txt'))
     os.remove(os.path.join(path,'energyBase_heating.png'))
     os.remove(os.path.join(path,'energyBase_cooling.png'))
     os.remove(os.path.join(path,'energyBase_summary.xlsx'))
@@ -216,8 +224,16 @@ increasing the maximum terminal airflow setpoints in these overheating rooms.", 
 
     t.style = 'Colorful List'
 
+    # output the start and end time of the analysis period
+    file = open(os.path.join(path,'period.txt'))
+    content = file.readlines()
+    p = document.add_paragraph()
+    p = document.add_paragraph('Data analysis period: ' + str(content[0]))
+    file.close()
+    
     #Remove used files
     print('Removing used files...')
+    os.remove(os.path.join(path,'period.txt'))
     os.remove(os.path.join(path,'ahu_anomaly_summary.xlsx'))
 
     #Save document in reports folder
@@ -449,8 +465,16 @@ example, if three (3) AHUs were analyzed, the energy use intensites for the AHU 
         k+=1
         t.style = 'Colorful List'
 
+    # output the start and end time of the analysis period
+    file = open(os.path.join(path,'period.txt'))
+    content = file.readlines()
+    p = document.add_paragraph()
+    p = document.add_paragraph('Data analysis period: ' + str(content[0]))
+    file.close()
+    
     # remove used files
     print('Removing used files...')
+    os.remove(os.path.join(path,'period.txt'))
     os.remove(os.path.join(path,'endUseDisaggregation.png'))
     os.remove(os.path.join(path,'endUseDisagg_summary.xlsx'))
     
@@ -541,8 +565,16 @@ of typical occupancy.')
         
         t.style = 'Colorful List'
 
+        # output the start and end time of the analysis period
+        file = open(os.path.join(path,'period.txt'))
+        content = file.readlines()
+        p = document.add_paragraph()
+        p = document.add_paragraph('Data analysis period: ' + str(content[0]))
+        file.close()
+        
         #Remove all used files
         print('Removing used files...')
+        os.remove(os.path.join(path,'period.txt'))
         os.remove(os.path.join(path,'percentile_occ.png'))
         os.remove(os.path.join(path,'arrive_depart_maxOcc.xlsx'))
 
@@ -608,8 +640,16 @@ on a given day. The below pseudo-code demonstrates these two implementations.")
         
         t.style = 'Colorful List'
 
+        # output the start and end time of the analysis period
+        file = open(os.path.join(path,'period.txt'))
+        content = file.readlines()
+        p = document.add_paragraph()
+        p = document.add_paragraph('Data analysis period: ' + str(content[0]))
+        file.close()
+        
         #Remove all used files
         print('Removing used files...')
+        os.remove(os.path.join(path,'period.txt'))
         os.remove(os.path.join(path,'motion_detection_kpis.xlsx'))
 
         #Save document in reports folder
@@ -699,8 +739,16 @@ rate of occurence of a type of complaint for the particular season.')
     
     t.style = 'Colorful List'
 
+    # output the start and end time of the analysis period
+    file = open(os.path.join(path,'period.txt'))
+    content = file.readlines()
+    p = document.add_paragraph()
+    p = document.add_paragraph('Data analysis period: ' + str(content[0]))
+    file.close()
+    
     #remove all used files
     print('Removing used files...')
+    os.remove(os.path.join(path,'period.txt'))
     os.remove(os.path.join(path,'complaints_freq.xlsx'))
     os.remove(os.path.join(path,'complaints_breakdown.png'))
     os.remove(os.path.join(path,'complaint_scatter.png'))

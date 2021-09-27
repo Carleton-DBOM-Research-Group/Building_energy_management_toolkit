@@ -340,6 +340,11 @@ def execute_function_wifi(input_path, output_path):
 
         floor = pd.concat(floor,axis=0)
 
+        # extract start and end time from last temp file
+        f = open(os.path.join(output_path, "period.txt"),"w+")
+        f.write(str(min(temp[temp.columns[0]])) + " to " + str(max(temp[temp.columns[0]])))
+        f.close()
+
         #Run the occupancy analysis with wifi data
         occupancy(floor,input_path,output_path)
 
@@ -351,6 +356,11 @@ def execute_function_motion(input_path, output_path):
         motion_files = os.listdir(input_path)
         motion_files_csv = [f for f in motion_files if f[-3:] == 'csv']
         motion_df = pd.read_csv(os.path.join(input_path, motion_files_csv[0]), index_col = 0, parse_dates=True)
+
+        # extract start and end time from last temp file
+        f = open(os.path.join(output_path, "period.txt"),"w+")
+        f.write(str(min(motion_df.index)) + " to " + str(max(motion_df.index)))
+        f.close()
 
         #Run the occupancy analysis with motion detection data
         occupancyMotion(motion_df,output_path)

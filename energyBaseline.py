@@ -141,6 +141,11 @@ def execute_function(input_path, output_path):
   else:
     print('Electricity use comparison disabled!')
     is_elec_clg = False
+  
+  # extract start and end time from htg_df
+  f = open(os.path.join(output_path, "period.txt"),"w+")
+  f.write(str(min(htg_df.index)) + " to " + str(max(htg_df.index)))
+  f.close()
 
   varbound = np.array([[0, max(htg_df['heating'])/10],[0,max(htg_df['heating'])/10],[0,20],[0,max(htg_df['heating'])],[0,20],[0,max(htg_df['heating'])],[0,8],[16,23],[0,12],[12,23]])
 

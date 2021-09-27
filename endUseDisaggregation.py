@@ -76,6 +76,11 @@ def execute_function(input_path, output_path):
 
     file.close()
     
+    # extract start and end time from Wifi
+    f = open(os.path.join(output_path, "period.txt"),"w+")
+    f.write(str(min(wifi.index)) + " to " + str(max(wifi.index)))
+    f.close()
+    
     #Extract normalized heating/cooling
     normalized_heating = (energy[energy.columns[1]]-energy[energy.columns[1]].min())/(energy[energy.columns[1]].max()-energy[energy.columns[1]].min())
     normalized_cooling = (energy[energy.columns[2]]-energy[energy.columns[2]].min())/(energy[energy.columns[2]].max()-energy[energy.columns[2]].min())

@@ -504,6 +504,11 @@ def execute_function(input_path, output_path):
     print("Zone-level HVAC controls network data read successful!")
     print("Number of zones detected: " + str(len(tIn.columns)))
 
+    # extract start and end time from ahu dataframe
+    f = open(os.path.join(output_path, "period.txt"),"w+")
+    f.write(str(min(ahu[ahu.columns[0]])) + " to " + str(max(ahu[ahu.columns[0]])))
+    f.close()
+
     #Analyze the data and generate KPIs and visuals
     ahuMdl, faults = ahuAnomaly(ahu,sRad,tIn,output_path) #Call ahuAnomaly local function, generate KPIs and visualizations
 

@@ -198,7 +198,6 @@ def execute_function(input_path, output_path):
     tOa = weather[weather.columns[0]]
     time_tOa = pd.date_range(start="2019-01-01",end="2019-12-31 23:00:00" ,freq='h')
     
-
     # Try reading zone-level HVAC data files
     print('Reading zone-level HVAC data files...')
     zone_files = os.listdir(os.path.join(input_path,'zone'))
@@ -226,6 +225,11 @@ def execute_function(input_path, output_path):
     content = file.readlines()
     bldg_area = int(content[0])
     file.close()
+
+    # extract start and end time from zone_time
+    f = open(os.path.join(output_path, "period.txt"),"w+")
+    f.write(str(min(zone_time)) + " to " + str(max(zone_time)))
+    f.close()
 
     #Try analyzing the data
     complaintsAnalytics(cmms,tOa,time_tOa,zone,zone_time,bldg_area,output_path)
