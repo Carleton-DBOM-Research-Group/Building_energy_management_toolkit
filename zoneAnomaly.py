@@ -264,6 +264,10 @@ def execute_function(input_path, output_path):
         qFlo = pd.concat([qFlo,data[data.columns[1]]], axis=1,sort=False).rename(columns={data.columns[1]:str(f).replace('.csv','')})
         qFloSp = pd.concat([qFloSp,data[data.columns[2]]], axis=1,sort=False).rename(columns={data.columns[2]:str(f).replace('.csv','')})
         sRad = pd.concat([sRad,data[data.columns[3]]], axis=1,sort=False).rename(columns={data.columns[3]:str(f).replace('.csv','')})
+    
+    # extract start and end time from last read zone file
+    print("Start time: "+str(min(data.index)),flush=True)
+    print("End time: "+str(max(data.index)),flush=True)
 
     #Set index of all dataframes to datetime
     for df in [tIn,qFlo,qFloSp,sRad]:
