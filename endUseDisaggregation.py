@@ -73,7 +73,7 @@ def execute_function(input_path, output_path):
 
     bldg_area = int(content[0])
     cooling_type = str(content[1]) 
-
+    
     #Extract normalized heating/cooling
     normalized_heating = (energy[energy.columns[3]]-energy[energy.columns[3]].min())/(energy[energy.columns[3]].max()-energy[energy.columns[3]].min())
     normalized_cooling = (energy[energy.columns[2]]-energy[energy.columns[2]].min())/(energy[energy.columns[2]].max()-energy[energy.columns[2]].min())
@@ -127,7 +127,7 @@ def execute_function(input_path, output_path):
     data['occupancy'] = occupancy.values
 
     #find change points
-    print('Finding change points using Ruptures... This will take a while...')
+    print('Finding change points using Ruptures... This will take a while...', flush=True)
     algo = rpt.Pelt(model= "rbf",min_size=200, jump=5).fit(data['Elec'].values)
     ipt = algo.predict(pen=10)
 
@@ -213,7 +213,7 @@ def execute_function(input_path, output_path):
                         algorithm_parameters=algorithm_param,
                         convergence_curve = False)
 
-    print('Estimate parameters of electricity disaggregation model using GA... This will take a while...')
+    print('Estimate parameters of electricity disaggregation model using GA... This will take a while...', flush=True)
     model_Elec_GA.run()
 
     #rmse_HtgMdl([1.2879,1.5583,0,0])
@@ -233,7 +233,7 @@ def execute_function(input_path, output_path):
                     algorithm_parameters=algorithm_param,
                     convergence_curve = False)
 
-    print('Estimate parameters of heating use disaggregation model using GA... This will take a while...')
+    print('Estimate parameters of heating use disaggregation model using GA... This will take a while...', flush=True)
     model_Htg_GA.run()
 
     varbound=np.array([[0,10]]*num_of_ahus) #limits for multiplier for i'th ahu cooling coil
@@ -245,7 +245,7 @@ def execute_function(input_path, output_path):
                     algorithm_parameters=algorithm_param,
                     convergence_curve = False)
 
-    print('Estimate parameters of cooling use disaggregation model using GA... This will take a while...')
+    print('Estimate parameters of cooling use disaggregation model using GA... This will take a while...',flush=True)
     model_Clg_GA.run()
 
     #Extract estimated parameter from genetic algorithm
@@ -314,7 +314,7 @@ def execute_function(input_path, output_path):
     clg_kpi_df.to_excel(writer, sheet_name='Cooling')
     writer.save()
 
-    print('Creating disaggregation plots...')
+    print('Creating disaggregation plots...',flush=True)
     disagg_Elect= pd.DataFrame()
     disagg_Elect['electricity_distribution'] = electricity_distribution
     disagg_Elect['electricity_occupant'] = electricity_occupant
