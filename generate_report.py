@@ -119,7 +119,7 @@ available at the respective sections.")
     document.add_heading('Visuals - Split-range controller', level=1)
     p = document.add_paragraph('A set of two charts are generated for each AHU dataset inputted. The first (top) plots supply air \
 temperature, and the coolest/warmest/average return air temperatures as a function of outdoor air temperature. For \
-reference, the "ideal" supply air temperature is depicted. The second (bottom) chart is a Split-range controller diagram, which \
+reference, the "ideal" supply air temperature is depicted. The second (bottom) chart is a split-range controller diagram, which \
 plots the outdoor air damper position (OA), heating coil valve position (HC), cooling coil valve position (CC) and average fraction \
 of active perimeter heaters (RAD) with respect to outdoor air temperature. The four underlaying color zones represent the four \
 distinct operating mode: Heating (red zone), economizer (yellow zone), economizer with cooling (grey zone), and cooling (blue zone). \
@@ -164,7 +164,9 @@ as intended in these rooms.")
     p = document.add_paragraph("A set of four to six visuals per AHU are generated which depict characteristic operating \
 periods of the AHU and the average damper and valve positions and temperatures at those periods. The fraction of time of \
 operation is the percentage of the total time of the AHU's operation which exhibit the displayed damper/valve positions \
-and temperatures.")
+and temperatures. Ensure that:")
+    document.add_paragraph('The economizer does not coincide with the heating coil operation', style='List Bullet')
+    document.add_paragraph('The heating and cooling coil do not operate simutaneously', style='List Bullet')
     
     #For each AHU, output the second set of visuals
     for i in faults_df.index:
@@ -398,6 +400,7 @@ hot water). The major end-use for cooling energy are the AHUs’ cooling coils. 
 the distribution of energy consumption within a building and can be used to identify abnormal energy use patterns.')
 
     #Visualization heading and description
+    print('Adding visuals...')
     document.add_heading('Visualizations', level=1)
     p = document.add_paragraph('The visuals plot energy use intensity profiles which depict the weekly distribution \
 of the major end-uses for electricity, cooling, and heating separately.')
@@ -406,6 +409,7 @@ of the major end-uses for electricity, cooling, and heating separately.')
     document.add_picture(os.path.join(path,'endUseDisaggregation.png'), width=Inches(5.75))
 
     #KPIs heading and description
+    print('Adding KPIs...')
     document.add_heading('Key performance Indicators', level=1)
     p = document.add_paragraph('This section presents the generated KPIs - ')
     p.add_run('energy use intensities for major end-uses in heating energy, cooling energy, and electricity use').bold = True
@@ -437,15 +441,15 @@ example, if three (3) AHUs were analyzed, the energy use intensites for the AHU 
         k+=1
         t.style = 'Colorful List'
 
-    #Save document in reports folder
-    document.save(os.path.join(path,'endUseDisaggregation_report.docx'))
-    convert(os.path.join(path,'endUseDisaggregation_report.docx'), os.path.join(path,'report.pdf'))
-    print('Report successfully generated!')
-
     # remove used files
+    print('Removing used files...')
     os.remove(os.path.join(path,'endUseDisaggregation.png'))
-    os.remove(os.path.join(path,'endUseDisaggregation_report.docx'))
     os.remove(os.path.join(path,'endUseDisagg_summary.xlsx'))
+    
+    #Save document in reports folder
+    print('Saving document...')
+    document.save(os.path.join(path,'report.docx'))
+    print('Report successfully generated!')
 
     return
 
@@ -553,8 +557,8 @@ of typical occupancy.')
         document.add_heading('Occupancy (Motion-detection) - Analysis Report', 0)
 
         #Introductory paragraph
-        p = document.add_paragraph('The occupancy function determines the typical ')
-        p.add_run('earliest arrival time, latest arrival time, latest departure time,').bold = True
+        p = document.add_paragraph('The occupancy function determines the ')
+        p.add_run('typical earliest arrival time, latest arrival time, latest departure time,').bold = True
         p.add_run(' and ')
         p.add_run('longest break duration').bold = True
         p.add_run(' for weekdays only.')
@@ -562,8 +566,8 @@ of typical occupancy.')
 excessive ventilation during unoccupied hours, or even serve as a basis for an occupant-driven demand controlled ventilation scheme. \
 The calculated earliest arrival time and latest departure time can be used to inform whole building-level schedules, including start/stop \
 times, whereas the calculated latest arrival time and longest break duration can be used to inform zone-level schedules, including time-out \
-durations for zone air flow. For example, if the calculated latest arrival time is 13:00 (1PM), you may implement a simple logic to each \
-zone's controller which switches the zone to the 'unoccupied mode' when the motion detector of the zone has not been triggered until 1 pm \
+durations for zone air flow. For example, if the calculated latest arrival time is 13:00 (1 PM), you may implement a simple logic to each \
+zone's controller which switches the zone to the 'unoccupied mode' when the motion detector of the zone has not been triggered until 1 PM \
 on a given day. Similarly, if the calculated longest break duration is 3:00 (3 hours), then you may implement another simple logic to each \
 zone's controller to switch the zone to the 'unoccupied mode' when the room's motion detector has not been triggered for longer than 3 hours \
 on a given day. The below pseudo-code demonstrates these two implementations.")
