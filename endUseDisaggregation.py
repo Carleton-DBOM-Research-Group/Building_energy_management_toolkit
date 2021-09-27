@@ -73,6 +73,8 @@ def execute_function(input_path, output_path):
 
     bldg_area = int(content[0])
     cooling_type = str(content[1]) 
+
+    file.close()
     
     #Extract normalized heating/cooling
     normalized_heating = (energy[energy.columns[3]]-energy[energy.columns[3]].min())/(energy[energy.columns[3]].max()-energy[energy.columns[3]].min())
