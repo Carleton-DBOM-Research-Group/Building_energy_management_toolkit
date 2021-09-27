@@ -362,7 +362,7 @@ belong to the zone cluster C1.) These tables can be used to identify the zone(s)
     # output the start and end time of the analysis period
     file = open(os.path.join(path,'period.txt'))
     content = file.readlines()
-    p = document.add_paragraph('Data analysis period: ' + str(content[0]) + ' to ' + str(content[1]))
+    p = document.add_paragraph('Data analysis period: ' + str(content[0]))
     file.close()
     
     #Remove all used files

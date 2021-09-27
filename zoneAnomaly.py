@@ -272,8 +272,7 @@ def execute_function(input_path, output_path):
     
     # extract start and end time from tIn
     f = open(os.path.join(output_path, "period.txt"),"w+")
-    f.write(str(min(tIn.index)) + "\n")
-    f.write(str(max(tIn.index)))
+    f.write(str(min(tIn.index)) + " to " + str(max(tIn.index)))
     f.close()
 
     print("Reading zone-level HVAC controls network data files successful!")
