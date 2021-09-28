@@ -170,7 +170,7 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path):
 
         #Optimize parameters for all genetic algorithms
         varbound = np.array([[0,100],[-20,30],[-20,30],[-20,30],[0,100]]) # ([lower_bound,upper_bound])
-        algorithm_param = {'max_num_iteration': 2,\
+        algorithm_param = {'max_num_iteration': 12,\
                    'population_size':5000,\
                    'mutation_probability':0.1,\
                    'elit_ratio': 0.01,\
@@ -271,10 +271,10 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path):
         ax[1].set_xticklabels(np.arange(-25,36,5),fontsize=25)
         ax[1].set_yticklabels(np.arange(0,101,10),fontsize=25)
 
+        print('Plot outdoor air damper position...')
         ax[1].plot(tOa_range,y,'k-.',linewidth=4,label='OA')
 
-        print('Plot heating coil...')
-        print(dataWrkHrs)
+        print('Plot heating coil valve position...')
         htgMdInd = tOa <= cp[1]
         sHcHtgMode = dataWrkHrs[dataWrkHrs.columns[5]][htgMdInd]
         tOaHtgMode = tOa[htgMdInd]
@@ -284,6 +284,7 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path):
         y = mdl.predict(x_test) #Note y is overwritten
         ax[1].plot(tOa_range,y,'r-',linewidth=4,label='HC')
 
+        print('Plot cooling coil valve position...')
         clgMdInd = tOa > cp[2]
         sCcClgMode = dataWrkHrs[dataWrkHrs.columns[6]][clgMdInd]
         tOaClgMode = tOa[clgMdInd]
@@ -293,6 +294,7 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path):
         y = mdl.predict(x_test)
         ax[1].plot(tOa_range,y,'b:',linewidth=4,label='CC')
 
+        print('Plot fraction of active perimeter radiators...')
         htgEconMdInd = tOa < cp[2]
         sRadHtgEconMode = sRadAvgWrkHrs[htgEconMdInd]
         tOaHtgEconMode = tOa[htgEconMdInd]
