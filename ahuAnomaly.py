@@ -209,7 +209,7 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path):
         tSaPrmtr = model.output_dict['variable'] #Extract estimated parameters
 
         #Plot first subplot of f2a_ahu_
-        print('Plotting split-range and indoor air temps...')
+        print('Plotting split-range and indoor air temps...',flush=True)
         fig, ax = plt.subplots(2,figsize=(15,12))
         ax[0].set_xlabel(r'Outdoor air temperature '+r'$(^{0}C)$', fontsize=24)
         ax[0].set_ylabel(r'Air temperature '+r'$(^{0}C)$', fontsize=24)
@@ -222,28 +222,34 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path):
 
         a = np.linspace(-25,35,num=100)
         #Plot coldest zone temperature
+        print('Plotting coldest zone temps...')
         p = np.polyfit(tOa,tInCldWrkHrs,2)
         ax[0].plot(a,np.polyval(p,a),'b-', linewidth=4, label=r'Coldest')
         #Plot average zone temperature
+        print('Plotting average zone temps...')
         p = np.polyfit(tOa,tInAvgWrkHrs,2) #tIn,avg
         ax[0].plot(a,np.polyval(p,a),'k-', linewidth=4, label=r'Average')
         #Plot warmest zone temperature
+        print('Plotting warmest zone temps...')
         p = np.polyfit(tOa,tInWrmWrkHrs,2) #tIn,Wrm
         ax[0].plot(a,np.polyval(p,a),'r-', linewidth=4, label=r'Warmest')
 
         #Estimate/plot supply air temperature as a function of outdoor air temperature using tSaPrmtr
+        print('Estimate/plot supply air temperature as a function of outdoor air temperature using tSaPrmtr...')
         conditions = [a <= tSaPrmtr[2], (a > tSaPrmtr[2]) & (a <= tSaPrmtr[3]), a > tSaPrmtr[3]]
         choices = [tSaPrmtr[0], (tSaPrmtr[0]-tSaPrmtr[1])/(tSaPrmtr[2]-tSaPrmtr[3])*(a-tSaPrmtr[2])+tSaPrmtr[0], tSaPrmtr[1]]
         tSaPr = np.select(conditions,choices,default=0)
         ax[0].plot(a,tSaPr,'k--', linewidth=4, label=r'Supply')
 
         #Plot ideal low/high supply air temperature
+        print('Plot low ideal tSa...')
         x_handle = [-12,12]
         y_handle = [17,12]
         tSaIdealLow = np.interp(a,x_handle,y_handle)
         tSaIdealLow[tSaIdealLow < y_handle[1]] = y_handle[1]
         tSaIdealLow[tSaIdealLow > y_handle[0]] = y_handle[0]
 
+        print('Plot high ideal tSa...')
         x_handle = [-6,19]
         y_handle = [20,13]
         tSaIdealHigh = np.interp(a,x_handle,y_handle)
@@ -255,6 +261,7 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path):
         ax[0].legend(ncol=4,loc='upper center',prop={"size":22})
 
         #Plot second subplot f2a_ahu_
+        print('Plot second subplot...')
         ax[1].set_xlabel(r'Outdoor air temperature '+r'$(^{0}C)$', fontsize=24)
         ax[1].set_ylabel('Damper/Valve position (%)', fontsize=24)
         ax[1].set_xlim(-25,35)
@@ -266,6 +273,8 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path):
 
         ax[1].plot(tOa_range,y,'k-.',linewidth=4,label='OA')
 
+        print('Plot heating coil...')
+        print(dataWrkHrs)
         htgMdInd = tOa <= cp[1]
         sHcHtgMode = dataWrkHrs[dataWrkHrs.columns[5]][htgMdInd]
         tOaHtgMode = tOa[htgMdInd]
