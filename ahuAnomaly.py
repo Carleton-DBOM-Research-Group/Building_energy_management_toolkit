@@ -160,6 +160,8 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path):
         tInCldWrkHrs = tInCldNew[mask]
         tInWrmWrkHrs = tInWrmNew[mask]
         tInAvgWrkHrs = tInAvgNew[mask]
+
+        print(dataWrkHrs, flush=True)
         
         #Draw split range controller plot
         tOa = dataWrkHrs[dataWrkHrs.columns[2]]
@@ -361,7 +363,6 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path):
         mask = dataNew.iloc[:,7] > 0
         clusterFrame = pd.DataFrame()
         clusterFrame = pd.concat([dataNew[mask][dataNew.columns[0:3]], dataNew[mask][dataNew.columns[4:8]], sRadAvg[mask].rename('sRad')], axis=1, sort=False)
-        print(clusterFrame)
         
         normData = clusterFrame / np.linalg.norm(clusterFrame)
         pca = PCA()
