@@ -30,11 +30,11 @@ effectiveness and afterhours energy use. More information is found in the respec
     p = document.add_paragraph('The first set of visuals (to the left) compare the rate of energy use during operating hours (workhours) and \
 outside operating hours (after-hours) as a function of outdoor air temperatures - this is done separately for heating, \
 cooling, and electricity. Current schedules may be ineffective at reducing after-hours energy use if the inclined slope of the after-hours energy use \
-line is similiar or identical to the workhours energy use line. If the slope of the after-hours energy use line is shallower \
+line is similar or identical to the workhours energy use line. If the slope of the after-hours energy use line is shallower \
 than the workhour energy use line, the current schedules are effective at reducing energy use outside operating hours.')
     p = document.add_paragraph('The second set of visuals (to the right) illustrates the sensitivity of energy use with respect to outdoor \
 air temperatures - this is done separately for heating, cooling, and electricity. If the lines are spaced considerably apart, \
-the energy use is particularily sensitive to fluctuations in outdoor air temperature.')
+the energy use is particularly sensitive to fluctuations in outdoor air temperature.')
 
     #Add visualizations
     document.add_picture(os.path.join(path,'energyBase_heating.png'), width=Inches(5.75))
@@ -54,7 +54,7 @@ the energy use is particularily sensitive to fluctuations in outdoor air tempera
     p.add_run(' and ')
     p.add_run('Afterhours energy use ratio').bold = True
     p.add_run('. Schedule effectiveness quantifies the difference between the slope of the workhours energy use line and the \
-afterhours energy use line. Values approaching zero (0%) indicate similiar or identical inclined slopes, positive (+) values indicate \
+afterhours energy use line. Values approaching zero (0%) indicate similar or identical inclined slopes, positive (+) values indicate \
 a steeper workhours energy use slope than afterhours, and negative (-) values indicate a steeper afterhours energy use slope. Therefore, \
 a greater positive value is desirable since it indicates an effective reduction in energy use rates during afterhours.\n\n\
 The Afterhours energy use ratio is the ratio of energy use during afterhours over the total energy use. A higher value indicates a larger \
@@ -120,7 +120,7 @@ energy use inefficiencies. The visuals are intended to aid understanding of the 
 supply air temperature, and the coolest/warmest/average return air temperatures as a function of outdoor air temperature, and \
 damper and valve actuator positions as a function of outdoor air temperature. Additionally, a number of diagrams are generated which \
 depict damper and valve actuator positions and temperature readings at characteristic AHU operational periods. More information is \
-available at the respective sections.")
+available in the respective sections.")
 
     #Visualization heading and description - Part 1
     print('Adding visuals...')
@@ -129,26 +129,26 @@ available at the respective sections.")
 temperature, and the coolest/warmest/average return air temperatures as a function of outdoor air temperature. For \
 reference, the "ideal" supply air temperature is depicted. The second (bottom) chart is a split-range controller diagram, which \
 plots the outdoor air damper position (OA), heating coil valve position (HC), cooling coil valve position (CC) and average fraction \
-of active perimeter heaters (RAD) with respect to outdoor air temperature. The four underlaying color zones represent the four \
-distinct operating mode: Heating (red zone), economizer (yellow zone), economizer with cooling (grey zone), and cooling (blue zone). \
-As an example, the below Split-range controller diagram is representative of normal, healthy AHU operations. Some ')
+of active perimeter heaters (RAD) with respect to outdoor air temperature. The four underlying color zones represent the four \
+distinct operating modes: Heating (red zone), economizer (yellow zone), economizer with cooling (grey zone), and cooling (blue zone). \
+As an example, the below split-range controller diagram is representative of normal, healthy AHU operations. Some ')
     p.add_run('key characteristics of normal, healthy AHU operation').bold=True
     p.add_run(' include:')
 
     document.add_paragraph('Heating coil active ONLY in heating mode', style='List Bullet')
     document.add_paragraph('Cooling coil active ONLY in economizer with cooling and cooling mode', style='List Bullet')
-    document.add_paragraph('Heating and cooling coils should not operate simutaneously', style='List Bullet')
+    document.add_paragraph('Heating and cooling coils should not operate simultaneously', style='List Bullet')
     document.add_paragraph('Perimeter heating should be minimal in economizer mode. This can be achieved by increasing the supply air \
 temperature setpoint in the heating season, while monitoring any occurence of overheating.', style='List Bullet')
 
     cwd = os.getcwd()
     document.add_picture(os.path.join(cwd,'static','img','SRC_example.png'), width=Inches(5.75))
 
-    p = document.add_paragraph("Suboptimal supply air temperatures can result excessive energy consumption from excessive perimeter heating use, \
+    p = document.add_paragraph("Suboptimal supply air temperatures can result in excessive energy consumption from excessive perimeter heating use, \
 economizing, or fan use. To guide supply air temperature setpoint adjustments, the typical 'ideal' supply air temperature range is provided as a \
 reference.\n\nFirst, ensure that the supply air temperature is not constant and is controlled by a program. Review the BAS program responsible for \
 the supply air temperature setpoint analog variable.\n\nIf the supply air temperature is ABOVE the 'ideal' range in the cooling season, excessive \
-fan power to deliver required necessary cooling may result. Inspect what may be causing this in the BAS program. Likely causes include:")
+fan power to deliver the required necessary cooling may result. Inspect what may be causing this in the BAS program. Likely causes include:")
     document.add_paragraph('Inappropriate logic in the BAS program', style='List Bullet')
     document.add_paragraph('VAV terminal unit dampers stuck open causing overcooling in select rooms', style='List Bullet')
     document.add_paragraph("If the supply air temperature is BELOW the 'ideal' range in the heating season, excessive use of the perimeter heaters \
@@ -172,9 +172,9 @@ as intended in these rooms.")
     p = document.add_paragraph("A set of four to six visuals per AHU are generated (arranged in ascending outdoor air \
 temperature) which depict characteristic operating periods of the AHU and the average damper and valve positions and \
 temperatures at those periods. The fraction of time of operation is the percentage of the total time of the AHU's \
-operation which exhibit the displayed damper/valve positions and temperatures. Ensure that:")
+operation which exhibits the displayed damper/valve positions and temperatures. Ensure that:")
     document.add_paragraph('The economizer does not coincide with the heating coil operation', style='List Bullet')
-    document.add_paragraph('The heating and cooling coil do not operate simutaneously', style='List Bullet')
+    document.add_paragraph('The heating and cooling coil do not operate simultaneously', style='List Bullet')
     
     #For each AHU, output the second set of visuals
     for i in faults_df.index:
@@ -282,7 +282,7 @@ for the heating and cooling season.')
 airflow control error of each group of zones. Each group of zones (C1, C2, C3, etc.) represents a number of zones \
 which is presented at the top-left of the visual. The airflow control error is the difference between the \
 actual and setpoint airflow rate with respect to the airflow rate setpoint. A positive (+) percentage indicates a \
-higher actual flowrate than the setpoint and a negative (-) percentage indicates a lower actual flowrate than the \
+higher actual flow rate than the setpoint and a negative (-) percentage indicates a lower actual flow rate than the \
 setpoint. This visual is generated twice, once for the heating season (December through February) and again \
 for the cooling season (May through August). The following are possible symptoms of anomalous operations:')
 
@@ -303,7 +303,7 @@ increasing the VAV terminal maximum airflow setpoint.", style='List Bullet')
 
     #KPIs heading and description
     print('Adding KPIs...')
-    document.add_heading('Key performance Indicators', level=1)
+    document.add_heading('Key Performance Indicators', level=1)
     p = document.add_paragraph('This section presents the generated KPIs - ')
     p.add_run('the zone health index').bold = True
     p.add_run('. The zone health index is the ') 
@@ -317,14 +317,14 @@ indicates little to no detected anomalous zones.')
     heating_health_index = (round(kpis_heating.iloc[0]['Health Index'],3))*100
     cooling_health_index = (round(kpis_cooling.iloc[0]['Health Index'],3))*100
 
-    p = document.add_paragraph('Zone health index for heating season: ', style='List Bullet')
+    p = document.add_paragraph('Zone health index for the heating season: ', style='List Bullet')
     p.add_run(str(heating_health_index) + '%').bold = True
-    p = document.add_paragraph('Zone health index for cooling season: ', style='List Bullet')
+    p = document.add_paragraph('Zone health index for the cooling season: ', style='List Bullet')
     p.add_run(str(cooling_health_index) + '%').bold = True
 
     #Add tables with summary tables
-    p = document.add_paragraph('The following tables are a summary of the clustering results, which lists the number of zones in each group and the average \
-indoor air temperature and average airflow control error for each group. For the heating season, the average fraction \
+    p = document.add_paragraph('The following tables are a summary of the clustering results, which lists the number of zones in each group, the average \
+indoor air temperature, and the average airflow control error for each group. For the heating season, the average fraction \
 of active (ON-state) perimeter heaters within a zone is also provided for each cluster.')
 
     kpis_heating.drop(kpis_heating.columns[-1],axis=1,inplace=True) #Drop the health index from the heating season table
@@ -356,7 +356,7 @@ of active (ON-state) perimeter heaters within a zone is also provided for each c
     document.add_page_break()
     
     #Add tables with cluster samples
-    p = document.add_paragraph('The following tables lists the individual zones (by filename) by its resultant group (i.e., the zones listed under C1 \
+    p = document.add_paragraph('The following tables list the individual zones (by filename) by their resultant group (i.e., the zones listed under C1 \
 belong to the zone cluster C1.) These tables can be used to identify the zone(s) which were determined to exhibit anomalous conditions.')
 
     table_headings = ['Zone samples - Heating season (December-February)','Zone samples - Cooling season (May-August)']
@@ -539,7 +539,7 @@ weekends (to the right) separately. The profiles are broken down by floor and ar
         p = document.add_paragraph('This section presents the generated KPIs - ')
         p.add_run('typical earliest arrival times, latest departure times, and highest occupant count').bold = True
         p.add_run(' which are broken down by floor and determined sparately for weekdays and weekends. The typical earliest arrival time \
-is the hour when the occupant count exceeds '+r'10%'+' of the maximum recorded count per floor. Similiarily, the typical latest \
+is the hour when the occupant count exceeds '+r'10%'+' of the maximum recorded count per floor. Similarily, the typical latest \
 departure time is the hours when occupant count dips below '+r'10%'+' of the maximum recorded count per floor. The highest occupant count \
 is taken as the highest recorded occupant count. Note all these calculations are determined at the 75th percentile, meaning the higher range \
 of typical occupancy.')
@@ -603,10 +603,10 @@ of typical occupancy.')
         p.add_run('longest break duration').bold = True
         p.add_run(' for weekdays only.')
         p = document.add_paragraph("This function can be used to inform ventilation schedules which can minimize \
-excessive ventilation during unoccupied hours, or even serve as a basis for an occupant-driven demand controlled ventilation scheme. \
+excessive ventilation during unoccupied hours, or even serve as a basis for an occupant-driven demand-controlled ventilation scheme. \
 The calculated earliest arrival time and latest departure time can be used to inform whole building-level schedules, including start/stop \
 times, whereas the calculated latest arrival time and longest break duration can be used to inform zone-level schedules, including time-out \
-durations for zone air flow. For example, if the calculated latest arrival time is 13:00 (1 PM), you may implement a simple logic to each \
+durations for zone airflow. For example, if the calculated latest arrival time is 13:00 (1 PM), you may implement a simple logic to each \
 zone's controller which switches the zone to the 'unoccupied mode' when the motion detector of the zone has not been triggered until 1 PM \
 on a given day. Similarly, if the calculated longest break duration is 3:00 (3 hours), then you may implement another simple logic to each \
 zone's controller to switch the zone to the 'unoccupied mode' when the room's motion detector has not been triggered for longer than 3 hours \
@@ -617,7 +617,7 @@ on a given day. The below pseudo-code demonstrates these two implementations.")
 
         #KPIs heading and description
         print('Adding KPIs...')
-        document.add_heading('Key performance Indicators', level=1)
+        document.add_heading('Key Performance Indicators', level=1)
         p = document.add_paragraph('This section presents the generated KPIs - ')
         p.add_run('typical earliest arrival time, latest arrival time, latest departure time, and longest break duration').bold = True
         p.add_run(' for weekdays only.')
@@ -790,7 +790,7 @@ This function does not output any key performance indicators (KPI) or visuals li
 it outputs a set of metadata labels which are organized by its data type (i.e., temperature sensor, \
 actuator position, valve position) and by system hierarchy (AHU or zone). Note that this function works by identifying labels based on \
 a predefined dictionary of common abbreviations for certain data points (i.e., "TSA" or "SAT" for supply air temperature sensor) and \
-associates them based on the alphanumeric similiarity of certain labels to other labels. Hence, this function may not work as effectively \
+associates them based on the alphanumeric similarity of certain labels to other labels. Hence, this function may not work as effectively \
 with BAS labels with unique ontologies and inconsistent labelling schema.')
 
     #Output metadata labels for AHUs
