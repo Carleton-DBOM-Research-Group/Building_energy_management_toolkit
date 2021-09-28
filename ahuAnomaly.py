@@ -12,7 +12,9 @@ from PIL import Image, ImageDraw, ImageFont
 
 
 #Local function to draw multiple AHU diagrams as snapshots of operations
-def drawAHU (ahu,clustCenter,oaSlope,oaBias,output_path): 
+def drawAHU (ahu,clustCenter,oaSlope,oaBias,output_path):
+
+    print(clustCenter, flush=True) 
 
     for k in clustCenter.index:
 
