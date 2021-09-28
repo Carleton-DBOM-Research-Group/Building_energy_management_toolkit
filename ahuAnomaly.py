@@ -14,8 +14,6 @@ from PIL import Image, ImageDraw, ImageFont
 #Local function to draw multiple AHU diagrams as snapshots of operations
 def drawAHU (ahu,clustCenter,oaSlope,oaBias,output_path):
 
-    print(clustCenter, flush=True) 
-
     for k in clustCenter.index:
 
         img = Image.new('RGB', (3600, 1200), (255, 255, 255))
@@ -46,30 +44,29 @@ def drawAHU (ahu,clustCenter,oaSlope,oaBias,output_path):
 
         # Add text
         font = ImageFont.truetype("arial.ttf", 100)
-        #font = ImageFont.load_default()
         d.text((1220, 40), "return", font=font, fill='black')
-        d.text((1240, 260), str(clustCenter.iloc[k][clustCenter.columns[6]])+" C", font=font, fill='black')#tRa
+        d.text((1240, 260), str(clustCenter['tRa'].iloc[k])+" C", font=font, fill='black')#tRa
         d.text((150, 640), "outdoor", font=font, fill='black')
-        d.text((620, 640), str(clustCenter.iloc[k][clustCenter.columns[5]])+" C", font=font, fill='black')#tOa
+        d.text((620, 640), str(clustCenter['tOa'].iloc[k])+" C", font=font, fill='black')#tOa
         d.text((2875, 640), "supply", font=font, fill='black')
-        d.text((3300, 640), str(clustCenter.iloc[k][clustCenter.columns[7]])+" C", font=font, fill='black')#tSa
+        d.text((3300, 640), str(clustCenter['tSa'].iloc[k])+" C", font=font, fill='black')#tSa
 
-        handle = min((((clustCenter.iloc[k][clustCenter.columns[4]]/100)+oaBias)*oaSlope),1)
-        tMa = clustCenter.iloc[k][clustCenter.columns[5]]*handle + clustCenter.iloc[k][clustCenter.columns[6]]*(1-handle) #compute mixed air temperature
+        handle = min((((clustCenter['sOa'].iloc[k]/100)+oaBias)*oaSlope),1)
+        tMa = clustCenter['tOa'].iloc[k]*handle + clustCenter['tRa'].iloc[k]*(1-handle) #compute mixed air temperature
 
         d.text((1500, 640), str(int(round(tMa)))+" C", font=font, fill='black')
         d.text((1790, 860), "heating", font=font, fill='black')
         d.text((1880, 960), "coil", font=font, fill='black')
-        d.text((1830, 750), str(clustCenter.iloc[k][clustCenter.columns[3]])+"%", font=font, fill='white')#heating coil
+        d.text((1830, 750), str(clustCenter['sHc'].iloc[k])+"%", font=font, fill='white')#heating coil
         d.text((2190, 860), "cooling", font=font, fill='black')
         d.text((2280, 960), "coil", font=font, fill='black')
-        d.text((2230, 750), str(clustCenter.iloc[k][clustCenter.columns[1]])+"%", font=font, fill='white')#cooling coil
+        d.text((2230, 750), str(clustCenter['sCc'].iloc[k])+"%", font=font, fill='white')#cooling coil
         d.text((2610, 860), "supply", font=font, fill='black')
         d.text((2680, 960), "fan", font=font, fill='black')
-        d.text((2630, 750), str(clustCenter.iloc[k][clustCenter.columns[2]])+"%", font=font, fill='white')#supply fan
-        d.text((1790, 200), "Fraction of time operation: " + str(clustCenter.iloc[k][clustCenter.columns[8]])+'%', font=font, fill='black')#duration of operation
-        d.text((1550, 300), "Fraction with active perimeter heaters: " + str(clustCenter.iloc[k][clustCenter.columns[0]])+'%', font=font, fill='black')#perimeter heaters
-        d.text((800,365), str(clustCenter.iloc[k][clustCenter.columns[4]])+'%', font=font, fill='black')#damper
+        d.text((2630, 750), str(clustCenter['sFan'].iloc[k])+"%", font=font, fill='white')#supply fan
+        d.text((1790, 200), "Fraction of time operation: " + str(clustCenter['size'].iloc[k])+'%', font=font, fill='black')#duration of operation
+        d.text((1550, 300), "Fraction with active perimeter heaters: " + str(clustCenter['sRad'].iloc[k])+'%', font=font, fill='black')#perimeter heaters
+        d.text((800,365), str(clustCenter['sOa'].iloc[k])+'%', font=font, fill='black')#damper
     
         img.save(os.path.join(output_path,'f2b_ahu_' + str(ahu+1) + '_C_' + str(k+1) + '.png'))
 
@@ -362,7 +359,8 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path):
         ahuOperationDuration = sum(dataNew[dataNew.columns[7]]>0)/len(dataNew.index)*168
         mask = dataNew.iloc[:,7] > 0
         clusterFrame = pd.DataFrame()
-        clusterFrame = pd.concat([dataNew[mask][dataNew.columns[0:3]], dataNew[mask][dataNew.columns[4:8]], sRadAvg[mask]], axis=1, sort=False)
+        clusterFrame = pd.concat([dataNew[mask][dataNew.columns[0:3]], dataNew[mask][dataNew.columns[4:8]], sRadAvg[mask].rename('sRad')], axis=1, sort=False)
+        print(clusterFrame)
         
         normData = clusterFrame / np.linalg.norm(clusterFrame)
         pca = PCA()
@@ -403,9 +401,9 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path):
         for j in range (0,optimalK):
             clusterCenter = clusterCenter.append((round(clusterFrame[eva==j].median(axis=0))), ignore_index=True)
             clusterSize.append(round(sum(eva==j)/len(eva),2)*100)
-        
+
         clusterCenter['size'] = clusterSize # Merge clusterSize with clusterCenter change
-        clusterCenter = clusterCenter.sort_values(by=clusterCenter.columns[5]).astype('int64') #sort by ascending tOa
+        clusterCenter = clusterCenter.sort_values(by='tOa').astype('int64') #sort by ascending tOa
 
         print('Creating simplified AHU diagram of clusters...')
         drawAHU(ahu_num,clusterCenter,ahuMdlMode1_2_Prmtr[0],ahuMdlMode1_2_Prmtr[1],output_path) # Pass to function to draw AHUs
