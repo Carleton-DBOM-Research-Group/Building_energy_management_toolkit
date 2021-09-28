@@ -129,7 +129,6 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path):
     tInWrm = tIn.quantile(.95, axis=1)
     tInAvg = tIn.mean(axis=1)
 
-    ahuMdl = pd.DataFrame()
     faults_df = pd.DataFrame()
     ahu_num = 0
 
@@ -352,7 +351,9 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path):
         ahuMdlMode4_Prmtr = model.output_dict['variable']
 
         #Save variables from ahuMdlMode1_2 and ahuMdlMode4 in ahuMdl Dataframe
-        ahuMdl = ahuMdl.append({'oaFrac':ahuMdlMode1_2_Prmtr[0],'dtHc':ahuMdlMode1_2_Prmtr[1]*100, 'dtCc':ahuMdlMode4_Prmtr[0]*100}, ignore_index=True)
+        #ahuMdlMode1_2_Prmtr[0] == Outdoor air fraction
+        #ahuMdlMode1_2_Prmtr[1] == delta temp across heating coil
+        #ahuMdlMode1_2_Prmtr[2] == delta temp across cooling coil
         
         #Cluster operations into groups and snapshot operation
         print('Clustering operations...')
@@ -458,7 +459,7 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path):
 
         ahu_num += 1 #Plus 1 ahu_num per AHU loop
 
-    return ahuMdl,faults_df
+    return faults_df
 
 
 def execute_function(input_path, output_path):
@@ -500,11 +501,10 @@ def execute_function(input_path, output_path):
     f.close()
 
     #Analyze the data and generate KPIs and visuals
-    ahuMdl, faults = ahuAnomaly(ahu,sRad,tIn,output_path) #Call ahuAnomaly local function, generate KPIs and visualizations
+    faults = ahuAnomaly(ahu,sRad,tIn,output_path) #Call ahuAnomaly local function, generate KPIs and visualizations
 
     #Output KPIs in excel spreadsheet
     writer = pd.ExcelWriter(os.path.join(output_path,'ahu_anomaly_summary.xlsx'), engine='xlsxwriter') # pylint: disable=abstract-class-instantiated
-    ahuMdl.to_excel(writer, sheet_name='ahuMdl')
     faults.to_excel(writer, sheet_name='faults')
     writer.save()
     writer.close()
