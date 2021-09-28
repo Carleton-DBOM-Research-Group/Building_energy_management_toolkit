@@ -160,8 +160,6 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path):
         tInCldWrkHrs = tInCldNew[mask]
         tInWrmWrkHrs = tInWrmNew[mask]
         tInAvgWrkHrs = tInAvgNew[mask]
-
-        print(dataWrkHrs, flush=True)
         
         #Draw split range controller plot
         tOa = dataWrkHrs[dataWrkHrs.columns[2]]
