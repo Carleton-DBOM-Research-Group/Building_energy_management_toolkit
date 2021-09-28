@@ -169,10 +169,10 @@ as intended in these rooms.")
     
     #Visualization heading and description - Part 2
     document.add_heading('Visuals - AHU operating periods', level=1)
-    p = document.add_paragraph("A set of four to six visuals per AHU are generated which depict characteristic operating \
-periods of the AHU and the average damper and valve positions and temperatures at those periods. The fraction of time of \
-operation is the percentage of the total time of the AHU's operation which exhibit the displayed damper/valve positions \
-and temperatures. Ensure that:")
+    p = document.add_paragraph("A set of four to six visuals per AHU are generated (arranged in ascending outdoor air \
+temperature) which depict characteristic operating periods of the AHU and the average damper and valve positions and \
+temperatures at those periods. The fraction of time of operation is the percentage of the total time of the AHU's \
+operation which exhibit the displayed damper/valve positions and temperatures. Ensure that:")
     document.add_paragraph('The economizer does not coincide with the heating coil operation', style='List Bullet')
     document.add_paragraph('The heating and cooling coil do not operate simutaneously', style='List Bullet')
     
