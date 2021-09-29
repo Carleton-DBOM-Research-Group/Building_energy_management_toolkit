@@ -27,6 +27,10 @@ def home():
 def functions():
   return render_template('functions.html')
 
+@app.route('/functions/sample-data', methods = ['GET'])
+def functions_sampleData():
+  return render_template('functions_sampleData.html')
+
 #METADATA  
 
 @app.route('/functions/metadata', methods = ['GET'])
