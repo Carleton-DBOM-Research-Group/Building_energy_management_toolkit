@@ -31,6 +31,11 @@ def functions():
 def functions_sampleData():
   return render_template('functions_sampleData.html')
 
+@app.route('/functions/sample-data/download-<filename>')
+def download_file(filename):
+  cwd = os.getcwd()
+  return send_file(os.path.join(cwd,'sample_data',filename))
+
 #METADATA  
 
 @app.route('/functions/metadata', methods = ['GET'])
