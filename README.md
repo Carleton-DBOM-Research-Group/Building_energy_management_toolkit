@@ -3,9 +3,12 @@
 This repository contains the web application version of a multi-sourced, data-driven toolkit for addressing building energy deficiencies and is open-source for others to learn from, adapt, and foster into more specialised versions of multi-sourced, data-driven toolkits. At this stage, the toolkit is undergoing active development. 
 Additions and revisions are expected and the repository will be updated periodically to reflect the most recent changes. 
 
+> http://building-energy-management-toolkit.com/home
+
 ## Reference documentation
 ### Framework of the toolkit
-> This section will be updated when the reference documentation is available
+> Markus *et al.*, "A framework for a multi-source, data-driven building energy management toolkit," 2021.
+> https://doi.org/10.1016/j.enbuild.2021.111255
 
 ### Metadata inferencing function (*metadata.py*)
 > Chen *et al.*, "A Metadata Inference Method for Building Automation Systems With Limited Semantic Information," 2020.
