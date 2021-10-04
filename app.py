@@ -27,12 +27,26 @@ def home():
 def functions():
   return render_template('functions.html')
 
+@app.route('/contributors', methods = ['GET'])
+def contributors():
+  return render_template('contributors.html')
+
+@app.route('/functions/data-templates', methods = ['GET'])
+def dataTemplates():
+  return "This page is under construction!"
+
+@app.route('/functions/data-templates/download-<filename>')
+def download_template_file(filename):
+  cwd = os.getcwd()
+  return "This page is under construction!"
+  return send_file(os.path.join(cwd,'data_templates',filename))
+
 @app.route('/functions/sample-data', methods = ['GET'])
 def functions_sampleData():
   return render_template('functions_sampleData.html')
 
 @app.route('/functions/sample-data/download-<filename>')
-def download_file(filename):
+def download_sample_file(filename):
   cwd = os.getcwd()
   return send_file(os.path.join(cwd,'sample_data',filename))
 
