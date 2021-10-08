@@ -101,21 +101,22 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path):
 
         return np.sqrt(((tSa - tSaPred) ** 2).mean())
     
-    def ahuMdlMode1_2(x): #Dimension = 3
-        # x[0] outdoor air fraction bias
-        # x[1] Delta temp across heating coil
-        # x[2] Temp bias across ducts
+    def ahuMdlMode1_2(x): #Dimension = 4
+        # x[0] Bias/proportionality term for outdoor air damper fraction
+        # x[1] Bias/proportionality term for outdoor air damper position
+        # x[2] Delta temp across heating coil
+        # x[3] Temp bias across fans
         sOa_mode1_2 = sOa/100
         oaFrac = (sOa_mode1_2 + x[1]) * x[0]
         oaFrac[oaFrac>1] = 1
         tMa = tOa*oaFrac + tRa*(1-oaFrac)
-        yp = tMa + sHc*x[1] + x[2]
+        yp = tMa + sHc*x[2] + x[3]
         
         return np.sqrt(((tSa - yp) ** 2).mean())
 
     def ahuMdlMode4(x): #Dimension = 2
         # x[0] Delta temp across cooling coil
-        # x[1] Temp bias across ducts
+        # x[1] Temp bias across fans
         sOa_mode4 = sOa/100
         oaFrac = (sOa_mode4 + ahuMdlMode1_2_Prmtr[1]) * ahuMdlMode1_2_Prmtr[0]
         oaFrac[oaFrac>1] = 1
@@ -325,11 +326,11 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path):
         sHc = dataWrkHrs[dataWrkHrs.columns[4]][htgEconMdInd] 
 
         #Optimize parameters for genetic algorithms for ahuMdlMode1_2
-        varbound = np.array([[0.0,1.5],[-1,1],[0,0.5]]) # ([lower_bound,upper_bound])
+        varbound = np.array([[0.0,1.5],[-1,1],[0,0.5],[-1,1]]) # ([lower_bound,upper_bound])
         
         #Same parameters as tSaMdl
         model=ga(function=ahuMdlMode1_2,\
-            dimension=3,\
+            dimension=4,\
             variable_type='real',\
             variable_boundaries=varbound,\
             algorithm_parameters=algorithm_param,
@@ -431,7 +432,7 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path):
             sOa_fault = 'Normal'
             ahuHealthInd += 100/6
         
-        if ahuMdlMode1_2_Prmtr[1]*100 < 1.0:
+        if ahuMdlMode1_2_Prmtr[2]*100 < 1.0:
             sHc_fault = 'Stuck'
         else:
             sHc_fault = 'Normal'
