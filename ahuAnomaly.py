@@ -145,8 +145,8 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path):
         tInWrm = tInWrm.drop(tInWrm[mask].index)
         tInAvg = tInAvg.drop(tInAvg[mask].index)
         
-        #Drop stagnant data
-        mask = data.iloc[:,3].rolling(24).std() < 0.001
+        #Drop stagnant data (based on tOa data points)
+        mask = data.iloc[:,2].rolling(24).std() < 0.001
         dataNew = data.drop(data[mask].index)
         sRadAvg = sRad.drop(sRad[mask].index)
         tInCldNew = tInCld.drop(tInCld[mask].index)
@@ -163,7 +163,7 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path):
         
         #Draw split range controller plot
         tOa = dataWrkHrs[dataWrkHrs.columns[2]]
-        sOa = dataWrkHrs[dataWrkHrs.columns[4]]
+        sOa = dataWrkHrs[dataWrkHrs.columns[3]]
         if max(sOa)<=1:
             sOa = sOa * 100
         tSa = dataWrkHrs[dataWrkHrs.columns[0]]
@@ -276,7 +276,7 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path):
 
         print('Plot heating coil valve position...')
         htgMdInd = tOa <= cp[1]
-        sHcHtgMode = dataWrkHrs[dataWrkHrs.columns[5]][htgMdInd]
+        sHcHtgMode = dataWrkHrs[dataWrkHrs.columns[4]][htgMdInd]
         tOaHtgMode = tOa[htgMdInd]
         x_train = np.select([tOaHtgMode < cp[1]],[cp[1]-tOaHtgMode],default=0)[np.newaxis].T
         mdl = linear_model.LinearRegression(fit_intercept=False).fit(x_train, sHcHtgMode)
@@ -286,7 +286,7 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path):
 
         print('Plot cooling coil valve position...')
         clgMdInd = tOa > cp[2]
-        sCcClgMode = dataWrkHrs[dataWrkHrs.columns[6]][clgMdInd]
+        sCcClgMode = dataWrkHrs[dataWrkHrs.columns[5]][clgMdInd]
         tOaClgMode = tOa[clgMdInd]
         x_train = np.select([tOaClgMode > cp[2]],[cp[2]-tOaClgMode],default=0)[np.newaxis].T
         mdl = linear_model.LinearRegression(fit_intercept=False).fit(x_train, sCcClgMode)
@@ -321,8 +321,8 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path):
         tSa = dataWrkHrs[dataWrkHrs.columns[0]][htgEconMdInd] 
         tRa = dataWrkHrs[dataWrkHrs.columns[1]][htgEconMdInd] 
         tOa = dataWrkHrs[dataWrkHrs.columns[2]][htgEconMdInd] #Note: tOa is redefined here.
-        sOa = dataWrkHrs[dataWrkHrs.columns[4]][htgEconMdInd] 
-        sHc = dataWrkHrs[dataWrkHrs.columns[5]][htgEconMdInd] 
+        sOa = dataWrkHrs[dataWrkHrs.columns[3]][htgEconMdInd] 
+        sHc = dataWrkHrs[dataWrkHrs.columns[4]][htgEconMdInd] 
 
         #Optimize parameters for genetic algorithms for ahuMdlMode1_2
         varbound = np.array([[0.0,1.5],[-1,1],[0,0.5]]) # ([lower_bound,upper_bound])
@@ -343,8 +343,8 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path):
         tSa = dataWrkHrs[dataWrkHrs.columns[0]][clgMdInd] 
         tRa = dataWrkHrs[dataWrkHrs.columns[1]][clgMdInd] 
         tOa = dataWrkHrs[dataWrkHrs.columns[2]][clgMdInd] #Note: tOa is redefined here.
-        sOa = dataWrkHrs[dataWrkHrs.columns[4]][clgMdInd] 
-        sCc = dataWrkHrs[dataWrkHrs.columns[6]][clgMdInd] 
+        sOa = dataWrkHrs[dataWrkHrs.columns[3]][clgMdInd] 
+        sCc = dataWrkHrs[dataWrkHrs.columns[5]][clgMdInd] 
 
         #Optimize parameters for genetic algorithms for ahuMdlMode4
         varbound = np.array([[-0.5,0],[-1,1]]) # ([lower_bound,upper_bound])
@@ -364,14 +364,14 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path):
         #Save variables from ahuMdlMode1_2 and ahuMdlMode4 in ahuMdl Dataframe
         #ahuMdlMode1_2_Prmtr[0] == Outdoor air fraction
         #ahuMdlMode1_2_Prmtr[1] == delta temp across heating coil
-        #ahuMdlMode1_2_Prmtr[2] == delta temp across cooling coil
+        #ahuMdlMode4_Prmtr[0] == delta temp across cooling coil
         
         #Cluster operations into groups and snapshot operation
         print('Clustering operations...')
-        ahuOperationDuration = sum(dataNew[dataNew.columns[7]]>0)/len(dataNew.index)*168
-        mask = dataNew.iloc[:,7] > 0
+        ahuOperationDuration = sum(dataNew[dataNew.columns[6]]>0)/len(dataNew.index)*168
+        mask = dataNew.iloc[:,6] > 0
         clusterFrame = pd.DataFrame()
-        clusterFrame = pd.concat([dataNew[mask][dataNew.columns[0:3]], dataNew[mask][dataNew.columns[4:8]], sRadAvg[mask].rename('sRad')], axis=1, sort=False)
+        clusterFrame = pd.concat([dataNew[mask][dataNew.columns[0:7]], sRadAvg[mask].rename('sRad')], axis=1, sort=False)
         
         normData = clusterFrame / np.linalg.norm(clusterFrame)
         pca = PCA()
@@ -431,7 +431,7 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path):
             sOa_fault = 'Normal'
             ahuHealthInd += 100/6
         
-        if ahuMdlMode1_2_Prmtr[2]*100 < 1.0:
+        if ahuMdlMode1_2_Prmtr[1]*100 < 1.0:
             sHc_fault = 'Stuck'
         else:
             sHc_fault = 'Normal'
@@ -481,7 +481,7 @@ def execute_function(input_path, output_path):
     dfs = []
     for f in ahu_files_csv:
         data = pd.read_csv(os.path.join(input_path,'ahu',f))
-        data = data.rename(columns={data.columns[1]:'tSa',data.columns[2]:'tRa',data.columns[3]:'tOa',data.columns[4]:'pSa',data.columns[5]:'sOa',data.columns[6]:'sHc',data.columns[7]:'sCc',data.columns[8]:'sFan'})
+        data = data.rename(columns={data.columns[1]:'tSa',data.columns[2]:'tRa',data.columns[3]:'tOa',data.columns[4]:'sOa',data.columns[5]:'sHc',data.columns[6]:'sCc',data.columns[7]:'sFan'})
         dfs.append(data)
     ahu = pd.concat(dfs,keys=ahu_files_csv).reset_index(level=1, drop=True)
     ahu[ahu.columns[0]] = pd.to_datetime(ahu[ahu.columns[0]])
