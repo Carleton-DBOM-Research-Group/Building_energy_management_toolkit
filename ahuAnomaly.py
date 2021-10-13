@@ -145,6 +145,11 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path):
         tInCld = tInCld.drop(tInCld[mask].index)
         tInWrm = tInWrm.drop(tInWrm[mask].index)
         tInAvg = tInAvg.drop(tInAvg[mask].index)
+
+        #If sOa, sHc, sCc, or sFan range is 0-1, set to 0-100 
+        for column_name in ['sOa','sHc','sCc','sFan']:
+            if max(data[column_name])<=1:
+                data[column_name] = 100 * data[column_name]
         
         #Drop stagnant data (based on tOa data points)
         mask = data.iloc[:,2].rolling(24).std() < 0.001
@@ -163,11 +168,9 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path):
         tInAvgWrkHrs = tInAvgNew[mask]
         
         #Draw split range controller plot
+        tSa = dataWrkHrs[dataWrkHrs.columns[0]]
         tOa = dataWrkHrs[dataWrkHrs.columns[2]]
         sOa = dataWrkHrs[dataWrkHrs.columns[3]]
-        if max(sOa)<=1:
-            sOa = sOa * 100
-        tSa = dataWrkHrs[dataWrkHrs.columns[0]]
 
         #Optimize parameters for all genetic algorithms
         varbound = np.array([[0,100],[-20,30],[-20,30],[-20,30],[0,100]]) # ([lower_bound,upper_bound])
