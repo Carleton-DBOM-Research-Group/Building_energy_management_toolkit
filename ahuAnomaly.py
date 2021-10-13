@@ -139,12 +139,13 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path):
         data = data.set_index(data.columns[0])
 
         #Drop rows with nan values
-        mask = data[data.columns[0]].isna()
-        data = data.drop(data[mask].index)
-        sRad = sRad.drop(sRad[mask].index)
-        tInCld = tInCld.drop(tInCld[mask].index)
-        tInWrm = tInWrm.drop(tInWrm[mask].index)
-        tInAvg = tInAvg.drop(tInAvg[mask].index)
+        for i in range(0,7):
+            mask = data[data.columns[i]].isna()
+            data = data.drop(data[mask].index)
+            sRad = sRad.drop(sRad[mask].index)
+            tInCld = tInCld.drop(tInCld[mask].index)
+            tInWrm = tInWrm.drop(tInWrm[mask].index)
+            tInAvg = tInAvg.drop(tInAvg[mask].index)        
 
         #If sOa, sHc, sCc, or sFan range is 0-1, set to 0-100 
         for column_name in ['sOa','sHc','sCc','sFan']:
