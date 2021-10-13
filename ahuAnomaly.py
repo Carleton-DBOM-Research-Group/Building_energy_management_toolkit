@@ -138,14 +138,13 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path):
         data = all_ahu_data.loc[i] #Select only data from AHU i
         data = data.set_index(data.columns[0])
 
-        #Drop rows with nan values
-        for i in range(0,7):
-            mask = data[data.columns[i]].isna()
-            data = data.drop(data[mask].index)
-            sRad = sRad.drop(sRad[mask].index)
-            tInCld = tInCld.drop(tInCld[mask].index)
-            tInWrm = tInWrm.drop(tInWrm[mask].index)
-            tInAvg = tInAvg.drop(tInAvg[mask].index)        
+        #Drop any rows with NAN values in ANY column
+        mask = data.isna().any(axis=1)
+        data = data.drop(data[mask].index)
+        sRadNew = sRad.drop(sRad[mask].index)
+        tInCldNew = tInCld.drop(tInCld[mask].index)
+        tInWrmNew = tInWrm.drop(tInWrm[mask].index)
+        tInAvgNew = tInAvg.drop(tInAvg[mask].index)
 
         #If sOa, sHc, sCc, or sFan range is 0-1, set to 0-100 
         for column_name in ['sOa','sHc','sCc','sFan']:
@@ -155,10 +154,10 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path):
         #Drop stagnant data (based on tOa data points)
         mask = data.iloc[:,2].rolling(24).std() < 0.001
         dataNew = data.drop(data[mask].index)
-        sRadAvg = sRad.drop(sRad[mask].index)
-        tInCldNew = tInCld.drop(tInCld[mask].index)
-        tInWrmNew = tInWrm.drop(tInWrm[mask].index)
-        tInAvgNew = tInAvg.drop(tInAvg[mask].index)
+        sRadAvg = sRadNew.drop(sRadNew[mask].index)
+        tInCldNew = tInCldNew.drop(tInCldNew[mask].index)
+        tInWrmNew = tInWrmNew.drop(tInWrmNew[mask].index)
+        tInAvgNew = tInAvgNew.drop(tInAvgNew[mask].index)
         
         #Extract only workhours
         mask = ((dataNew.index.hour>8)&(dataNew.index.hour<17)) & (dataNew.index.weekday<5)
@@ -501,12 +500,10 @@ def execute_function(input_path, output_path):
     tIn = pd.DataFrame()
     sRad = pd.DataFrame()
     for f in zone_files_csv:
-        data = pd.read_csv(os.path.join(input_path,'zone',f), index_col=0) #Specify the sample data and sheet name for zones
+        data = pd.read_csv(os.path.join(input_path,'zone',f), index_col=0, parse_dates=True) #Specify the sample data and sheet name for zones
         data = data.rename(columns={data.columns[0]:'tIn',data.columns[1]:'qFlo',data.columns[2]:'qFloSp',data.columns[3]:'sRad'})
         tIn = pd.concat([tIn,data[data.columns[0]]], axis=1,sort=False).rename(columns={data.columns[0]:str(f).replace('.csv','')})
         sRad = pd.concat([sRad,data[data.columns[3]]], axis=1,sort=False).rename(columns={data.columns[3]:str(f).replace('.csv','')})
-    for df in [tIn,sRad]:
-        df.index = pd.to_datetime(df.index)
     print("Zone-level HVAC controls network data read successful!")
     print("Number of zones detected: " + str(len(tIn.columns)))
 
