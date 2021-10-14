@@ -11,10 +11,18 @@ pd.options.mode.chained_assignment = None  # default='warn'
 def zoneAnomaly (tIn,qFlo,qFloSp,sRad,output_path):
 
     print('Cleaning data...')
-    #Remove stagnant and nan values
+    #Remove NAN values
+    for df in [tIn,qFlo,qFloSp,sRad]:
+        mask = df.isna().any(axis=1)
+        tIn.drop(tIn[mask].index, inplace=True, errors='ignore')
+        qFlo.drop(qFlo[mask].index, inplace=True, errors='ignore')
+        qFloSp.drop(qFloSp[mask].index, inplace=True, errors='ignore')
+        sRad.drop(sRad[mask].index, inplace=True, errors='ignore')
+    
+    #Remove stagnant values (based on tIn measurements)
     mask = tIn.rolling(24).std().mean(axis=1) < 0.001
     for df in [tIn,qFlo,qFloSp,sRad]:
-        df.drop(df[mask].index, inplace=True)     
+        df.drop(df[mask].index, inplace=True)    
     
     print('Extracting data for heating season...')
     #Extract workhours in WINTER (December-February)
@@ -23,12 +31,21 @@ def zoneAnomaly (tIn,qFlo,qFloSp,sRad,output_path):
     qFloWntr = qFlo[mask]
     qFloSpWntr = qFloSp[mask]
     sRadWntr_mean = sRad[mask].mean(axis=0) #Take the mean reheat/radiant heat valve per zone
+
+    #Filter out zones where >50% of qFloSpWntr is 0. 
+    for column in qFloSpWntr.columns:
+        if (qFloSpWntr[column] == 0).sum(axis=0) / len(qFloSpWntr[column]) >= 0.50:
+            print('Dropping zone: ' + str(column))
+            tInWntr.drop(index=column, inplace=True)
+            qFloWntr.drop(columns=column, inplace=True)
+            qFloSpWntr.drop(columns=column, inplace=True)
+            sRadWntr_mean.drop(index=column, inplace=True)
     
     qFloWntrErr = ((qFloWntr-qFloSpWntr)/qFloSpWntr) #Calculate airflow control error
     qFloWntrErr = qFloWntrErr.replace(np.nan, 0) #If NaN value, replace with zero (NaNs are a result of (qFloWntr-qFloSpWntr)/qFloSpWntr == 0/0, and thus is no airflow error)
     qFloWntrErr = qFloWntrErr.replace([np.inf, -np.inf], np.nan).dropna(axis=0) #Remove inf/-inf values (This is a result of qFloSpWntr == 0, and thus is inconclusive)
     qFloWntrErr_mean = qFloWntrErr.mean(axis=0) #Take the mean airflow control error per zone
-
+    
     tInErrNrm = tInWntr / np.linalg.norm(tInWntr)
     qFloErrNrm = qFloWntrErr_mean / np.linalg.norm(qFloWntrErr_mean)
     
@@ -133,6 +150,14 @@ def zoneAnomaly (tIn,qFlo,qFloSp,sRad,output_path):
     tInSmr = tIn[mask].mean(axis=0)
     qFloSmr = qFlo[mask]
     qFloSpSmr = qFloSp[mask]
+
+    #Filter out zones where >=50% of qFloSpSmr is 0.
+    for column in qFloSpSmr.columns:
+        if (qFloSpSmr[column] == 0).sum(axis=0) / len(qFloSpSmr[column]) >= 0.50:
+            print('Dropping zone: ' + str(column))
+            tInSmr.drop(index=column, inplace=True)
+            qFloSmr.drop(columns=column, inplace=True)
+            qFloSpSmr.drop(columns=column, inplace=True)
 
     qFloSmrErr = ((qFloSmr-qFloSpSmr)/qFloSpSmr) #Calculate airflow control error
     qFloSmrErr = qFloSmrErr.replace(np.nan, 0) #If NaN value, replace with zero (NaNs are a result of (qFloSmr-qFloSpSmr)/qFloSpSmr == 0/0, and thus is no airflow error)
@@ -259,7 +284,7 @@ def execute_function(input_path, output_path):
     print('Reading zone-level HVAC data files...')
     #Populate tIn,qFlo,qFloSp,and sRad dataframes
     for f in zone_files_csv:
-        data = pd.read_csv(os.path.join(input_path,f), index_col=0)
+        data = pd.read_csv(os.path.join(input_path,f), index_col=0, parse_dates=True)
         tIn = pd.concat([tIn,data[data.columns[0]]], axis=1,sort=False).rename(columns={data.columns[0]:str(f).replace('.csv','')})
         qFlo = pd.concat([qFlo,data[data.columns[1]]], axis=1,sort=False).rename(columns={data.columns[1]:str(f).replace('.csv','')})
         qFloSp = pd.concat([qFloSp,data[data.columns[2]]], axis=1,sort=False).rename(columns={data.columns[2]:str(f).replace('.csv','')})
