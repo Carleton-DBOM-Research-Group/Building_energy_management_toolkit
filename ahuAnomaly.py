@@ -125,10 +125,10 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path):
         
         return np.sqrt(((tSa - yp) ** 2).mean())
 
-    sRad = sRad.mean(axis=1)
-    tInCld = tIn.quantile(.05, axis=1)
-    tInWrm = tIn.quantile(.95, axis=1)
-    tInAvg = tIn.mean(axis=1)
+    sRadAvg_raw = sRad.mean(axis=1)
+    tInCld_raw = tIn.quantile(.05, axis=1)
+    tInWrm_raw = tIn.quantile(.95, axis=1)
+    tInAvg_raw = tIn.mean(axis=1)
 
     faults_df = pd.DataFrame()
     ahu_num = 0
@@ -138,13 +138,23 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path):
         data = all_ahu_data.loc[i] #Select only data from AHU i
         data = data.set_index(data.columns[0])
 
-        #Drop any rows with NAN values in ANY column
+        #Drop any rows with NAN values in ANY column of the ahu dataframe
+        print("Cleaning data...")
         mask = data.isna().any(axis=1)
-        data = data.drop(data[mask].index)
-        sRadNew = sRad.drop(sRad[mask].index)
-        tInCldNew = tInCld.drop(tInCld[mask].index)
-        tInWrmNew = tInWrm.drop(tInWrm[mask].index)
-        tInAvgNew = tInAvg.drop(tInAvg[mask].index)
+        data = data.drop(data[mask].index, errors='ignore')
+        sRadAvgNew = sRadAvg_raw.drop(sRadAvg_raw[mask].index, errors='ignore')
+        tInCldNew = tInCld_raw.drop(tInCld_raw[mask].index, errors='ignore')
+        tInWrmNew = tInWrm_raw.drop(tInWrm_raw[mask].index, errors='ignore')
+        tInAvgNew = tInAvg_raw.drop(tInAvg_raw[mask].index, errors='ignore')
+
+        #Drop any rows with NAN values zone series (sRad and tInCld)
+        for zone_df in [sRadAvgNew,tInCldNew]:
+            mask = zone_df.isna()
+            data = data.drop(data[mask].index, errors='ignore')
+            sRadAvgNew = sRadAvgNew.drop(sRadAvgNew[mask].index, errors='ignore')
+            tInCldNew = tInCldNew.drop(tInCldNew[mask].index, errors='ignore')
+            tInWrmNew = tInWrmNew.drop(tInWrmNew[mask].index, errors='ignore')
+            tInAvgNew = tInAvgNew.drop(tInAvgNew[mask].index, errors='ignore')
 
         #If sOa, sHc, sCc, or sFan range is 0-1, set to 0-100 
         for column_name in ['sOa','sHc','sCc','sFan']:
@@ -154,7 +164,7 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path):
         #Drop stagnant data (based on tOa data points)
         mask = data.iloc[:,2].rolling(24).std() < 0.001
         dataNew = data.drop(data[mask].index)
-        sRadAvg = sRadNew.drop(sRadNew[mask].index)
+        sRadAvgNew = sRadAvgNew.drop(sRadAvgNew[mask].index)
         tInCldNew = tInCldNew.drop(tInCldNew[mask].index)
         tInWrmNew = tInWrmNew.drop(tInWrmNew[mask].index)
         tInAvgNew = tInAvgNew.drop(tInAvgNew[mask].index)
@@ -162,7 +172,7 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path):
         #Extract only workhours
         mask = ((dataNew.index.hour>8)&(dataNew.index.hour<17)) & (dataNew.index.weekday<5)
         dataWrkHrs = dataNew[mask]
-        sRadAvgWrkHrs = sRadAvg[mask]
+        sRadAvgWrkHrs = sRadAvgNew[mask]
         tInCldWrkHrs = tInCldNew[mask]
         tInWrmWrkHrs = tInWrmNew[mask]
         tInAvgWrkHrs = tInAvgNew[mask]
@@ -375,7 +385,7 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path):
         ahuOperationDuration = sum(dataNew[dataNew.columns[6]]>0)/len(dataNew.index)*168
         mask = dataNew.iloc[:,6] > 0
         clusterFrame = pd.DataFrame()
-        clusterFrame = pd.concat([dataNew[mask][dataNew.columns[0:7]], sRadAvg[mask].rename('sRad')], axis=1, sort=False)
+        clusterFrame = pd.concat([dataNew[mask][dataNew.columns[0:7]], sRadAvgNew[mask].rename('sRad')], axis=1, sort=False)
         
         normData = clusterFrame / np.linalg.norm(clusterFrame)
         pca = PCA()
