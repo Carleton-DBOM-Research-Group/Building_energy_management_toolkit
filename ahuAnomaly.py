@@ -183,7 +183,7 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path):
         sOa = dataWrkHrs[dataWrkHrs.columns[3]]
 
         #Optimize parameters for all genetic algorithms
-        varbound = np.array([[0,100],[-20,30],[-20,30],[-20,30],[0,100]]) # ([lower_bound,upper_bound])
+        varbound = np.array([[0,100],[-15,0],[-20,30],[-20,30],[0,100]]) # ([lower_bound,upper_bound])
         algorithm_param = {'max_num_iteration': 12,\
                    'population_size':5000,\
                    'mutation_probability':0.1,\
