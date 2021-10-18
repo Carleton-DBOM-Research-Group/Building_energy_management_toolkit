@@ -246,6 +246,8 @@
       contains supply airflow, etc.)</p>
     <p class="fs-6">This function employs a clustering algorithm and, as a result, a minimum of six (6) CSV files containing zone-level HVAC control network trend data must be supplied to this function, where each CSV file represents a unique VAV terminal unit or 
       thermal zone. Note that timestamps must be consistent between multiple files.</p>
+    <p class="fs-6"><strong>NOTE:</strong> For both seasons, if the supply airflow setpoint for a particular zone is equal to zero (0) for more than half the duration of the analysis period for the season (December through February for heating, May through August for cooling),
+      this zone's data will be discarded and will not be reflected in the final results.</p>
   
     <!-- Footer -->
     <footer class="pt-4 my-md-5 pt-md-5 border-top">
