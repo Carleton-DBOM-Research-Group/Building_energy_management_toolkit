@@ -125,13 +125,21 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path):
         
         return np.sqrt(((tSa - yp) ** 2).mean())
 
-    sRadAvg_raw = sRad.mean(axis=1)
-    tInCld_raw = tIn.quantile(.05, axis=1)
-    tInWrm_raw = tIn.quantile(.95, axis=1)
-    tInAvg_raw = tIn.mean(axis=1)
+    #Remove stagnant values in tIn
+    mask = tIn.rolling(24).std() < 0.01
+    tIn[mask] = np.nan
 
-    faults_df = pd.DataFrame()
-    ahu_num = 0
+    #Remove values over 40 or under 10 (These are unreasonable values for indoor air temperatures.)
+    mask = np.logical_or(tIn > 40, tIn < 10)
+    tIn[mask] = np.nan
+    
+    sRadAvg_raw = sRad.mean(axis=1) #Take the average tIn of all zones per timeframe
+    tInCld_raw = tIn.quantile(.05, axis=1) #Take the 5th percentile tIn of all zones per timeframe
+    tInWrm_raw = tIn.quantile(.95, axis=1) #Take the 95th percentile tIn of all zones per timeframe
+    tInAvg_raw = tIn.mean(axis=1) #Take the average sRad of all zones per timeframe
+
+    faults_df = pd.DataFrame() #Create empty df to store faults
+    ahu_num = 0 #Track number of AHUs analyzed
 
     for i in all_ahu_data.index.unique():
         print("Analyzing data from AHU: " + str(i))
@@ -141,33 +149,33 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path):
         #Drop any rows with NAN values in ANY column of the ahu dataframe
         print("Cleaning data...")
         mask = data.isna().any(axis=1)
-        data = data.drop(data[mask].index, errors='ignore')
+        dataNew = data.drop(data[mask].index, errors='ignore')
         sRadAvgNew = sRadAvg_raw.drop(sRadAvg_raw[mask].index, errors='ignore')
         tInCldNew = tInCld_raw.drop(tInCld_raw[mask].index, errors='ignore')
         tInWrmNew = tInWrm_raw.drop(tInWrm_raw[mask].index, errors='ignore')
         tInAvgNew = tInAvg_raw.drop(tInAvg_raw[mask].index, errors='ignore')
 
-        #Drop any rows with NAN values zone series (sRad and tInCld)
+        #Drop any rows with NAN values in zone series (sRad and tInCld)
         for zone_df in [sRadAvgNew,tInCldNew]:
             mask = zone_df.isna()
-            data = data.drop(data[mask].index, errors='ignore')
-            sRadAvgNew = sRadAvgNew.drop(sRadAvgNew[mask].index, errors='ignore')
-            tInCldNew = tInCldNew.drop(tInCldNew[mask].index, errors='ignore')
-            tInWrmNew = tInWrmNew.drop(tInWrmNew[mask].index, errors='ignore')
-            tInAvgNew = tInAvgNew.drop(tInAvgNew[mask].index, errors='ignore')
+            dataNew.drop(dataNew[mask].index, inplace=True, errors='ignore')
+            sRadAvgNew.drop(sRadAvgNew[mask].index, inplace=True, errors='ignore')
+            tInCldNew.drop(tInCldNew[mask].index, inplace=True, errors='ignore')
+            tInWrmNew.drop(tInWrmNew[mask].index, inplace=True, errors='ignore')
+            tInAvgNew.drop(tInAvgNew[mask].index, inplace=True, errors='ignore')
 
         #If sOa, sHc, sCc, or sFan range is 0-1, set to 0-100 
         for column_name in ['sOa','sHc','sCc','sFan']:
-            if max(data[column_name])<=1:
-                data[column_name] = 100 * data[column_name]
+            if max(dataNew[column_name])<=1:
+                dataNew[column_name] = 100 * dataNew[column_name]
         
         #Drop stagnant data (based on tOa data points)
-        mask = data.iloc[:,2].rolling(24).std() < 0.001
-        dataNew = data.drop(data[mask].index)
-        sRadAvgNew = sRadAvgNew.drop(sRadAvgNew[mask].index)
-        tInCldNew = tInCldNew.drop(tInCldNew[mask].index)
-        tInWrmNew = tInWrmNew.drop(tInWrmNew[mask].index)
-        tInAvgNew = tInAvgNew.drop(tInAvgNew[mask].index)
+        mask = dataNew.iloc[:,2].rolling(24).std() < 0.001
+        dataNew.drop(dataNew[mask].index, inplace=True, errors='ignore')
+        sRadAvgNew.drop(sRadAvgNew[mask].index, inplace=True, errors='ignore')
+        tInCldNew.drop(tInCldNew[mask].index, inplace=True, errors='ignore')
+        tInWrmNew.drop(tInWrmNew[mask].index, inplace=True, errors='ignore')
+        tInAvgNew.drop(tInAvgNew[mask].index, inplace=True, errors='ignore')
         
         #Extract only workhours
         mask = ((dataNew.index.hour>8)&(dataNew.index.hour<17)) & (dataNew.index.weekday<5)
