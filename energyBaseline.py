@@ -186,6 +186,20 @@ def execute_function(input_path, output_path):
   mdl_heating_residual= pd.DataFrame(a,columns=['residual1'])
   mdl_heating_residual['residual2'] = b
 
+  # This analysis is duplicated intentionally - once to determine the ylim of both plots, once to plot predicted loads
+  timeOfDay_handle = list(range(0,24))
+  sch_handle =((timeOfDay_handle > x[6]) & (timeOfDay_handle < x[7]))
+  max_yp = [0,0]
+  for i in [-20,-10,0]:
+    tOa_handle = i*(np.ones(len(timeOfDay_handle)))
+    yp = (np.logical_and(tOa_handle < x[2],sch_handle == 1)) * ((x[2] - tOa_handle) * x[0] + x[3]) + (np.logical_and(tOa_handle >= x[2],sch_handle == 1))*(x[3]) + (np.logical_and(tOa_handle < x[4],sch_handle == 0)) * ((x[4] - tOa_handle) * x[1] + x[5]) + (np.logical_and(tOa_handle >= x[4],sch_handle == 0))*x[5]
+    if i < x[2]:
+      yp = np.maximum(yp + mdl_heating_residual['residual1'].values,0)
+    else:
+      yp = np.maximum(yp + mdl_heating_residual['residual2'].values,0)
+    if max(yp)>max(max_yp):
+      max_yp = yp
+
   plt.figure(figsize=(10,5))
   plt.subplot(121)
   plt.scatter(htg_df['tOa'], htg_df['heating'], alpha=0.1, c='darkred',label='Measured')
@@ -194,7 +208,7 @@ def execute_function(input_path, output_path):
   plt.xticks(fontsize=12)
   plt.yticks(fontsize=12)
   plt.xlim(-25,25)
-  plt.ylim(bottom=0)
+  plt.ylim(0 ,max(math.ceil(max(htg_df['heating'])/100)*100,math.ceil(max(max_yp)/100)*100))
 
   print('Modeling operating and afterhours heating energy use rates...')
   #Modelled cold operating hours and afterhours
@@ -218,7 +232,7 @@ def execute_function(input_path, output_path):
   print('Modeling predicted heating energy use rates...')
   plt.subplot(122)
   plt.xlim(0,23)
-  plt.ylim(0 ,math.ceil(max(htg_df['heating'])/100)*100)
+  plt.ylim(0 ,max(math.ceil(max(htg_df['heating'])/100)*100,math.ceil(max(max_yp)/100)*100))
   plt.xticks(np.arange(0, 24, step=2), fontsize=12)
   plt.yticks(fontsize=12)
   plt.xlabel('Time of day (h)',fontsize = 18)
@@ -271,6 +285,20 @@ def execute_function(input_path, output_path):
   mdl_cooling_residual= pd.DataFrame(a,columns=['residual1'])
   mdl_cooling_residual['residual2'] = b
 
+  # This analysis is duplicated intentionally - once to determine the ylim of both plots, once to plot predicted loads
+  timeOfDay_handle = list(range(0,24))
+  sch_handle =((timeOfDay_handle > x[6]) & (timeOfDay_handle < x[7] ))
+  max_yp = [0,0]
+  for i in [15,25,35]:
+    tOa_handle = i*(np.ones(len(timeOfDay_handle)))
+    yp = (np.logical_and(tOa_handle > x[2],sch_handle == 1)) * ((-x[2] + tOa_handle) * x[0] + x[3]) + (np.logical_and(tOa_handle <= x[2],sch_handle == 1))*(x[3]) + (np.logical_and(tOa_handle > x[4],sch_handle == 0)) * ((-x[4] + tOa_handle) * x[1] + x[5]) + (np.logical_and(tOa_handle <= x[4],sch_handle == 0))*x[5]
+    if i < x[2]:
+      yp = np.maximum(yp + mdl_cooling_residual['residual1'].values,0)
+    else:
+      yp = np.maximum(yp + mdl_cooling_residual['residual2'].values,0)
+    if max(yp)>max(max_yp):
+      max_yp = yp
+
   plt.figure(figsize=(10,5))
   plt.subplot(121)
   plt.scatter(clg_df['tOa'], clg_df['cooling'], alpha=0.1,label='Measured')
@@ -279,7 +307,7 @@ def execute_function(input_path, output_path):
   plt.xticks(fontsize=12)
   plt.yticks(fontsize=12)
   plt.xlim(-5,35)
-  plt.ylim(bottom=0)
+  plt.ylim(0 ,max(math.ceil(max(clg_df['cooling'])/100)*100,math.ceil(max(max_yp)/100)*100))
 
   #Modelled hot operating hours and afterhours
   print('Modeling operating and afterhours cooling energy use rates...')
@@ -299,13 +327,13 @@ def execute_function(input_path, output_path):
   print('Modeling predicted cooling energy use rates...')
   plt.subplot(122)
   plt.xlim(0,23)
-  plt.ylim(0 ,math.ceil(max(clg_df['cooling'])/100)*100)
+  plt.ylim(0 ,max(math.ceil(max(clg_df['cooling'])/100)*100,math.ceil(max(max_yp)/100)*100))
   plt.xticks(np.arange(0,24 ,step=2), fontsize=12)
   plt.yticks(fontsize=12)
   plt.xlabel('Time of day (h)',fontsize = 18)
   plt.ylabel("Predicted cooling load (kWh)", fontsize= 18)
   timeOfDay_handle = list(range(0,24))
-  sch_handle =((timeOfDay_handle > x[6]) & (timeOfDay_handle < x[7] ))
+  sch_handle =((timeOfDay_handle > x[6]) & (timeOfDay_handle < x[7]))
 
   for i in [15,25,35]:
     tOa_handle = i*(np.ones(len(timeOfDay_handle)))
@@ -353,6 +381,20 @@ def execute_function(input_path, output_path):
     mdl_electricity_residual= pd.DataFrame(a,columns=['residual1'])
     mdl_electricity_residual['residual2'] = b
 
+    # This analysis is duplicated intentionally - once to determine the ylim of both plots, once to plot predicted loads
+    timeOfDay_handle = list(range(0,24))
+    sch_handle =((timeOfDay_handle > x[6]) & (timeOfDay_handle < x[7]))
+    max_yp = [0,0]
+    for i in [-5,15,35]:
+      tOa_handle = i*(np.ones(len(timeOfDay_handle)))
+      yp = (np.logical_and(tOa_handle >= x[2],sch_handle == 1 )) * ((tOa_handle - x[2]) * x[0] + x[3]) + (np.logical_and(tOa_handle >= x[2],sch_handle == 0 ))*((tOa_handle - x[2]) * x[1] + x[3]) + (tOa_handle < x[2])*x[3]
+      if i < x[2]:
+        yp = np.maximum(yp + mdl_electricity_residual['residual1'].values,0)
+      else:
+        yp = np.maximum(yp + mdl_electricity_residual['residual2'].values,0)
+      if max(yp)>max(max_yp):
+        max_yp = yp
+
     plt.figure(figsize=(10,5))
     plt.subplot(121)
     plt.scatter(elec_df['tOa'], elec_df['electricity'], alpha=0.1, c='gray',label='Measured')
@@ -361,7 +403,7 @@ def execute_function(input_path, output_path):
     plt.xticks(fontsize=12)
     plt.yticks(fontsize=12)
     plt.xlim(-5,35)
-    plt.ylim(bottom=0)
+    plt.ylim(0 ,max(math.ceil(max(elec_df['electricity'])/100)*100,math.ceil(max(max_yp)/100)*100))
 
     #Modelled hot operating hours and afterhours
     print('Modeling operating and afterhours electricity use...')
@@ -376,7 +418,7 @@ def execute_function(input_path, output_path):
     print('Modeling predicted electricity use...')
     plt.subplot(122)
     plt.xlim(0,23)
-    plt.ylim(0 ,math.ceil(max(elec_df['electricity'])/100)*100)
+    plt.ylim(0 ,max(math.ceil(max(elec_df['electricity'])/100)*100,math.ceil(max(max_yp)/100)*100))
     plt.xticks(np.arange(0,24 ,step=2), fontsize=12)
     plt.yticks(fontsize=12)
     plt.xlabel('Time of day (h)',fontsize = 18)
