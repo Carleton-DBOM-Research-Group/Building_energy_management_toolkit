@@ -189,7 +189,7 @@
 
     <p class="h3 fw-normal">AHU-level HVAC Control Network Trends</p>
     <p class="fs-6">The AHU anomaly function requires AHU-level HVAC control network trend data. These data are a record of the various actuator and sensor measurements pertaining to the air handling units (AHUs) and can typically be extracted 
-      from a building automation system (BAS). For this analysis, eight unique trend data are required for each AHU; they are as listed with units and range in Table 1 and must be formatted as in Figure 1.</p>
+      from a building automation system (BAS). For this analysis, seven (7) unique trend data are required for each AHU; they are as listed with units and range in Table 1 and must be formatted as in Figure 1.</p>
     <div class="card">
       <div class="card-body">
         <table class="table table-striped table-hover">
@@ -203,7 +203,7 @@
           </thead>
           <tbody>
             <tr>
-              <th scope="row">Supply air temperature</th>
+              <th scope="row">Supply/discharge air temperature</th>
               <td>tSa</td>
               <td><sup>o</sup>C</td>
               <td>-</td>
@@ -218,12 +218,6 @@
               <th scope="row">Outdoor air temperature</th>
               <td>tOa</td>
               <td><sup>o</sup>C</td>
-              <td>-</td>
-            </tr>
-            <tr>
-              <th scope="row">Supply air pressure</th>
-              <td>pSa</td>
-              <td>Pa</td>
               <td>-</td>
             </tr>
             <tr>
@@ -245,7 +239,7 @@
               <td>0(closed) - 100(open)</td>
             </tr>
             <tr>
-              <th scope="row">Supply fan state</th>
+              <th scope="row">Supply/discharge fan state</th>
               <td>sFan</td>
               <td>%</td>
               <td>0(closed) - 100(open)</td>
@@ -266,14 +260,14 @@
     </div>
     <p class="fs-6 pt-4">This function requires <u>hourly</u> trend data. The first column must contain the timestamp at which the measurement was recorded. The timestamp must include the numerical date and time and 
       in the following format: [yyyy-mm-dd hh-mm]. Each subsequent column must contain the trend data as listed in Table 1 in descending order (i.e. second column 
-      contains supply air supply temperature, third column contains return air temperature, etc.)</p>
+      contains supply/discharge air temperature, third column contains return air temperature, etc.)</p>
     <p class="fs-6">A minimum of one (1) CSV file containing AHU-level HVAC control network trend data must be supplied to this function, where each CSV file represents a separate AHU. 
       If multiple files are inputted, the function will conduct a separate analysis and generate a separate set of visuals and KPIs for each AHU detected. See 
       <a href="/functions/ahuAnomaly/outputs" class="link-blue">outputs</a> for information about generated KPIs and visuals. Note that timestamps must be consistent between multiple files.</p>
     
     <p class="h3 fw-normal">Zone-level HVAC Control Network Trends</p>
     <p class="fs-6">The AHU anomaly function also requires zone-level HVAC control network trend data. Like AHU-level HVAC control network trend data, these data are a record of various 
-      actuator and sensor measurements, but pertain to variable air volume (VAV) terminals which regulate airflow and sometimes re-condition supply air from the AHUs to specific thermal zone(s). 
+      actuator and sensor measurements, but pertain to variable air volume (VAV) terminals which regulate airflow and sometimes re-condition supply/discharge air from the AHUs to specific thermal zone(s). 
       For this analysis, four unique trend data are required for each zone/VAV; they are as listed in Table 2 and must be formatted as seen in Figure 2.</p>
     <div class="card">
       <div class="card-body">
@@ -294,13 +288,13 @@
               <td>-</td>
             </tr>
             <tr>
-              <th scope="row">Supply airflow</th>
+              <th scope="row">Supply/discharge airflow</th>
               <td>qFlo</td>
               <td>m<sup>3</sup>/s</td>
               <td>-</td>
             </tr>
             <tr>
-              <th scope="row">Supply airflow setpoint</th>
+              <th scope="row">Supply/discharge airflow setpoint</th>
               <td>qFloSp</td>
               <td>m<sup>3</sup>/s</td>
               <td>-</td>
@@ -326,7 +320,7 @@
       </div>
     </div>
     <p class="fs-6 pt-4">This function requires <u>hourly</u> trend data. Like AHU-level HVAC control network trend data, the first column must contain the timestamp, which must include the numerical date and time and in the following format: [yyyy-mm-dd hh-mm].
-      The timestamps must be consistent with the timestamps in the AHU-level HVAC control network trend data. Each subsequent column must contain the trend data as listed in Table 2 in descending order (i.e. second column contains indoor air temperature, third column contains supply airflow, etc.)</p>
+      The timestamps must be consistent with the timestamps in the AHU-level HVAC control network trend data. Each subsequent column must contain the trend data as listed in Table 2 in descending order (i.e. second column contains indoor air temperature, third column contains supply/discharge airflow, etc.)</p>
       <p class="fs-6">A minimum of one (1) CSV file containing zone-level HVAC control network trend data must be supplied to this function, where each CSV file represents a unique VAV terminal unit or thermal zone. 
         Note that timestamps must be consistent between multiple files <u>and</u> with the timestamps in the AHU-level HVAC network trend data.</p>
   
