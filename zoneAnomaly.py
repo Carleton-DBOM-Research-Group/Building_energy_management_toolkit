@@ -118,10 +118,12 @@ def zoneAnomaly (tIn,qFlo,qFloSp,sRad,output_path):
         x = tInWntr.to_frame().T.loc[:, eva==i].stack().mean() #Temp Bias
         y = (qFloWntrErr_mean.to_frame().T.loc[:, eva==i]*100).stack().mean() #Flow Bias
         z = sRadWntr_mean.to_frame().T.loc[:, eva==i].stack().mean() #Mean rad state
+        x = 15 if x<15 else 30 if x>30 else x
+        y = -100 if y<-100 else 100 if y>100 else y
+        z = 0 if z<0 else 100 if z>100 else z
         centerClust = centerClust.append({'Zones':sum(eva==i),'Mean t_in':x,'Mean q_Flo Error':y,'Mean s_Rad':z},ignore_index=True) #cluster center
-        if ((x>15) & (x<30) & (y>-100) &(y<100)):
-            t = plt.text(x, y, 'C'+str(i+1), fontsize=25, color = 'w', ha = 'center', va= 'center')
-            t.set_bbox(dict(facecolor='black', alpha=0.6, edgecolor='black'))
+        t = plt.text(x, y, 'C'+str(i+1), fontsize=25, color = 'w', ha = 'center', va= 'center')
+        t.set_bbox(dict(facecolor='black', alpha=0.6, edgecolor='black'))
         t = plt.text(15.2, 99.5 - 7*(i+1), 'C'+str(i+1)+': '+str(sum(eva==i))+ ' zone(s)', fontsize=20, alpha=0.5)
 
     #Find samples in clusters
@@ -231,10 +233,11 @@ def zoneAnomaly (tIn,qFlo,qFloSp,sRad,output_path):
         
         x = tInSmr.to_frame().T.loc[:, eva==i].stack().mean() #Temp Bias
         y = (qFloSmrErr_mean.to_frame().T.loc[:, eva==i]*100).stack().mean() #Flow Bias
+        x = 15 if x<15 else 30 if x>30 else x
+        y = -100 if y<-100 else 100 if y>100 else y
         centerClust = centerClust.append({'Zones':sum(eva==i),'Mean t_in':x,'Mean q_Flo Error':y},ignore_index=True) #cluster center
-        if ((x>15) & (x<30) & (y>-100) &(y<100)):
-            t = plt.text(x, y, 'C'+str(i+1), fontsize=25, color = 'w', ha = 'center', va= 'center')
-            t.set_bbox(dict(facecolor='black', alpha=0.6, edgecolor='black'))
+        t = plt.text(x, y, 'C'+str(i+1), fontsize=25, color = 'w', ha = 'center', va= 'center')
+        t.set_bbox(dict(facecolor='black', alpha=0.6, edgecolor='black'))
         t = plt.text(15.2, 99.5 - 7*(i+1), 'C'+str(i+1)+': '+str(sum(eva==i))+ ' zone(s)', fontsize=20, alpha=0.5)
     
     #Find samples in clusters
