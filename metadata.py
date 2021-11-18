@@ -1,4 +1,5 @@
 #Import required modules
+import os
 import pandas as pd
 import editdistance as ed
 
@@ -80,16 +81,6 @@ def searchAHUTags (tSaTagInc,tSaTagExc,tRaTagInc,tRaTagExc,tOaTagInc,tOaTagExc,
     
     tOa = tag[{'TL Name','TL Reference'}].iloc[ind].reset_index().rename(columns={'index':'TL'})
 
-    #pSa
-    indInc.clear()
-    indExc.clear()
-    indInc = tag.index[tag['TL Name'].str.contains('|'.join(pSaTagInc),case=False)].tolist()
-    indExc = tag.index[tag['TL Name'].str.contains('|'.join(pSaTagExc),case=False)].tolist()
-    
-    ind = diff(indInc,indExc)
-    
-    pSa = tag[{'TL Name','TL Reference'}].iloc[ind].reset_index().rename(columns={'index':'TL'})
-
     #sOa
     indInc.clear()
     indExc.clear()
@@ -130,30 +121,9 @@ def searchAHUTags (tSaTagInc,tSaTagExc,tRaTagInc,tRaTagExc,tOaTagInc,tOaTagExc,
     
     sFan = tag[{'TL Name','TL Reference'}].iloc[ind].reset_index().rename(columns={'index':'TL'})
 
-    #tSaSp
-    indInc.clear()
-    indExc.clear()
-    indInc = tag.index[tag['TL Name'].str.contains('|'.join(tSaSpTagInc),case=False)].tolist()
-    indExc = tag.index[tag['TL Name'].str.contains('|'.join(tSaSpTagExc),case=False)].tolist()
-    
-    ind = diff(indInc,indExc)
-    
-    tSaSp = tag[{'TL Name','TL Reference'}].iloc[ind].reset_index().rename(columns={'index':'TL'})
-
-    #pSaSp
-    indInc.clear()
-    indExc.clear()
-    indInc = tag.index[tag['TL Name'].str.contains('|'.join(pSaSpTagInc),case=False)].tolist()
-    indExc = tag.index[tag['TL Name'].str.contains('|'.join(pSaSpTagExc),case=False)].tolist()
-    
-    ind = diff(indInc,indExc)
-    
-    pSaSp = tag[{'TL Name','TL Reference'}].iloc[ind].reset_index().rename(columns={'index':'TL'})
-
-
     #ASSOCIATE and ORGANIZE
     print('Associate AHU-level labels by name or address using Levenschtein distance...')
-    ahu_df = pd.DataFrame(columns=['tSaTag','tSaID','tRaTag','tRaID','tOaTag','tOaID','pSaTag','pSaID','sOaTag','sOaID','sHcTag','sHcID','sCcTag','sCcID','sFanTag','sFanID','tSaSpTag','tSaSpID','pSaSpTag','pSaSpID'])
+    ahu_df = pd.DataFrame(columns=['tSaTag','tSaID','tRaTag','tRaID','tOaTag','tOaID','sOaTag','sOaID','sHcTag','sHcID','sCcTag','sCcID','sFanTag','sFanID'])
 
     print('Number of identified AHUs (Assuming one cooling coil sensor per AHU): ' + str(len(sCc)))
     for i in sCc.index: #Assume one sCc (cooling coil sensor) per AHU
@@ -197,21 +167,6 @@ def searchAHUTags (tSaTagInc,tSaTagExc,tRaTagInc,tRaTagExc,tOaTagInc,tOaTagExc,
         ahu_df['tOaTag'][i] = tOa.iloc[ind]['TL Name']
         ahu_df['tOaID'][i] = tOa.iloc[ind]['TL Reference']
 
-        #pSa
-        d = pd.DataFrame(columns=['d_Name','d_ID'],dtype=int)
-        for j in pSa.index:
-            d = d.append({'d_Name':ed.eval(str(sCc.iloc[i]['TL Name']),str(pSa.iloc[j]['TL Name'])),
-            'd_ID':ed.eval(str(sCc.iloc[i]['TL Reference']),str(pSa.iloc[j]['TL Reference']))}, ignore_index=True)
-        if d['d_Name'].min() < 5:
-            ind = d['d_Name'].idxmin()
-            ahu_df['pSaTag'][i] = pSa.iloc[ind]['TL Name']
-            ahu_df['pSaID'][i] = pSa.iloc[ind]['TL Reference']
-        elif d['d_ID'].min() < 2:
-            ind = d['d_ID'].idxmin()
-            ahu_df['pSaTag'][i] = pSa.iloc[ind]['TL Name']
-            ahu_df['pSaID'][i] = pSa.iloc[ind]['TL Reference']
-        
-
         #sOa
         d = pd.DataFrame(columns=['d_Name','d_ID'],dtype=int)
         for j in sOa.index:
@@ -252,35 +207,7 @@ def searchAHUTags (tSaTagInc,tSaTagExc,tRaTagInc,tRaTagExc,tOaTagInc,tOaTagExc,
         elif d['d_ID'].min() < 2:
             ind = d['d_ID'].idxmin()
             ahu_df['sFanTag'][i] = sFan.iloc[ind]['TL Name']
-            ahu_df['sFanID'][i] = sFan.iloc[ind]['TL Reference']
-
-        #tSaSp
-        d = pd.DataFrame(columns=['d_Name','d_ID'],dtype=int)
-        for j in tSaSp.index:
-            d = d.append({'d_Name':ed.eval(str(sCc.iloc[i]['TL Name']),str(tSaSp.iloc[j]['TL Name'])),
-            'd_ID':ed.eval(str(sCc.iloc[i]['TL Reference']),str(tSaSp.iloc[j]['TL Reference']))}, ignore_index=True)
-        if d['d_Name'].min() < 5:
-            ind = d['d_Name'].idxmin()
-            ahu_df['tSaSpTag'][i] = tSaSp.iloc[ind]['TL Name']
-            ahu_df['tSaSpID'][i] = tSaSp.iloc[ind]['TL Reference']
-        elif d['d_ID'].min() < 2:
-            ind = d['d_ID'].idxmin()
-            ahu_df['tSaSpTag'][i] = tSaSp.iloc[ind]['TL Name']
-            ahu_df['tSaSpID'][i] = tSaSp.iloc[ind]['TL Reference']
-
-        #pSaSp
-        d = pd.DataFrame(columns=['d_Name','d_ID'],dtype=int)
-        for j in pSaSp.index:
-            d = d.append({'d_Name':ed.eval(str(sCc.iloc[i]['TL Name']),str(pSaSp.iloc[j]['TL Name'])),
-            'd_ID':ed.eval(str(sCc.iloc[i]['TL Reference']),str(pSaSp.iloc[j]['TL Reference']))}, ignore_index=True)
-        if d['d_Name'].min() < 5:
-            ind = d['d_Name'].idxmin()
-            ahu_df['pSaSpTag'][i] = pSaSp.iloc[ind]['TL Name']
-            ahu_df['pSaSpID'][i] = pSaSp.iloc[ind]['TL Reference']
-        elif d['d_ID'].min() < 3:
-            ind = d['d_ID'].idxmin()
-            ahu_df['pSaSpTag'][i] = pSaSp.iloc[ind]['TL Name']
-            ahu_df['pSaSpID'][i] = pSaSp.iloc[ind]['TL Reference']           
+            ahu_df['sFanID'][i] = sFan.iloc[ind]['TL Reference']          
 
     return ahu_df
 
@@ -455,11 +382,13 @@ def searchZoneTags (zoneIdentifier,tInTagInc,tInTagExc,qFloTagInc,qFloTagExc,qFl
         
     return zone_df
 
-def execute_function(uploaded_metadata_file,output_path):
+def execute_function(input_path,output_path):
 
-    #Try reading the metadata data file
-    print("Reading metadata file...")
-    tag = pd.read_csv(uploaded_metadata_file)
+    #Try reading metadata data file
+    print('Reading metadata data file...')
+    metadata_files = os.listdir(os.path.join(input_path))
+    metadata_files_csv = [f for f in metadata_files if f[-3:] == 'csv']
+    tag = pd.read_csv(os.path.join(input_path,metadata_files_csv[0]))
 
     #Try analyzing AHU- and zone-level metadata labels
     #Call the searchAHUTags local function

@@ -770,13 +770,14 @@ def metadata(path):
     #Extract KPIs excel sheet
     ahu_meta = pd.read_excel(os.path.join(path,'metadata_summary.xlsx'),sheet_name='ahu')
     zone_meta = pd.read_excel(os.path.join(path,'metadata_summary.xlsx'),sheet_name='zone')
-    ahu_meta.drop(ahu_meta.columns[0],axis=1,inplace=True)
-    zone_meta.drop(ahu_meta.columns[0],axis=1,inplace=True)
 
     #Generate Word document in landscape orientation
     document = Document()
     section = document.sections[-1]
     section.orientation = WD_ORIENT.LANDSCAPE
+    new_width, new_height = section.page_height, section.page_width
+    section.page_width = new_width
+    section.page_height = new_height
 
     #Report title
     document.add_heading('Metadata - Analysis Report', 0)
@@ -802,8 +803,6 @@ with BAS labels with unique ontologies and inconsistent labelling schema.')
                     'tRa ID',
                     'tOa label',
                     'tOa ID',
-                    'pSa label',
-                    'pSa ID',
                     'sOa label',
                     'sOa ID',
                     'sHc label',
