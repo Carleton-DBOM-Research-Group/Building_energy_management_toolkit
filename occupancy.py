@@ -326,6 +326,7 @@ def execute_function_wifi(input_path, output_path):
                 temp = pd.read_csv(os.path.join(input_path,f))
                 temp[temp.columns[0]] = pd.to_datetime(temp[temp.columns[0]])#Convert timeframe column time to datetime object
                 temp = temp.set_index(temp[temp.columns[0]])# Set the index to the timestamp
+                time_diff = (temp.iloc[1][temp.columns[0]] - temp.iloc[0][temp.columns[0]]).total_seconds() / 60.0 #Find the difference (minutes) between time intervals
 
                 floor_count += 1
                 temp['floor'] = floor_count
@@ -333,7 +334,7 @@ def execute_function_wifi(input_path, output_path):
                 temp['weekday'] = temp.index.weekday
                 temp['workday'] = temp.weekday.isin(range(0,5)).values
 
-                ind = temp['wifi counts'].rolling(96).std() > 0.001 # Disgard stagnant values (data acquisition error)
+                ind = temp['wifi counts'].rolling(int(480/time_diff)).std() > 0.001 # Disgard stagnant values (data acquisition error) based on an 8-hour window
                 temp = temp.iloc[ind.values]
 
                 floor.append(temp) # Store the data for this floor in the list
