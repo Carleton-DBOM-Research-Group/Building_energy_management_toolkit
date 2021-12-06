@@ -33,7 +33,7 @@ def contributors():
 
 @app.route('/functions/data-templates', methods = ['GET'])
 def dataTemplates():
-  return "This page is under construction!"
+  return render_template('functions_dataTemplates.html')
 
 @app.route('/functions/data-templates/download-<filename>')
 def download_template_file(filename):
@@ -404,6 +404,14 @@ def run_occupancy_wifi_function():
   uploaded_wifi_files = request.files.getlist('wifi_files[]')
   for f in uploaded_wifi_files:
     f.save(os.path.join(path, f.filename))
+  
+  # create text file and store number of artifacts
+  if (bool(request.form['alwaysOnCount']) == True):
+    f = open(os.path.join(path, "alwaysOn.txt"),"w+")
+    f.write(str(request.form['alwaysOnCount']) + "\n")
+    f.close()
+  else:
+    pass
   
   # create flag for floor level analysis
   if 'is_flr_lvl' in request.form:

@@ -189,6 +189,9 @@
     <p class="fs-6 pb-2">The occupancy function requires at least one (1) CSV file containing Wi-Fi device count data <strong>or</strong> only one (1) CSV file containing motion detection data. To run the function, upload your data in the corresponding form below. The first form (Wi-Fi device count) takes in Wi-Fi device count data, 
       and the second form (Motion detection) takes in motion detection data. For information about input data and the required format for this function, see <a href="/functions/occupancy/inputs" class="link-blue">inputs</a>.
     </p>
+    <p class="fs-6 pb-2"><strong>NOTE:</strong> Statistical artifacts resulting from 'always-on' devices (ex. Wi-Fi enabled printers, smart plugs) may produce inaccurate results. If known approximately, consider entering 
+      the number of 'always-on' devices <u>per floor</u> to be subtracted from the device counts. Otherwise, this value will be calculated automatically.</p>
+
 
     <!-- Upload wifi device count data form --> 
     <div class="card">
@@ -199,11 +202,19 @@
             <input class="form-control" type="file" name="wifi_files[]" id="formFileMultiple" accept=".csv" multiple required>
           </div>
           <div class="mb-3">
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" name="is_flr_lvl" value="" id="flexCheckDefault">
-              <label class="form-check-label" for="flexCheckDefault">
-              Enable floor-level analysis (Requires multiple files. If only one file is supplied, floor-level analysis will be disabled.) 
-              </label>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label for="inputArtifacts" class="form-label">Always-on devices (Optional, see <strong>NOTE</strong> above)</label>
+                <input type="text" class="form-control" name="alwaysOnCount" id="inputAlwaysOnCount">
+              </div>
+              <div class="col-md-6">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" name="is_flr_lvl" value="" id="flexCheckDefault">
+                  <label class="form-check-label" for="flexCheckDefault">
+                  Enable floor-level analysis (Requires multiple files. If only one (1) file is supplied, floor-level analysis is automatically disabled) 
+                  </label>
+                </div>
+              </div>
             </div>
           </div>  
           <div class="col-12">

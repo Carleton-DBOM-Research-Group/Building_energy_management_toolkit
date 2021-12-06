@@ -8,7 +8,7 @@ import math
 from datetime import timedelta
 import os
 
-def occupancy(floor,input_path,output_path):   
+def occupancy(floor,input_path,output_path,alwaysOnCount):   
     
     # Create a blank data frame to store KPIs
     kpi = pd.DataFrame(0,
@@ -32,6 +32,14 @@ def occupancy(floor,input_path,output_path):
         # Assign single floor to new data frame
         df = floor.loc[floor['floor']==j]
 
+        #Subtract device count by average device count between 12am-3am (lower limit of 0) OR user inputted value
+        if os.path.isfile(os.path.join(input_path, 'alwaysOn.txt'))==False:
+                mask = ((df.index.hour>=0)&(df.index.hour<=3))
+                alwaysOnCount = math.ceil(df[mask]['wifi counts'].mean())
+        
+        df['wifi counts'] = df['wifi counts'] - alwaysOnCount
+        df.loc[df['wifi counts']<0,'wifi counts'] = 0
+
         # Specify desired quantiles
         quantiles = [.25,.5,.75]
         
@@ -39,14 +47,12 @@ def occupancy(floor,input_path,output_path):
         line = []
         for i in quantiles:
             temp = df.loc[df['workday'] == True].groupby(['hour'])['wifi counts'].quantile(i)
-            temp = round((temp-temp.min())/1.2)
+            temp = round((temp-temp.min())/1.2) # 1.2 devices per occupant conversion
             line.append(temp)
         
         # Turn list into data frame, rename columns, and add to building-level data frame for workdays
         occ_wkdy = pd.concat(line, axis=1)
         occ_wkdy.columns = ['25th percentile','Median','75th percentile']
-        for col in occ_wkdy:
-                occ_wkdy.loc[occ_wkdy[col]<4,col] = 0 #If occupancy count is less than four per floor, count as no occupancy.
         bdg_wkdy = bdg_wkdy + occ_wkdy
         
         # Create blank list to store each quantile on weekends and populate
@@ -346,8 +352,21 @@ def execute_function_wifi(input_path, output_path):
         f.write(str(min(temp[temp.columns[0]])) + " to " + str(max(temp[temp.columns[0]])))
         f.close()
 
+        # Try to open alwaysOn text file.
+        try:
+                file = open(os.path.join(input_path,'alwaysOn.txt')) #Open text file if exists
+                content = file.readlines()
+                alwaysOnCount = int(content[0])
+                
+                file.close()
+                print('Always-on device count entered...')
+                
+        except:
+                print('No always-on device count entered. Always-on device count will be automatically calculated...')
+                alwaysOnCount = 0
+
         #Run the occupancy analysis with wifi data
-        occupancy(floor,input_path,output_path)
+        occupancy(floor,input_path,output_path,alwaysOnCount)
 
         return
 
