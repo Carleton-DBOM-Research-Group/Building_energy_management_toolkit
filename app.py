@@ -31,6 +31,10 @@ def functions():
 def contributors():
   return render_template('contributors.html')
 
+@app.route('/literature', methods = ['GET'])
+def contributors():
+  return render_template('literature.html')
+
 @app.route('/functions/data-templates', methods = ['GET'])
 def dataTemplates():
   return render_template('functions_dataTemplates.html')
