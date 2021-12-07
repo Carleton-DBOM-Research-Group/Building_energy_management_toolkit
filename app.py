@@ -32,7 +32,8 @@ def contributors():
   return render_template('contributors.html')
 
 @app.route('/literature', methods = ['GET'])
-def contributors():
+def literature():
+  return "This page is under construction! Check back later..."
   return render_template('literature.html')
 
 @app.route('/functions/data-templates', methods = ['GET'])
@@ -42,7 +43,7 @@ def dataTemplates():
 @app.route('/functions/data-templates/download-<filename>')
 def download_template_file(filename):
   cwd = os.getcwd()
-  return "This page is under construction!"
+  return "This page is under construction! Check back later..."
   return send_file(os.path.join(cwd,'data_templates',filename))
 
 @app.route('/functions/sample-data', methods = ['GET'])
