@@ -31,10 +31,9 @@ def functions():
 def contributors():
   return render_template('contributors.html')
 
-@app.route('/literature', methods = ['GET'])
-def literature():
-  return "This page is under construction! Check back later..."
-  return render_template('literature.html')
+@app.route('/publications', methods = ['GET'])
+def publications():
+  return render_template('publications.html')
 
 @app.route('/functions/data-templates', methods = ['GET'])
 def dataTemplates():
