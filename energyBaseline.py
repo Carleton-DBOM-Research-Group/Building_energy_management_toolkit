@@ -40,7 +40,7 @@ def execute_function(input_path, output_path):
   #Read AMY weather data
   print('Reading weather data...')
   weather_files = os.listdir(os.path.join(input_path,'weather'))
-  weather = pd.read_csv(os.path.join(input_path, 'weather',weather_files[0]),usecols=[3],skiprows=18,encoding='unicode escape')
+  weather = pd.read_csv(os.path.join(input_path, 'weather',weather_files[0]),usecols=[1],skiprows=1,encoding='unicode escape')
 
   #Define ga functions
 
