@@ -507,7 +507,7 @@ def occupancy(path,is_wifi):
         p.add_run(' and ')
         p.add_run('highest recorded occupancy').bold = True
         p.add_run(' for weekdays and weekends separately. This function can be used to inform ventilation schedules which can minimize \
-excessive ventilation during unoccupied hours, or even serve as a bssis for an occupant-driven demand controlled ventilation scheme. \
+excessive ventilation during unoccupied hours, or even serve as a basis for an occupant-driven demand controlled ventilation scheme. \
 Visuals plot building-level and floor-level* occupant count profiles.')
         p = document.add_paragraph("*Floor-level occupant count profiles are shown only if multiple files were inputted and read.")
 
