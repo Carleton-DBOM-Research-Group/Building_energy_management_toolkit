@@ -62,7 +62,7 @@ def execute_function(input_path, output_path):
         data = pd.read_csv(os.path.join(input_path,'ahu',f)) #Specify the sample data for ahu files
         if len(data) > 8760:
             data.drop(data.tail(len(data)-8760).index,inplace=True)
-        data = data.rename(columns={data.columns[1]:'tSa'+str(num_of_ahus),data.columns[2]:'tRa'+str(num_of_ahus),data.columns[3]:'tOa'+str(num_of_ahus),data.columns[4]:'pSa'+str(num_of_ahus),data.columns[5]:'sOa'+str(num_of_ahus),data.columns[6]:'sHc'+str(num_of_ahus),data.columns[7]:'sCc'+str(num_of_ahus),data.columns[8]:'sFan'+str(num_of_ahus)})
+        data = data.rename(columns={data.columns[1]:'tSa'+str(num_of_ahus),data.columns[2]:'tRa'+str(num_of_ahus),data.columns[3]:'tOa'+str(num_of_ahus),data.columns[4]:'sOa'+str(num_of_ahus),data.columns[5]:'sHc'+str(num_of_ahus),data.columns[6]:'sCc'+str(num_of_ahus),data.columns[7]:'sFan'+str(num_of_ahus)})
         dfs.append(data)
 
     ahu = pd.concat(dfs,axis=1)   
@@ -95,14 +95,14 @@ def execute_function(input_path, output_path):
     #If AHU not running (supply pressure less than 100 Pa), 
     #heating/cooling valve position makes no impact on the heating/cooling energy consumption
     for i in range(1,num_of_ahus+1):
-        ahu['sHc'+str(i)].loc[ahu['pSa'+str(i)] < 100] = 0
-        ahu['sCc'+str(i)].loc[ahu['pSa'+str(i)] < 100] = 0
-        ahu['pSa'+str(i)].loc[ahu['pSa'+str(i)] < max(ahu['pSa'+str(i)])/8] = 0
+        ahu['sHc'+str(i)].loc[ahu['sFan'+str(i)] < 5] = 0
+        ahu['sCc'+str(i)].loc[ahu['sFan'+str(i)] < 5] = 0
+        ahu['sFan'+str(i)].loc[ahu['sFan'+str(i)] < 5] = 0
 
     data = pd.DataFrame(energy[energy.columns[0]]) #Create new dataframe with same timestamp as energy file
 
     for i in range(1,num_of_ahus+1):
-        data['pSa'+str(i)] = (ahu['pSa'+str(i)]-ahu['pSa'+str(i)].min())/(ahu['pSa'+str(i)].max()-ahu['pSa'+str(i)].min()) #Populate with pSa data from all AHUs
+        data['sFan'+str(i)] = (ahu['sFan'+str(i)]-ahu['sFan'+str(i)].min())/(ahu['sFan'+str(i)].max()-ahu['sFan'+str(i)].min()) #Populate with sFan data from all AHUs
         
         data['sHc'+str(i)] = ahu['sHc'+str(i)] #Populate with sHc data from all AHUs
 
@@ -154,7 +154,9 @@ def execute_function(input_path, output_path):
     x_Elec_list = []
     x_Elec_list.append('occupancy')
     for i in range(1,num_of_ahus+1):
-        x_Elec_list.append('pSa'+str(i))
+        x_Elec_list.append('sFan'+str(i))
+    
+    print(x_Elec_list)
 
     x_Htg = data[x_Htg_list]
     x_Clg = data[x_Clg_list]
@@ -265,7 +267,7 @@ def execute_function(input_path, output_path):
 
     electricity_distribution = pd.DataFrame()
     for i in range(1,num_of_ahus+1):
-        electricity_distribution = pd.concat([electricity_distribution,(data['pSa'+str(i)]*prmtr_Elec[i])], axis=1)
+        electricity_distribution = pd.concat([electricity_distribution,(data['sFan'+str(i)]*prmtr_Elec[i])], axis=1)
 
     electricity_distribution = electricity_distribution.sum(axis=1)
 
