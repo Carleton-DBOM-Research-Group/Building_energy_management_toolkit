@@ -168,6 +168,7 @@ def execute_function(input_path, output_path):
   print('Estimating heating energy use change points using GA...', flush=True)
   model_Htg_GA.run() #Run GA
   x = model_Htg_GA.best_variable #Extract estimated changepoints
+  htg_cv_rmse = round(model_Htg_GA.best_function / htg_df['heating'].mean(),2) #Calculate the CV-RMSE of the heating GA
 
   sch = ((htg_df.index.hour > x[6]) & (htg_df.index.hour < x[7]) & (htg_df.index.dayofweek >=0 ) & (htg_df.index.dayofweek < 5)) | ((htg_df.index.hour> x[8]) & (htg_df.index.hour < x[9]) & ( (htg_df.index.dayofweek==6) | (htg_df.index.dayofweek == 5)))
   yp = (np.logical_and(htg_df['tOa'] < x[2],sch == 1)) * ((x[2] - htg_df['tOa']) * x[0] + x[3]) + (np.logical_and(htg_df['tOa'] >= x[2],sch == 1)) * (x[3]) + (np.logical_and(htg_df['tOa'] < x[4],sch == 0)) * ((x[4] - htg_df['tOa']) * x[1] + x[5]) + (np.logical_and(htg_df['tOa'] >= x[4],sch == 0))*(x[5])
@@ -208,7 +209,8 @@ def execute_function(input_path, output_path):
   plt.xticks(fontsize=12)
   plt.yticks(fontsize=12)
   plt.xlim(-25,25)
-  plt.ylim(0 ,max(math.ceil(max(htg_df['heating'])/100)*100,math.ceil(max(max_yp)/100)*100))
+  y_upper_lim = max(math.ceil(max(htg_df['heating'])/100)*100,math.ceil(max(max_yp)/100)*100)
+  plt.ylim(0,y_upper_lim)
 
   print('Modeling operating and afterhours heating energy use rates...')
   #Modelled cold operating hours and afterhours
@@ -227,12 +229,13 @@ def execute_function(input_path, output_path):
   except:
     print('Insufficent information provided - No NECB compliant model will be generated...')
 
+  t = plt.text(-24.7,y_upper_lim*1.01,'CV-RMSE: ' + str(htg_cv_rmse), fontsize=12, alpha=0.7)
   plt.legend(ncol=1,handlelength=3,fontsize=12)
 
   print('Modeling predicted heating energy use rates...')
   plt.subplot(122)
   plt.xlim(0,23)
-  plt.ylim(0 ,max(math.ceil(max(htg_df['heating'])/100)*100,math.ceil(max(max_yp)/100)*100))
+  plt.ylim(0,y_upper_lim)
   plt.xticks(np.arange(0, 24, step=2), fontsize=12)
   plt.yticks(fontsize=12)
   plt.xlabel('Time of day (h)',fontsize = 18)
@@ -250,7 +253,7 @@ def execute_function(input_path, output_path):
 
     plt.plot(timeOfDay_handle, yp, linewidth=4, markersize=16)
     plt.text(x=12,y=max(yp)+10,s=r'$T_{oa} =$' + str(i) + ' C', fontsize=15)
-
+  
   plt.tight_layout()
   plt.savefig(os.path.join(output_path,'energyBase_heating.png'),dpi=600)
   print('Heating energy use analysis completed!', flush=True)
@@ -267,6 +270,7 @@ def execute_function(input_path, output_path):
   print('Estimating cooling energy use change points using GA...', flush=True)
   model_Clg_GA.run() #Run GA for cooling
   x = model_Clg_GA.best_variable #Extract estimated changepoints from GA
+  clg_cv_rmse = round(model_Clg_GA.best_function / clg_df['cooling'].mean(),2) #Calculate the CV-RMSE of the cooling GA
 
   sch = ((clg_df.index.hour > x[6]) & (clg_df.index.hour < x[7]) & (clg_df.index.dayofweek >=0 ) & (clg_df.index.dayofweek < 5)) | ((clg_df.index.hour> x[8]) & (clg_df.index.hour < x[9]) & ( (clg_df.index.dayofweek==6) | (clg_df.index.dayofweek == 5)))
   yp = (np.logical_and(clg_df['tOa'] > x[2],sch == 1)) * ((-x[2] + clg_df['tOa']) * x[0] + x[3]) + (np.logical_and(clg_df['tOa'] <= x[2],sch == 1)) * (x[3]) + (np.logical_and(clg_df['tOa'] > x[4],sch == 0)) * ((-x[4] + clg_df['tOa']) * x[1] + x[5]) + (np.logical_and(clg_df['tOa'] <= x[4],sch == 0))*(x[5])
@@ -307,7 +311,8 @@ def execute_function(input_path, output_path):
   plt.xticks(fontsize=12)
   plt.yticks(fontsize=12)
   plt.xlim(-5,35)
-  plt.ylim(0 ,max(math.ceil(max(clg_df['cooling'])/100)*100,math.ceil(max(max_yp)/100)*100))
+  y_upper_lim = max(math.ceil(max(clg_df['cooling'])/100)*100,math.ceil(max(max_yp)/100)*100)
+  plt.ylim(0,y_upper_lim)
 
   #Modelled hot operating hours and afterhours
   print('Modeling operating and afterhours cooling energy use rates...')
@@ -322,12 +327,13 @@ def execute_function(input_path, output_path):
   #expected high levels of expected outdoor air use during economizer,
   #NECB comparison is not included.
 
+  t = plt.text(-4.7,y_upper_lim*1.01,'CV-RMSE: ' + str(clg_cv_rmse), fontsize=12, alpha=0.7)
   plt.legend(ncol=1,handlelength=3)
 
   print('Modeling predicted cooling energy use rates...')
   plt.subplot(122)
   plt.xlim(0,23)
-  plt.ylim(0 ,max(math.ceil(max(clg_df['cooling'])/100)*100,math.ceil(max(max_yp)/100)*100))
+  plt.ylim(0,y_upper_lim)
   plt.xticks(np.arange(0,24 ,step=2), fontsize=12)
   plt.yticks(fontsize=12)
   plt.xlabel('Time of day (h)',fontsize = 18)
@@ -363,6 +369,7 @@ def execute_function(input_path, output_path):
     print('Estimating electricity use change points using GA...', flush=True)
     model_Elec_GA.run() #Run GA for electricity
     x = model_Elec_GA.best_variable #Extract changepoints from GA
+    elec_cv_rmse = round(model_Elec_GA.best_function / elec_df['electricity'].mean(),2) #Calculate the CV-RMSE of the electricity GA
 
     sch = ((elec_df.index.hour > x[4]) & (elec_df.index.hour < x[5]) & (elec_df.index.dayofweek >=0 ) & (elec_df.index.dayofweek < 5)) | ((elec_df.index.hour> x[6]) & (elec_df.index.hour < x[7]) & ( (elec_df.index.dayofweek==6) | (elec_df.index.dayofweek == 5)))
     yp = (np.logical_and(elec_df['tOa'] >= x[2],sch == 1)) * ((elec_df['tOa'] - x[2]) * x[0] + x[3]) + (np.logical_and(elec_df['tOa'] >= x[2],sch == 0 ))*((elec_df['tOa'] - x[2]) * x[1] + x[3]) + (elec_df['tOa'] < x[2])*x[3]
@@ -403,7 +410,8 @@ def execute_function(input_path, output_path):
     plt.xticks(fontsize=12)
     plt.yticks(fontsize=12)
     plt.xlim(-5,35)
-    plt.ylim(0 ,max(math.ceil(max(elec_df['electricity'])/100)*100,math.ceil(max(max_yp)/100)*100))
+    y_upper_lim = max(math.ceil(max(elec_df['electricity'])/100)*100,math.ceil(max(max_yp)/100)*100)
+    plt.ylim(0,y_upper_lim)
 
     #Modelled hot operating hours and afterhours
     print('Modeling operating and afterhours electricity use...')
@@ -413,12 +421,13 @@ def execute_function(input_path, output_path):
     plt.plot(tOa_handle,ypOperating, 'k',linewidth=4,label='Modelled operating')
     plt.plot(tOa_handle,ypAfterHours, 'k--',linewidth=4,label ='Modelled afterhours')
 
+    t = plt.text(-4.7,y_upper_lim*1.01,'CV-RMSE: ' + str(elec_cv_rmse), fontsize=12, alpha=0.7)
     plt.legend(ncol=1,handlelength=3)
 
     print('Modeling predicted electricity use...')
     plt.subplot(122)
     plt.xlim(0,23)
-    plt.ylim(0 ,max(math.ceil(max(elec_df['electricity'])/100)*100,math.ceil(max(max_yp)/100)*100))
+    plt.ylim(0,y_upper_lim)
     plt.xticks(np.arange(0,24 ,step=2), fontsize=12)
     plt.yticks(fontsize=12)
     plt.xlabel('Time of day (h)',fontsize = 18)
