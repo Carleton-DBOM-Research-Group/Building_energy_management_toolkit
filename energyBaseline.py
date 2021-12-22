@@ -350,7 +350,7 @@ def execute_function(input_path, output_path):
       yp = np.maximum(yp + mdl_cooling_residual['residual2'].values,0)
     
     plt.plot(timeOfDay_handle, yp, linewidth=4, markersize=16)
-    plt.text(x=12, y=max(yp)+10, s=r'$t_{oa} =$' + str(i) + ' C', fontsize=15)
+    plt.text(x=12, y=max(yp)+10, s=r'$T_{oa} =$' + str(i) + ' C', fontsize=15)
 
   plt.tight_layout()
   plt.savefig(os.path.join(output_path,'energyBase_cooling.png'),dpi=600)
@@ -444,7 +444,7 @@ def execute_function(input_path, output_path):
         yp = np.maximum(yp + mdl_electricity_residual['residual2'].values,0)
       
       plt.plot(timeOfDay_handle, yp, linewidth=4, markersize=16)
-      plt.text(x=12, y=max(yp)+10, s=r'$t_{oa} =$' + str(i) + ' C', fontsize=15)
+      plt.text(x=12, y=max(yp)+10, s=r'$T_{oa} =$' + str(i) + ' C', fontsize=15)
 
     plt.tight_layout()
     plt.savefig(os.path.join(output_path,'energyBase_electricity.png'),dpi=600)
