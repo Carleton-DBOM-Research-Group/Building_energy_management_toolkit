@@ -471,7 +471,7 @@ def check_result(request_uuid):
     return render_template('error.html')
     #return "Something went wrong with the analysis. Please check your input data and try again. (︶︹︺)"
   else:
-    return render_template('results_not_ready.html')
+    return render_template('results_not_ready.html', data=request_uuid)
     #return "Your results are not ready yet. Please check back later. ヾ(￣0￣ )ノ"
 
 @app.route('/download/<uuid:request_uuid>')
