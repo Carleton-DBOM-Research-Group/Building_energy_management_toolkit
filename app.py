@@ -97,6 +97,7 @@ def run_metadata_function():
   open(os.path.join(path, 'ready'), 'a').close()
   open(os.path.join(path, 'metadata'), 'a').close()
   
+  return render_template('request_accepted.html', data=request_uuid)
   return f"Request accepted, check the result with this link:\n http://building-energy-management-toolkit.com/checkresult/{request_uuid}"
 
 #ENERGY BASELINE  
@@ -157,6 +158,7 @@ def run_energyBaseline_function():
   open(os.path.join(path, 'ready'), 'a').close()
   open(os.path.join(path, 'energyBaseline'), 'a').close()
   
+  return render_template('request_accepted.html', data=request_uuid)
   return f"Request accepted, check the result with this link:\n http://building-energy-management-toolkit.com/checkresult/{request_uuid}"
 
 #AHU ANOMALY  
@@ -205,6 +207,7 @@ def run_ahuAnomaly_function():
   open(os.path.join(path, 'ready'), 'a').close()
   open(os.path.join(path, 'ahuAnomaly'), 'a').close()
 
+  return render_template('request_accepted.html', data=request_uuid)
   return f"Request accepted, check the result with this link:\n http://building-energy-management-toolkit.com/checkresult/{request_uuid}"
 
 #ZONE ANOMALY  
@@ -246,6 +249,7 @@ def run_zoneAnomaly():
   
   #zoneAnomaly.execute_function(uploaded_files, path)
   #return "Success!"
+  return render_template('request_accepted.html', data=request_uuid)
   return f"Request accepted, check the result with this link:\n http://building-energy-management-toolkit.com/checkresult/{request_uuid}"
 
 
@@ -314,6 +318,7 @@ def run_endUseDisaggregation_function():
   open(os.path.join(path, 'ready'), 'a').close()
   open(os.path.join(path, 'endUseDisaggregation'), 'a').close()
   
+  return render_template('request_accepted.html', data=request_uuid)
   return f"Request accepted, check the result with this link:\n http://building-energy-management-toolkit.com/checkresult/{request_uuid}"
 
 
@@ -373,6 +378,7 @@ def run_complaintAnalytics_function():
   open(os.path.join(path, 'ready'), 'a').close()
   open(os.path.join(path, 'complaintAnalytics'), 'a').close()
   
+  return render_template('request_accepted.html', data=request_uuid)
   return f"Request accepted, check the result with this link:\n http://building-energy-management-toolkit.com/checkresult/{request_uuid}"
 
 
@@ -425,8 +431,7 @@ def run_occupancy_wifi_function():
   open(os.path.join(path, 'ready'), 'a').close()
   open(os.path.join(path, 'occupancy_wifi'), 'a').close()
   
-  #zoneAnomaly.execute_function(uploaded_files, path)
-  #return "Success!"
+  return render_template('request_accepted.html', data=request_uuid)
   return f"Request accepted, check the result with this link:\n http://building-energy-management-toolkit.com/checkresult/{request_uuid}"
 
   
@@ -450,6 +455,7 @@ def run_occupancy_motion_function():
   
   #zoneAnomaly.execute_function(uploaded_files, path)
   #return "Success!"
+  return render_template('request_accepted.html', data=request_uuid)
   return f"Request accepted, check the result with this link:\n http://building-energy-management-toolkit.com/checkresult/{request_uuid}"
 
 #Function to check results
@@ -459,8 +465,17 @@ def check_result(request_uuid):
   cwd = os.getcwd()
   result_dir = os.path.join(cwd, 'userdata', 'done', str(request_uuid))
   if os.path.isfile(os.path.join(result_dir, 'ready')):
-    return send_file(os.path.join(result_dir, 'report.docx'))
+    return render_template('results_ready.html', data=request_uuid)
+    #return send_file(os.path.join(result_dir, 'report.docx'))
   elif os.path.isfile(os.path.join(result_dir, 'error')):
-    return "Something went wrong with the analysis. Please check your input data and try again. (︶︹︺)"
+    return render_template('error.html')
+    #return "Something went wrong with the analysis. Please check your input data and try again. (︶︹︺)"
   else:
-    return "Your results are not ready yet. Please check back later. ヾ(￣0￣ )ノ"
+    return render_template('results_not_ready.html')
+    #return "Your results are not ready yet. Please check back later. ヾ(￣0￣ )ノ"
+
+@app.route('/download/<uuid:request_uuid>')
+def download(request_uuid):
+  cwd = os.getcwd()
+  result_dir = os.path.join(cwd, 'userdata', 'done', str(request_uuid))
+  return send_file(os.path.join(result_dir, 'report.docx'))
