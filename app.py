@@ -97,7 +97,7 @@ def run_metadata_function():
   open(os.path.join(path, 'ready'), 'a').close()
   open(os.path.join(path, 'metadata'), 'a').close()
   
-  return render_template('request_accepted.html', data=request_uuid)
+  return render_template('request_accepted.html', data=request_uuid, queue_num=len(next(os.walk(os.path.join(cwd, 'userdata', 'unprocessed')))[1]))
   return f"Request accepted, check the result with this link:\n http://building-energy-management-toolkit.com/checkresult/{request_uuid}"
 
 #ENERGY BASELINE  
@@ -158,7 +158,7 @@ def run_energyBaseline_function():
   open(os.path.join(path, 'ready'), 'a').close()
   open(os.path.join(path, 'energyBaseline'), 'a').close()
   
-  return render_template('request_accepted.html', data=request_uuid)
+  return render_template('request_accepted.html', data=request_uuid, queue_num=len(next(os.walk(os.path.join(cwd, 'userdata', 'unprocessed')))[1]))
   return f"Request accepted, check the result with this link:\n http://building-energy-management-toolkit.com/checkresult/{request_uuid}"
 
 #AHU ANOMALY  
@@ -207,7 +207,7 @@ def run_ahuAnomaly_function():
   open(os.path.join(path, 'ready'), 'a').close()
   open(os.path.join(path, 'ahuAnomaly'), 'a').close()
 
-  return render_template('request_accepted.html', data=request_uuid)
+  return render_template('request_accepted.html', data=request_uuid, queue_num=len(next(os.walk(os.path.join(cwd, 'userdata', 'unprocessed')))[1]))
   return f"Request accepted, check the result with this link:\n http://building-energy-management-toolkit.com/checkresult/{request_uuid}"
 
 #ZONE ANOMALY  
@@ -249,7 +249,7 @@ def run_zoneAnomaly():
   
   #zoneAnomaly.execute_function(uploaded_files, path)
   #return "Success!"
-  return render_template('request_accepted.html', data=request_uuid)
+  return render_template('request_accepted.html', data=request_uuid, queue_num=len(next(os.walk(os.path.join(cwd, 'userdata', 'unprocessed')))[1]))
   return f"Request accepted, check the result with this link:\n http://building-energy-management-toolkit.com/checkresult/{request_uuid}"
 
 
@@ -318,7 +318,7 @@ def run_endUseDisaggregation_function():
   open(os.path.join(path, 'ready'), 'a').close()
   open(os.path.join(path, 'endUseDisaggregation'), 'a').close()
   
-  return render_template('request_accepted.html', data=request_uuid)
+  return render_template('request_accepted.html', data=request_uuid, queue_num=len(next(os.walk(os.path.join(cwd, 'userdata', 'unprocessed')))[1]))
   return f"Request accepted, check the result with this link:\n http://building-energy-management-toolkit.com/checkresult/{request_uuid}"
 
 
@@ -378,7 +378,7 @@ def run_complaintAnalytics_function():
   open(os.path.join(path, 'ready'), 'a').close()
   open(os.path.join(path, 'complaintAnalytics'), 'a').close()
   
-  return render_template('request_accepted.html', data=request_uuid)
+  return render_template('request_accepted.html', data=request_uuid, queue_num=len(next(os.walk(os.path.join(cwd, 'userdata', 'unprocessed')))[1]))
   return f"Request accepted, check the result with this link:\n http://building-energy-management-toolkit.com/checkresult/{request_uuid}"
 
 
@@ -431,7 +431,7 @@ def run_occupancy_wifi_function():
   open(os.path.join(path, 'ready'), 'a').close()
   open(os.path.join(path, 'occupancy_wifi'), 'a').close()
   
-  return render_template('request_accepted.html', data=request_uuid)
+  return render_template('request_accepted.html', data=request_uuid, queue_num=len(next(os.walk(os.path.join(cwd, 'userdata', 'unprocessed')))[1]))
   return f"Request accepted, check the result with this link:\n http://building-energy-management-toolkit.com/checkresult/{request_uuid}"
 
   
