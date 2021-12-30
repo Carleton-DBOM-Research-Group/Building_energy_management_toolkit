@@ -455,7 +455,7 @@ def run_occupancy_motion_function():
   
   #zoneAnomaly.execute_function(uploaded_files, path)
   #return "Success!"
-  return render_template('request_accepted.html', data=request_uuid)
+  return render_template('request_accepted.html', data=request_uuid, queue_num=len(next(os.walk(os.path.join(cwd, 'userdata', 'unprocessed')))[1]))
   return f"Request accepted, check the result with this link:\n http://building-energy-management-toolkit.com/checkresult/{request_uuid}"
 
 #Function to check results
