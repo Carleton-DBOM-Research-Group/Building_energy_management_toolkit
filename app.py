@@ -356,7 +356,7 @@ def run_complaintAnalytics_function():
   weather_path = os.path.join(path, 'weather')
   os.makedirs(weather_path, exist_ok=True)
   
-  # put the uploaded energy file in energy subfolder
+  # put the uploaded CMMS file in CMMS subfolder
   uploaded_cmms_file = request.files.getlist('cmms_file[]')
   uploaded_cmms_file[0].save(os.path.join(cmms_path, uploaded_cmms_file[0].filename))
 
