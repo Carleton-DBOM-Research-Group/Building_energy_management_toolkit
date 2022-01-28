@@ -214,7 +214,7 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path):
         
         tOa_range = np.arange(-25.0,35.0,0.1)
         conditions = [tOa_range <= cp[1], (tOa_range > cp[1]) & (tOa_range <= cp[2]), (tOa_range > cp[2]) & (tOa_range <= cp[3]), tOa_range > cp[3]]
-        choices = [cp[0], (100-cp[0])*(tOa_range-cp[1])/(cp[2]-cp[1]) + cp[0], 100, cp[0]]
+        choices = [cp[0], (cp[4]-cp[0])*(tOa_range-cp[1])/(cp[2]-cp[1]) + cp[0], cp[4], cp[0]]
         y = np.select(conditions,choices,default=0)
 
         #Optimize parameters for genetic algorithms for tSaMdl
