@@ -122,6 +122,41 @@ damper and valve actuator positions as a function of outdoor air temperature. Ad
 depict damper and valve actuator positions and temperature readings at characteristic AHU operational periods. More information is \
 available in the respective sections.")
 
+    #Extract data from excel sheet and add table to document
+    print('Adding KPIs...')
+    p = document.add_heading('Key performance indicators - AHU faults',level=1)
+    p = document.add_paragraph('The following table lists the hard and soft faults identified by the function. The AHU health \
+index is also provided for each AHU which is '+ r'100%'+' if no faults are detected and '+ r'0%'+' if all six faults are detected. \
+The following faults may be detected:')
+
+    document.add_paragraph('STUCK COOLING COIL VALVE: This fault is generated if no or minimal use of the cooling coil was observed in the data. \
+This may be symptomatic of a faulty sensor, a stuck valve, or a conflict in the operational logic.', style='List Bullet')
+    document.add_paragraph('STUCK HEATING COIL VALVE: This fault is generated if no or minimal use of the cooling coil was observed in the data. \
+This may be symptomatic of a faulty sensor, a stuck valve, or a conflict in the operational logic.', style='List Bullet')
+    document.add_paragraph("CHECK ECONOMIZER LOGIC: This fault is generated if the outdoor air damper does not exceed "+r"90%"+" open in the \
+economizer with cooling state, or if the transition to mechanical cooling is premature (i.e., outdoor air temperature is less than 15degC). \
+In either case, the economizer state settings may not be programmed correctly and is not taking full advantage of cooler outdoor air temperatures..", style='List Bullet')
+    document.add_paragraph('LOW/HIGH OUTDOOR AIR: This fault is generated if an inadequate or excessive amount of outdoor air was observed. \
+This may be symptomatic of a stuck outdoor air damper or faulty damper sensor/actuator.', style='List Bullet')
+    document.add_paragraph('CHECK MODE OF OPERATIONS LOGIC: This fault is generated if the weekly operational time (i.e. when the AHU fans are \
+operational) exceeds 100 hours a week. This is typically considered excessive operations. It is suggested to check the operational logic for any conflicts \
+which may result in unintended operation of the AHUs', style='List Bullet')
+    document.add_paragraph("CHECK SUPPLY AIR TEMPERATURE RESET LOGIC: This fault is generated if a setpoint reset scheme was not detected or there \
+is a logic mistake in the reset program. Ensuring that an appropriate setpoint reset scheme is present and operating as intended, there may be excessive use of the perimeter heating \
+devices during the AHUs' economizer mode. This may be a result of select rooms overheating in the heating season. If this is the case, consider \
+increasing the maximum terminal airflow setpoints in these overheating rooms.", style='List Bullet')
+
+    t = document.add_table(faults_df.shape[0]+1, faults_df.shape[1])
+    
+    for j in range(faults_df.shape[-1]): # add the header rows.
+        t.cell(0,j).text = faults_df.columns[j]
+    
+    for i in range(faults_df.shape[0]): # add the rest of the data frame
+        for j in range(faults_df.shape[-1]):
+            t.cell(i+1,j).text = str(faults_df.values[i,j])
+
+    t.style = 'Colorful List'
+
     #Visualization heading and description - Part 1
     print('Adding visuals...')
     document.add_heading('Visuals - Split-range controller', level=1)
@@ -187,42 +222,6 @@ operation which exhibits the displayed damper/valve positions and temperatures. 
                 os.remove(os.path.join(path,'f2b_ahu_'+str(i+1)+'_C_'+str(j)+'.png'))
             except FileNotFoundError:
                 break
-
-    document.add_page_break()
-
-    #Extract data from excel sheet and add table to document
-    print('Adding KPIs...')
-    p = document.add_heading('Key performance indicators - AHU faults',level=1)
-    p = document.add_paragraph('The following table lists the hard and soft faults identified by the function. The AHU health \
-index is also provided for each AHU which is '+ r'100%'+' if no faults are detected and '+ r'0%'+' if all six faults are detected. \
-The following faults may be detected:')
-
-    document.add_paragraph('Cooling coil stuck: This fault is generated if no or minimal use of the cooling coil was observed in the data. \
-This may be symptomatic of a faulty sensor, a stuck valve, or a conflict in the operational logic.', style='List Bullet')
-    document.add_paragraph('Heating coil stuck: This fault is generated if no or minimal use of the cooling coil was observed in the data. \
-This may be symptomatic of a faulty sensor, a stuck valve, or a conflict in the operational logic.', style='List Bullet')
-    document.add_paragraph("Check economizer logic: This fault is generated if excessive use of the perimeter heatings was observed in the \
-AHU's economizer mode.", style='List Bullet')
-    document.add_paragraph('Low/High outdoor air: This fault is generated if an inadequate or excessive amount of outdoor air was observed. \
-This may be symptomatic of a stuck outdoor air damper or faulty damper sensor/actuator.', style='List Bullet')
-    document.add_paragraph('Check mode of operation logic: This fault is generated if the weekly operational time (i.e. when the AHU fans are \
-operational) exceeds 100 hours a week. This is typically considered excessive operations. It is suggested to check the operational logic for any conflicts \
-which may result in unintended operation of the AHUs', style='List Bullet')
-    document.add_paragraph("Check supply air temperature reset logic: This fault is generated if a setpoint reset scheme was not detected or there \
-is a logic mistake in the reset program. Ensuring that an appropriate setpoint reset scheme is present and operating as intended, there may be excessive use of the perimeter heating \
-devices during the AHUs' economizer mode. This may be a result of select rooms overheating in the heating season. If this is the case, consider \
-increasing the maximum terminal airflow setpoints in these overheating rooms.", style='List Bullet')
-
-    t = document.add_table(faults_df.shape[0]+1, faults_df.shape[1])
-    
-    for j in range(faults_df.shape[-1]): # add the header rows.
-        t.cell(0,j).text = faults_df.columns[j]
-    
-    for i in range(faults_df.shape[0]): # add the rest of the data frame
-        for j in range(faults_df.shape[-1]):
-            t.cell(i+1,j).text = str(faults_df.values[i,j])
-
-    t.style = 'Colorful List'
 
     # output the start and end time of the analysis period
     file = open(os.path.join(path,'period.txt'))
