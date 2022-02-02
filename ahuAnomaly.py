@@ -480,7 +480,7 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path):
             modeOfOperation_fault = 'Normal'
             ahuHealthInd += 100/6
         
-        if (cp[4] < 90) or (cp[3] < 15) or (cp[0] > 90):
+        if (cp[4] < 70) or (cp[3] < 15) or (cp[0] > 70):
             economizer_fault = 'Check economizer logic'
         else:
             economizer_fault = 'Normal'
