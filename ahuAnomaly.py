@@ -465,10 +465,10 @@ def ahuAnomaly (all_ahu_data,sRad,tIn,output_path):
             sCc_fault = 'Normal'
             ahuHealthInd += 100/6
         
-        fracRadOnEconomizer = sRadAvgWrkHrs[((dataWrkHrs[dataWrkHrs.columns[2]] > cp[1]) | (dataWrkHrs[dataWrkHrs.columns[2]] < cp[2]))].mean()
-        tInWrmEcon = tInWrmWrkHrs[((dataWrkHrs[dataWrkHrs.columns[2]] > cp[1]) | (dataWrkHrs[dataWrkHrs.columns[2]] < cp[2]))].mean() #Check for overheating
+        fracRadOnEconomizer = sRadAvgWrkHrs[((dataWrkHrs[dataWrkHrs.columns[2]] > cp[1]) & (dataWrkHrs[dataWrkHrs.columns[2]] < cp[2]))].mean()
+        tInWrmEcon = tInWrmWrkHrs[((dataWrkHrs[dataWrkHrs.columns[2]] > cp[1]) & (dataWrkHrs[dataWrkHrs.columns[2]] < cp[2]))].mean() #Check for overheating
         
-        if (fracRadOnEconomizer > 50) & (tInWrmEcon < 24):
+        if (fracRadOnEconomizer > 40) & (tInWrmEcon < 24):
             tSaReset_fault = 'Check supply air temperature reset logic'
         else:
             tSaReset_fault = 'Normal'
