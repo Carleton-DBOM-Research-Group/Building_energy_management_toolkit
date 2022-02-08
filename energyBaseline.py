@@ -328,7 +328,7 @@ def execute_function(input_path, output_path):
   #NECB comparison is not included.
 
   t = plt.text(-4.7,y_upper_lim*1.01,'CV-RMSE: ' + str(clg_cv_rmse), fontsize=12, alpha=0.7)
-  plt.legend(ncol=1,handlelength=3)
+  plt.legend(ncol=1,handlelength=3,fontsize=12)
 
   print('Modeling predicted cooling energy use rates...')
   plt.subplot(122)
@@ -422,7 +422,7 @@ def execute_function(input_path, output_path):
     plt.plot(tOa_handle,ypAfterHours, 'k--',linewidth=4,label ='Modelled afterhours')
 
     t = plt.text(-4.7,y_upper_lim*1.01,'CV-RMSE: ' + str(elec_cv_rmse), fontsize=12, alpha=0.7)
-    plt.legend(ncol=1,handlelength=3)
+    plt.legend(ncol=1,handlelength=3,fontsize=12)
 
     print('Modeling predicted electricity use...')
     plt.subplot(122)
