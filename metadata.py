@@ -324,7 +324,7 @@ def searchZoneTags (zoneIdentifier,tInTagInc,tInTagExc,qFloTagInc,qFloTagExc,qFl
 
     print('Number of identified VAV terminals (Assuming one airflow rate sensor per VAV terminal): ' + str(len(qFlo)))
     for i in qFlo.index:#Assume one qFlo (Airflow rate) sensor per zone
-        print('Associating labels in VAV terminal ' + str(i+1))
+        print('Associating labels in VAV terminal ' + str(i+1), flush=True)
         #qFlo
         zone_df = zone_df.append({'qFloTag':qFlo.iloc[i]['TL Name'],'qFloID':qFlo.iloc[i]['TL Reference']},ignore_index=True)
         handle1 = qFlo.iloc[i]['TL Reference'].split('TL')

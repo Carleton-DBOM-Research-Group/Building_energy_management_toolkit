@@ -4,7 +4,6 @@ import pandas as pd
 from docx import Document
 from docx.shared import Inches
 from docx.enum.section import WD_ORIENT
-from docx2pdf import convert
 
 #-----------------------------------------------GENERATE BASELINE ENERGY REPORT----------------------------------------------------
 def energyBaseline(path):
@@ -848,11 +847,9 @@ with BAS labels with unique ontologies and inconsistent labelling schema.')
 
     #Save document in reports folder
     document.save(os.path.join(path,'meta_report.docx'))
-    convert(os.path.join(path,'meta_report.docx'), os.path.join(path,'report.pdf'))
 
     #remove all used files
     os.remove(os.path.join(path,'metadata_summary.xlsx'))
-    os.remove(os.path.join(path,'meta_report.docx'))
 
     print('Report successfully generated!')
 
