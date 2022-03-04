@@ -846,7 +846,7 @@ with BAS labels with unique ontologies and inconsistent labelling schema.')
     t.style = 'Colorful List'
 
     #Save document in reports folder
-    document.save(os.path.join(path,'meta_report.docx'))
+    document.save(os.path.join(path,'report.docx'))
 
     #remove all used files
     os.remove(os.path.join(path,'metadata_summary.xlsx'))
