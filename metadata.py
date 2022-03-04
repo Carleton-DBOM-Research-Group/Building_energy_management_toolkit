@@ -403,7 +403,7 @@ def execute_function(input_path,output_path):
     
     #Output resultant tags in excel file
     print('Formatting identified labels...')
-    writer = pd.ExcelWriter(output_path + r'\metadata_summary.xlsx', engine='xlsxwriter') # pylint: disable=abstract-class-instantiated
+    writer = pd.ExcelWriter(os.path.join(output_path,'metadata_summary.xlsx'), engine='xlsxwriter')# pylint: disable=abstract-class-instantiated
     ahu_df.to_excel(writer, sheet_name='ahu')
     zone_df.to_excel(writer, sheet_name='zone')
     writer.save()
