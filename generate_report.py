@@ -604,10 +604,12 @@ of typical occupancy.')
 excessive ventilation during unoccupied hours, or even serve as a basis for an occupant-driven demand-controlled ventilation scheme. \
 The calculated earliest arrival time and latest departure time can be used to inform whole building-level schedules, including start/stop \
 times, whereas the calculated latest arrival time and longest break duration can be used to inform zone-level schedules, including time-out \
-durations for zone airflow. For example, if the calculated latest arrival time is 13:00 (1 PM), you may implement a simple logic to each \
-zone's controller which switches the zone to the 'unoccupied mode' when the motion detector of the zone has not been triggered until 1 PM \
-on a given day. Similarly, if the calculated longest break duration is 3:00 (3 hours), then you may implement another simple logic to each \
-zone's controller to switch the zone to the 'unoccupied mode' when the room's motion detector has not been triggered for longer than 3 hours \
+durations for zone airflow.") 
+
+        p = document.add_paragraph("For example, if the calculated latest arrival time is 10:00 (10 am), you may implement a simple logic to each \
+zone's controller which switches the zone to the 'unoccupied mode' when the motion detector of the zone has not been triggered until 10 am \
+on a given day. Similarly, if the calculated longest break duration is 4:00 (4 hours), then you may implement another simple logic to each \
+zone's controller to switch the zone to the 'unoccupied mode' when the room's motion detector has not been triggered for longer than 4 hours \
 on a given day. The below pseudo-code demonstrates these two implementations.")
 
         cwd = os.getcwd()
