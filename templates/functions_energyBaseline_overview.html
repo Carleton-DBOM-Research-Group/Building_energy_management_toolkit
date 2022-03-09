@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <title>FRAMeWORK - Baseline energy performance - Overview</title>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -191,10 +192,10 @@
       and institutional buildings for the same reason. These buildings implement schedules that attempt to reduce or eliminate heating or cooling when occupants are less likely to be present, typically during afterhours. 
       But how effective are these schedules at reducing overall energy consumption? And how do we know that they are working as intended? By comparing energy use during and outside scheduled operating times, we can make this 
       assessment.</p>
-    <p class="fs-6">The energy baseline function is intended to help the user assess the effectiveness of operating schedules and their ability to reduce energy use outside of the building's scheduled operating hours. Plots are generated 
-      which compare the rate of energy use during scheduled operating hours (workhours) and outside scheduled operating hours (afterhours) with respect to outdoor air temperature, and predict energy consumption at representative outdoor air 
-      temperatures - these are done separately for heating, cooling, and electricity*. Key performance indicators (KPIs) are calculated which compare the change of energy use rates with respect to outdoor air temperature between workhours and 
-      after-hours energy use, and the ratio of after-hours energy use to total energy use.</p>
+    <p class="fs-6">The energy baseline function is intended to help the user assess the effectiveness of operating schedules and their ability to reduce energy use outside of the building's scheduled operating hours. The function 
+      employs inverse modeling to create modified ASHRAE Guideline 14 three-parameter change point models which compare the rate of energy use during scheduled operating hours (workhours) and outside scheduled operating hours (afterhours) 
+      with respect to outdoor air temperature. The functions also predicts energy consumption at representative outdoor air temperatures - these are done separately for heating, cooling, and electricity*. Key performance indicators (KPIs) 
+      are calculated which compare the relative difference workhours and after-hours energy use rates, and the ratio of energy used during after-hours to the total energy used.</p>
     
     <p class="fs-6">*<sup>Energy use comparison for electricity is valid only for buildings with on-site electricity-based cooling and without electricity-based heating.</sup></p>
 
