@@ -183,13 +183,13 @@
     <p class="lead fs-4 pb-1">Instructions on how to use the FRAMeWORK toolkit.
     </p>
     <div class="d-md-flex flex-md-row align-items-center justify-content-start">     
-      <p class="h2 pb-3">How-to</p>
+      <p class="h2">Preparing and uploading data</p>
     </div>
-    <p class="fs-6">The FRAMeWORK toolkit is comprised of seven discrete data-driven functions. Every functions serves a unqiue purpose and thereof, requires different sets of data and generates unique sets of visualizations and 
-      key performance indicators (KPIs). To assist the user, every function in the toolbar (left of the page) contains four sub-tabs - Overview, Input, Output, and Upload Data. 
+    <p class="fs-6">The FRAMeWORK toolkit is comprised of seven discrete data-driven functions. Every functions serves a unique purpose in identifying operational deficiencies and thereof, requires different sets of data and generates unique sets of visualizations and 
+      key performance indicators (KPIs). To assist the user in invoking the functions, every function in the toolbar (left of the page) contains four sub-tabs - Overview, Input, Output, and Upload Data. 
     </p>
     
-    <div class="accordion accordion-flush" id="accordionFlushExample">
+    <div class="accordion accordion-flush pb-3" id="accordionFlushExample">
       <div class="accordion-item">
         <h2 class="accordion-header" id="flush-headingOne">
           <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
@@ -236,7 +236,66 @@
         </div>
       </div>
     </div>
+    <p class="fs-6">Once you've uploaded your data, you're half-way done! The function you've selected will automatically analyze your data and output the results once it has finished its analysis. The analysis may take some time, depending on the amount of data you inputted and the 
+      the function you selected. Functions that utilize a genetic algorithm (i.e., AHU anomaly detection, baseline energy performance, end-use disaggregation) will take a much longer time than other functions. Please be patient!
+    </p>
+
+    <p class="h2">Retreiving results</p>
+    <p class="fs-6">Your results can be retrieved through a randomly generated link that is provided to you upon successful data upload. Retain this link as it is the only way you will be able to get your results. When you use the link, you may be presented with
+       one of the three following prompts.
+    </p>
     
+    <div class="accordion accordion-flush" id="accordionFlush2">
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="flush-headingFive">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseFive" aria-expanded="false" aria-controls="flush-collapseFive">
+            <p class="text-center text-success h1">Still processing...
+              <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor" class="bi bi-clock" viewBox="0 0 16 16">
+                <path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"/>
+                <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z"/>
+              </svg>
+            </p>
+          </button>
+        </h2>
+        <div id="flush-collapseFive" class="accordion-collapse collapse" aria-labelledby="flush-headingFive" data-bs-parent="#accordionFlush2">
+          <div class="accordion-body">Your data is currently being processed or is still in line to be processed. Please be patient! Work on something else, go for walk, or get a coffee; it will be done eventually.</div>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="flush-headingSix">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseSix" aria-expanded="false" aria-controls="flush-collapseSix">
+            <p class="text-center text-success h1">Analysis successful!
+              <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor" class="bi bi-file-check" viewBox="0 0 16 16">
+                <path d="M10.854 6.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 8.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
+                <path d="M4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H4zm0 1h8a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z"/>
+              </svg>
+            </p>
+          </button>
+        </h2>
+        <div id="flush-collapseSix" class="accordion-collapse collapse" aria-labelledby="flush-headingSix" data-bs-parent="#accordionFlush2">
+          <div class="accordion-body">The function has successfully analyzed your data and your results are ready to be downloaded. Select the "Download" button to begin downloading your results; 
+            a report-style document containing the generated visuals and KPIs should begin downloading.</div>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="flush-headingSeven">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseSeven" aria-expanded="false" aria-controls="flush-collapseSeven">
+            <p class="text-center text-warning h1">Something went wrong with the analysis.
+              <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
+                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+              </svg>
+            </p>
+          </button>
+        </h2>
+        <div id="flush-collapseSeven" class="accordion-collapse collapse" aria-labelledby="flush-headingSeven" data-bs-parent="#accordionFlush2">
+          <div class="accordion-body">An issue in the analysis prevented the function from completing its analysis. This is most commonly caused by incompatible or incorrectly formatted data. Ensure that your data 
+            does not contains non-numeric values (i.e., %,#,@,-,*, etc.) and that the data are formatted as prescribed in each function's respective Inputs page. Also, please be aware of any restrictions to the input data (i.e, 
+            temporal resolution, zero-values) that are stated in the Inputs page.
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- Download templates form --> 
     <div class="card">
