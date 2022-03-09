@@ -37,6 +37,7 @@ def publications():
 
 @app.route('/functions/data-templates', methods = ['GET'])
 def dataTemplates():
+  return "This page is under construction! Check back later..."
   return render_template('functions_dataTemplates.html')
 
 @app.route('/functions/data-templates/download-<filename>')
@@ -48,6 +49,11 @@ def download_template_file(filename):
 @app.route('/functions/sample-data', methods = ['GET'])
 def functions_sampleData():
   return render_template('functions_sampleData.html')
+
+@app.route('/functions/help', methods = ['GET'])
+def functions_help():
+  cwd = os.getcwd()
+  return render_template('functions_help.html')
 
 @app.route('/functions/sample-data/download-<filename>')
 def download_sample_file(filename):
