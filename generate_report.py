@@ -26,12 +26,12 @@ effectiveness and afterhours energy use. More information is found in the respec
     #Visualization heading and description
     print('Adding visuals...')
     document.add_heading('Visuals', level=1)
-    p = document.add_paragraph('The first set of visuals (to the left) compare the rate of energy use during operating hours (workhours) and \
+    p = document.add_paragraph('The first plot (left) are modified ASHRAE Guideline 14 three-parameter change point models which compare the rate of energy use during operating hours (workhours) and \
 outside operating hours (after-hours) as a function of outdoor air temperatures - this is done separately for heating, \
 cooling, and electricity. Current schedules may be ineffective at reducing after-hours energy use if the inclined slope of the after-hours energy use \
 line is similar or identical to the workhours energy use line. If the slope of the after-hours energy use line is shallower \
 than the workhour energy use line, the current schedules are effective at reducing energy use outside operating hours.')
-    p = document.add_paragraph('The second set of visuals (to the right) illustrates the sensitivity of energy use with respect to outdoor \
+    p = document.add_paragraph('The second set of visuals (right) illustrates the sensitivity of energy use with respect to outdoor \
 air temperatures - this is done separately for heating, cooling, and electricity. If the lines are spaced considerably apart, \
 the energy use is particularly sensitive to fluctuations in outdoor air temperature.')
 
@@ -134,7 +134,7 @@ This may be symptomatic of a faulty sensor, a stuck valve, or a conflict in the 
 This may be symptomatic of a faulty sensor, a stuck valve, or a conflict in the operational logic.', style='List Bullet')
     document.add_paragraph("CHECK ECONOMIZER LOGIC: This fault is generated if the outdoor air damper does not exceed "+r"90%"+" open in the \
 economizer with cooling state, or if the transition to mechanical cooling is premature (i.e., outdoor air temperature is less than 15degC). \
-In either case, the economizer state settings may not be programmed correctly and is not taking full advantage of cooler outdoor air temperatures..", style='List Bullet')
+In either case, the economizer state settings may not be programmed correctly and is not taking full advantage of cooler outdoor air temperatures.", style='List Bullet')
     document.add_paragraph('LOW/HIGH OUTDOOR AIR: This fault is generated if an inadequate or excessive amount of outdoor air was observed. \
 This may be symptomatic of a stuck outdoor air damper or faulty damper sensor/actuator.', style='List Bullet')
     document.add_paragraph('CHECK MODE OF OPERATIONS LOGIC: This fault is generated if the weekly operational time (i.e. when the AHU fans are \
@@ -161,7 +161,7 @@ increasing the maximum terminal airflow setpoints in these overheating rooms.", 
     document.add_heading('Visuals - Split-range controller', level=1)
     p = document.add_paragraph('A set of two charts are generated for each AHU dataset inputted. The first (top) plots supply air \
 temperature, and the coolest/warmest/average return air temperatures as a function of outdoor air temperature. For \
-reference, the "ideal" supply air temperature is depicted. The second (bottom) chart is a split-range controller diagram, which \
+reference, the "ideal" supply air temperature is depicted. The second (bottom) chart is a split-range controller diagram as per ASHRAE Guidelines 36, which \
 plots the outdoor air damper position (OA), heating coil valve position (HC), cooling coil valve position (CC) and average fraction \
 of active perimeter heaters (RAD) with respect to outdoor air temperature. The four underlying color zones represent the four \
 distinct operating modes: Heating (red zone), economizer (yellow zone), economizer with cooling (grey zone), and cooling (blue zone). \
