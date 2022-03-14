@@ -183,10 +183,15 @@
     <p class="lead fs-4 pb-1">General guidance and sample data to help you get started.
     </p>
     <p class="h2 pb-3">Help</p>
-    <div class="d-md-flex flex-md-row align-items-center justify-content-start">     
-      <p class="h3 fw-normal">Preparing and uploading data</p>
+    <div class="d-md-flex flex-md-row align-items-center justify-content-start">
+      <p class="h3 fw-normal">Using the toolkit</p>
     </div>
-    <p class="fs-6">The FRAMeWORK toolkit is comprised of seven discrete data-driven functions. Every functions serves a unique purpose in identifying operational deficiencies and thereof, requires different sets of data and generates unique sets of visualizations and 
+    <p class="fs-6">The FRAMeWORK toolkit is completely data-driven. This means that all you need to do to run the functions is supply process-history data. Once you upload your data to the selected function, the function will automatically analyze your data and 
+      generate your results in the form of multiple types of visualizations and key performance indicators (KPI); these outputs will be preformatted in a report-style document. That's it! 
+    </p>
+
+    <p class="h3 fw-normal">Preparing and uploading data</p>
+    <p class="fs-6">The toolkit is comprised of seven discrete data-driven functions. Every functions serves a unique purpose in identifying operational deficiencies and thereof, requires different sets of data and generates unique sets of visualizations and 
       key performance indicators (KPIs). To assist the user in invoking the functions, every function in the toolbar (left of the page) contains four sections - Overview, Input, Output, and Upload Data. 
     </p>
     
@@ -293,7 +298,7 @@
         <div id="flush-collapseError" class="accordion-collapse collapse" aria-labelledby="flush-headingError" data-bs-parent="#accordionFlushPrompts">
           <div class="accordion-body">Oops! An issue in the analysis prevented the function from completing its analysis. This is most commonly caused by incompatible or incorrectly formatted data. Ensure that your data 
             do not contain non-numeric values (i.e., %,#,@,-,*, etc.) and that the data are formatted as prescribed in each function's respective Inputs page. Also, please be aware of any restrictions to the input data (i.e, 
-            temporal resolution, zero-values); these are stated in each function's Inputs section.
+            temporal resolution, zero-values); these are stated in each function's Inputs section. For functions which input multiple data types (excluding CMMS data), ensure the timestamps are consistent throughout each data.
           </div>
         </div>
       </div>
