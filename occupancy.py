@@ -264,9 +264,9 @@ def occupancyMotion(motion_df, output_path):
                 for j in temp.columns: #Cycle through the columns(sensors) of the temp df
                         
                         if temp[j].sum() > 0: #Check if any activity for the sensor for the day
-                                temp_firstArrTime.append((temp[j] == 1).idxmax().hour)
-                                temp_lastDepTime.append(temp[j].where(temp[j]==1).last_valid_index().hour)
-                                temp_breakDuration.append((temp[(temp.index.hour>8) & (temp.index.hour<17)][j] == 0).sum())
+                                temp_firstArrTime.append((temp[j] == 1).idxmax().hour) #Find first hour where occupancy is detected
+                                temp_lastDepTime.append(temp[j].where(temp[j]==1).last_valid_index().hour) #Find last hour where occupancy is detected
+                                temp_breakDuration.append((temp[(temp.index.hour>8) & (temp.index.hour<17)][j] == 0).sum()) #Sum hours between 8am and 5pm where vacancy is detected
 
                         else: #If no activity, give nan
                                 temp_firstArrTime.append(0)
@@ -277,11 +277,11 @@ def occupancyMotion(motion_df, output_path):
                 lastDepTime_df[day.date()] = pd.Series(temp_lastDepTime,dtype='float64')
                 breakDuration_df[day.date()] = pd.Series(temp_breakDuration,dtype='float64')
 
-        firstArrTime_df = firstArrTime_df.T
+        firstArrTime_df = firstArrTime_df.T #Transpose df to nxm (days(rows) x sensors(columns))
         lastDepTime_df = lastDepTime_df.T
         breakDuration_df = breakDuration_df.T
 
-        firstArrTime_df.index = pd.to_datetime(firstArrTime_df.index)
+        firstArrTime_df.index = pd.to_datetime(firstArrTime_df.index) #Convert index to datetime
         lastDepTime_df.index = pd.to_datetime(lastDepTime_df.index)
         breakDuration_df.index = pd.to_datetime(breakDuration_df.index)
 
@@ -296,18 +296,18 @@ def occupancyMotion(motion_df, output_path):
         latestDepTime = []
         longestBreakDuration = []
 
-        for i in firstArrTime_df.columns:
-                temp_absentDayFrac = (firstArrTime_df[i]==0).sum()/len(firstArrTime_df[i])
+        for i in firstArrTime_df.columns: #For every sensor...
+                temp_absentDayFrac = (firstArrTime_df[i]==0).sum()/len(firstArrTime_df[i]) #...find the fraction of time vacancy is detected.
                 absentDayFrac.append(temp_absentDayFrac)
-                earliestArrTime.append((firstArrTime_df[(firstArrTime_df[i]>5) & (firstArrTime_df[i]<22)][i].quantile(0.25+((temp_absentDayFrac*40)/100))))
-                latestArrTime.append((firstArrTime_df[(firstArrTime_df[i]>5) & (firstArrTime_df[i]<22)][i].quantile(0.75-((temp_absentDayFrac*40)/100))))
-                latestDepTime.append((lastDepTime_df[(lastDepTime_df[i]>5) & (lastDepTime_df[i]<22)][i].quantile(0.75-((temp_absentDayFrac*40)/100))))
-                longestBreakDuration.append((breakDuration_df[(breakDuration_df[i]>0) & (breakDuration_df[i]<6)][i].quantile(0.75-((temp_absentDayFrac*40)/100))))
+                earliestArrTime.append((firstArrTime_df[(firstArrTime_df[i]>5) & (firstArrTime_df[i]<22)][i].quantile(0.25+((temp_absentDayFrac*40)/100)))) #...find the 25th + 0.4(fraction of time vacancy is detected) quantile of first arrival time.
+                latestArrTime.append((firstArrTime_df[(firstArrTime_df[i]>5) & (firstArrTime_df[i]<22)][i].quantile(0.75-((temp_absentDayFrac*40)/100)))) #...find the 75th - 0.4(fraction of time vacancy is detected) quantile of first arrival time.
+                latestDepTime.append((lastDepTime_df[(lastDepTime_df[i]>5) & (lastDepTime_df[i]<22)][i].quantile(0.75-((temp_absentDayFrac*40)/100)))) #...find the 75th - 0.4(fraction of time vacancy is detected) quantile of last departure time.
+                longestBreakDuration.append((breakDuration_df[(breakDuration_df[i]>0) & (breakDuration_df[i]<6)][i].quantile(0.75-((temp_absentDayFrac*40)/100)))) #...find the 75th - 0.4(fraction of time vacancy is detected) quantile of break duration.
 
-        kpis = {'Earliest arrival time': ['{0:02.0f}:{1:02.0f}'.format(*divmod(float(round(np.nanquantile(earliestArrTime,0.25),1)) * 60, 60))],
-                'Latest arrival time': ['{0:02.0f}:{1:02.0f}'.format(*divmod(float(round(np.nanquantile(latestArrTime,0.75),1)) * 60, 60))],
-                'Latest departure time': ['{0:02.0f}:{1:02.0f}'.format(*divmod(float(round(np.nanquantile(latestDepTime,0.75),1)) * 60, 60))],
-                'Longest break duration': ['{0:02.0f}:{1:02.0f}'.format(*divmod(float(round(np.nanquantile(longestBreakDuration,0.75),1)) * 60, 60))]}
+        kpis = {'Earliest arrival time': ['{0:02.0f}:{1:02.0f}'.format(*divmod(float(round(np.nanquantile(earliestArrTime,0.25),1)) * 60, 60))], #Output 25th percentile of earliest arrival times
+                'Latest arrival time': ['{0:02.0f}:{1:02.0f}'.format(*divmod(float(round(np.nanquantile(latestArrTime,0.75),1)) * 60, 60))], #Output 75th percentile of earliest arrival times
+                'Latest departure time': ['{0:02.0f}:{1:02.0f}'.format(*divmod(float(round(np.nanquantile(latestDepTime,0.75),1)) * 60, 60))], #Output 75th percentile of latest departure times
+                'Longest break duration': ['{0:02.0f}:{1:02.0f}'.format(*divmod(float(round(np.nanquantile(longestBreakDuration,0.75),1)) * 60, 60))]} #Output 75th percentile of longest break duration
         kpis_df = pd.DataFrame(data=kpis)
 
         #Output the KPIs in an excel spreadsheet
