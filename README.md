@@ -5,6 +5,8 @@ Additions and revisions are expected and the repository will be updated periodic
 
 > http://building-energy-management-toolkit.com/home
 
+The toolkit has a name now! "FRAMeWORK"
+
 ## Reference documentation
 ### Framework of the toolkit
 > Markus *et al.*, "A framework for a multi-source, data-driven building energy management toolkit," 2021.
