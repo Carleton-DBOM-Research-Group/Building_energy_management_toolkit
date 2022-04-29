@@ -398,7 +398,7 @@ def execute_function(input_path, output_path):
     index=pd.date_range(start='2019/04/21', end='2019/12/31',freq='w')
     week=index.weekofyear+1
 
-    plt.figure(figsize=(21,6))
+    plt.figure(figsize=(19,6))
     #pal = ["#9b59b7", "#e74c4c", "#34496e", "#2ecc72"]
 
     plt.subplot(131)
@@ -408,7 +408,7 @@ def execute_function(input_path, output_path):
     plt.xticks(fontsize=18)
     plt.yticks(fontsize=18)
     plt.xlabel('Week of year',fontsize = 22)
-    plt.ylabel("Electricity (kWh/$m^{2}$)", fontsize= 22)
+    plt.ylabel("Electricity ($kWh/m^{2}$)", fontsize= 22)
     plt.legend(("Fans & Pumps","Lighting & Plug loads","Chillers"), loc='upper center', bbox_to_anchor=(0.5, 1.25), ncol=2, prop={"size":17})
 
     plt.subplot(132)
@@ -418,7 +418,7 @@ def execute_function(input_path, output_path):
     plt.xticks(fontsize=18)
     plt.yticks(fontsize=18)
     plt.xlabel('Week of year',fontsize = 22)
-    plt.ylabel("Cooling (kWh/$m^{2}$)", fontsize= 22)
+    plt.ylabel("Cooling ($kWh/m^{2}$)", fontsize= 22)
     ahu_legend_labels = []
     for i in range(1,num_of_ahus+1):
         ahu_legend_labels.append('AHU '+str(i))
@@ -431,7 +431,7 @@ def execute_function(input_path, output_path):
     plt.xticks(fontsize=18)
     plt.yticks(fontsize=18)
     plt.xlabel('Week of year',fontsize = 22)
-    plt.ylabel("Heating (kWh/$m^{2}$)", fontsize= 22)
+    plt.ylabel("Heating ($kWh/m^{2}$)", fontsize= 22)
     ahu_legend_labels = ['Domestic hot water','Perimeter heaters']
     for i in range(1,num_of_ahus+1):
         ahu_legend_labels.append('AHU '+str(i))
