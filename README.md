@@ -5,7 +5,7 @@ Additions and revisions are expected and the repository will be updated periodic
 
 > http://building-energy-management-toolkit.com/home
 
-The toolkit has a name now! "FRAMeWORK"
+The toolkit has a name now! "FRAMeWORK" Test change
 
 ## Reference documentation
 ### Framework of the toolkit
