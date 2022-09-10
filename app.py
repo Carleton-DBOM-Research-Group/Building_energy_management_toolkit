@@ -493,5 +493,9 @@ def upload_fdd(filename):
   os.makedirs(path, exist_ok=True)
 
   data = request.json
-  data.save(os.path.join(path, filename))
+
+  f = open(os.path.join(path, filename),"w")
+  f.write(str(data))
+  f.close()
+
   return "success"
