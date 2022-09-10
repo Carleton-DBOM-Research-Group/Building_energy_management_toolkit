@@ -485,3 +485,9 @@ def download(request_uuid):
   cwd = os.getcwd()
   result_dir = os.path.join(cwd, 'userdata', 'done', str(request_uuid))
   return send_file(os.path.join(result_dir, 'report.docx'))
+
+@app.route('/api/fdd', methods=['PUT'])
+def upload_fdd():
+  data = request.json
+  print(len(data))
+  return
