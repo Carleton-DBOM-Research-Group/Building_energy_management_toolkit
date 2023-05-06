@@ -50,6 +50,11 @@ def searchAHUTags (tSaTagInc,tSaTagExc,tRaTagInc,tRaTagExc,tOaTagInc,tOaTagExc,
     tag['TL Name'] = tag['TL Name'].str.replace('_',' ')
     tag['TL Name'] = tag['TL Name'].str.replace('-',' ')
     tag['TL Name'] = tag['TL Name'].str.replace('/',' ')
+    tag['TL Name'] = tag['TL Name'].str.replace('$',' ')
+    tag['TL Name'] = tag['TL Name'].str.replace('#',' ')
+    tag['TL Name'] = tag['TL Name'].str.replace('@',' ')
+    tag['TL Name'] = tag['TL Name'].str.replace('*',' ')
+    tag['TL Name'] = tag['TL Name'].str.replace('.',' ')
 
     #CLASSIFY
     print('Classifying AHU-level metadata labels by tags...')
@@ -269,6 +274,11 @@ def searchZoneTags (zoneIdentifier,tInTagInc,tInTagExc,qFloTagInc,qFloTagExc,qFl
     tag['TL Name'] = tag['TL Name'].str.replace('_',' ')
     tag['TL Name'] = tag['TL Name'].str.replace('-',' ')
     tag['TL Name'] = tag['TL Name'].str.replace('/',' ')
+    tag['TL Name'] = tag['TL Name'].str.replace('$',' ')
+    tag['TL Name'] = tag['TL Name'].str.replace('#',' ')
+    tag['TL Name'] = tag['TL Name'].str.replace('@',' ')
+    tag['TL Name'] = tag['TL Name'].str.replace('*',' ')
+    tag['TL Name'] = tag['TL Name'].str.replace('.',' ')
 
     #CLASSIFY
     print('Classify zone-level metadata labels...')
@@ -388,7 +398,8 @@ def execute_function(input_path,output_path):
     print('Reading metadata data file...')
     metadata_files = os.listdir(os.path.join(input_path))
     metadata_files_csv = [f for f in metadata_files if f[-3:] == 'csv']
-    tag = pd.read_csv(os.path.join(input_path,metadata_files_csv[0]))
+    tag = pd.read_csv(os.path.join(input_path,metadata_files_csv[0]),usecols=[0,1])
+    tag.set_axis(['TL Name', 'TL Reference'], axis='columns', inplace=True)
 
     #Try analyzing AHU- and zone-level metadata labels
     #Call the searchAHUTags local function
